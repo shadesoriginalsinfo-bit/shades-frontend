@@ -1,5 +1,4 @@
 import React from "react";
-import { ShoppingCart } from "lucide-react";
 import logo from "@/assets/transparentLogo.png";
 import MobileHeader from "./MobileHeader";
 import { useAuthContext } from "@/hooks/useAuthContext";
@@ -8,7 +7,7 @@ import { Link } from "react-router-dom";
 
 const Header: React.FC = () => {
   const { user } = useAuthContext();
-  const cartCount = 10;
+  // const cartCount = 10;
 
   return (
     <div>
@@ -29,7 +28,7 @@ const Header: React.FC = () => {
 
         <div className="flex items-center gap-5">
           {/* Notification bell */}
-          <Link
+          {/* <Link
             to="/notifications"
             aria-label="Notification Bell"
             className="relative bg-white p-2 text-gray-800 focus:outline-none cursor-pointer"
@@ -45,7 +44,7 @@ const Header: React.FC = () => {
                 {cartCount > 99 ? "99+" : cartCount}
               </span>
             )}
-          </Link>
+          </Link> */}
         </div>
       </header>
     </div>

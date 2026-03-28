@@ -1,9 +1,12 @@
 
 import { Clock, Sparkles } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { useNavigate } from "react-router-dom"
 
 export default function HomePage() {
 
+  const navigate = useNavigate()
   return (
     <div
       className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden"
@@ -70,6 +73,8 @@ export default function HomePage() {
             Stay tuned — it won't be long.
           </p>
         </div>
+
+        <Button onClick={()=>navigate("/login")} className="rounded-md">Login</Button>
 
         {/* Divider */}
         <div className="w-full h-px" style={{ background: "linear-gradient(90deg, transparent, rgba(139,92,246,0.2), transparent)" }} />

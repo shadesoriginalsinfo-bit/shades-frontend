@@ -6,7 +6,6 @@ import {
   LucideLayoutDashboard,
   Settings,
   LogOut,
-  FileText,
   ChartColumn,
 } from "lucide-react";
 import { useLogout } from "@/hooks/useLogout";
@@ -24,25 +23,31 @@ export const navLinks: SidebarItem[] = [
     label: "Dashboard",
     icon: <LucideLayoutDashboard />,
     key: "dashboard",
-    path: "/",
+    path: "/admin/dashboard",
   },
+  // {
+  //   label: "Category",
+  //   icon: <FileText />,
+  //   key: "category",
+  //   path: "/admin/category",
+  // },
   {
-    label: "Mandates",
-    icon: <FileText />,
-    key: "mandates",
-    path: "/mandates",
-  },
-  {
-    label: "Report",
+    label: "Orders",
     icon: <ChartColumn />,
-    key: "reports",
-    path: "/reports",
+    key: "orders",
+    path: "/admin/orders",
+  },
+  {
+    label: "Products",
+    icon: <ChartColumn />,
+    key: "products",
+    path: "/admin/products",
   },
   {
     label: "User List",
     icon: <Users />,
     key: "users",
-    path: "/users",
+    path: "/admin/users",
   },
 ];
 
@@ -63,7 +68,7 @@ const Sidebar: React.FC = () => {
                 clsx(
                   "flex items-center gap-3 rounded-xl px-3 py-3 text-sm transition-colors duration-150",
                   isActive
-                    ? "bg-gray-100 text-[#1B77BB] font-bold"
+                    ? "bg-gray-100 text-[#C6A46C] font-bold"
                     : "text-[#496c87] hover:bg-gray-100 font-medium"
                 )
               }
@@ -77,12 +82,12 @@ const Sidebar: React.FC = () => {
       </ul>
       <div className="absolute bottom-8 w-full">
         <NavLink
-          to="/settings"
+          to="/admin/settings"
           className={({ isActive }) =>
             clsx(
               "w-[89%] flex items-center gap-3 rounded-xl px-3 py-3 text-sm transition-colors duration-150",
               isActive
-                ? "bg-gray-100 text-[#1B77BB] font-bold"
+                ? "bg-gray-100 text-[#C6A46C] font-bold"
                 : "text-[#496c87] hover:bg-gray-100 font-medium"
             )
           }
@@ -92,7 +97,7 @@ const Sidebar: React.FC = () => {
         </NavLink>
         <button
           onClick={logout}
-          className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm transition-colors duration-150 text-[#1B77BB] font-semibold hover:font-bold cursor-pointer"
+          className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm transition-colors duration-150 text-[#C6A46C] font-semibold hover:font-bold cursor-pointer"
         >
           <LogOut />
           <span>Logout</span>

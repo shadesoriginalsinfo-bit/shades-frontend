@@ -10,6 +10,7 @@ import { handleApiError } from "@/utils/handleApiError";
 import toast from "react-hot-toast";
 import { CornerOrnament, GoldDivider, GoldPattern } from "@/components/comps";
 import { INDIAN_MOBILE_REGEX } from "@/utils/validation";
+import { Role } from "@/types/enum";
 
 interface ILoginForm {
   mobileNumber: string;
@@ -27,8 +28,12 @@ const LoginPage = () => {
 
   const LoginMutation = useMutation({
     mutationFn: login,
-    onSuccess: () => {
+    onSuccess: (data) => {
       toast.success("Login Successful");
+      if(data.role === Role.ADMIN){
+        navigate("/admin/dashboard");
+        return;
+      }
       navigate("/");
     },
     onError: async (error: any) => {

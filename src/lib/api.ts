@@ -2,27 +2,12 @@ import type { IRegisterUser, IUserProfile } from "@/types/user";
 import axios from "./axios";
 
 
-export async function getCaptcha() {
-  const { data } = await axios.get(`/auth/captcha`);
-  return data;
-}
 
 export async function login(payload: { mobileNumber: string; password: string }) {
   const { data } = await axios.post(`/auth/login`, payload);
-  return data;
+  return data.data;
 }
 
-export const forceLogin = async (forceLoginToken: string) => {
-  const { data } = await axios.post( "/auth/force-login",{},
-    {
-      withCredentials: true,
-      headers: {
-        Authorization: `Bearer ${forceLoginToken}`,
-      },
-    }
-  );
-  return data;
-};
 
 export async function logout() {
   const { data } = await axios.post(`/auth/logout`);
