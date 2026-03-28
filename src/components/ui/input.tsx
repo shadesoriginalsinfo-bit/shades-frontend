@@ -1,19 +1,57 @@
-import * as React from "react"
+import * as React from "react";
+import { cn } from "@/lib/utils";
 
-import { cn } from "@/lib/utils"
+type InputProps = React.ComponentProps<"input"> & {
+  variant?: "default";
+  restrictSpecialChars?: boolean;
+};
 
-function Input({ className, type, ...props }: React.ComponentProps<"input">) {
+function Input({
+  className,
+  type,
+  variant = "default",
+  required,
+  placeholder,
+  restrictSpecialChars = true,
+  ...props
+}: InputProps) {
+  const finalPlaceholder =
+    required && placeholder ? `${placeholder} *` : placeholder;
+
   return (
     <input
       type={type}
       data-slot="input"
+      placeholder={finalPlaceholder}
+      required={required}
+      onKeyDown={(e) => {
+        if (!restrictSpecialChars) return;
+        if (!/[a-zA-Z0-9._@]/.test(e.key) && e.key.length === 1) {
+          e.preventDefault();
+        }
+      }}
       className={cn(
-        "h-8 w-full min-w-0 rounded-lg border border-input bg-transparent px-2.5 py-1 text-base transition-colors outline-none file:inline-flex file:h-6 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:bg-input/50 disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 md:text-sm dark:bg-input/30 dark:disabled:bg-input/80 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40",
+        // Layout & base
+        "w-full bg-transparent text-sm text-gray-800 outline-none",
+        "transition-all duration-300",
+        // Bottom-border only — Art Deco underline style
+        "border-0 border-b border-[#D4B896] rounded-none",
+        "pb-2 pt-1",
+        // Placeholder
+        "placeholder:text-[#C6A46C]/50 placeholder:text-xs placeholder:tracking-wider placeholder:uppercase",
+        // Focus: gold underline glow
+        "focus:border-[#C6A46C] focus:shadow-[0_1px_0_0_#C6A46C]",
+        // Disabled
+        "disabled:opacity-40 disabled:cursor-not-allowed",
+        // Selection
+        "selection:bg-[#C6A46C]/30 selection:text-[#6B4E2A]",
+        // Invalid
+        "aria-invalid:border-red-400",
         className
       )}
       {...props}
     />
-  )
+  );
 }
 
-export { Input }
+export { Input };
