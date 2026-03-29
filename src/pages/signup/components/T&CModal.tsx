@@ -18,7 +18,7 @@ export default function TermsAndConditionsModal({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-[95%] md:max-w-xl">
         <DialogHeader>
-          <DialogTitle>Terms and Conditions</DialogTitle>
+          <DialogTitle className="text-[#C6A46C]">Terms and Conditions</DialogTitle>
           {/* <p className="text-sm text-muted-foreground">Last updated on 1/12/2025</p> */}
         </DialogHeader>
 

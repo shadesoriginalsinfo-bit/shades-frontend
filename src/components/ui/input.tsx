@@ -15,14 +15,12 @@ function Input({
   restrictSpecialChars = true,
   ...props
 }: InputProps) {
-  const finalPlaceholder =
-    required && placeholder ? `${placeholder} *` : placeholder;
-
+  
   return (
     <input
       type={type}
       data-slot="input"
-      placeholder={finalPlaceholder}
+      placeholder={placeholder}
       required={required}
       onKeyDown={(e) => {
         if (!restrictSpecialChars) return;
@@ -36,9 +34,9 @@ function Input({
         "transition-all duration-300",
         // Bottom-border only — Art Deco underline style
         "border-0 border-b border-[#D4B896] rounded-none",
-        "pb-2 pt-1",
+        "pb-1 pt-1.5",
         // Placeholder
-        "placeholder:text-[#C6A46C]/50 placeholder:text-xs placeholder:tracking-wider placeholder:uppercase",
+        "placeholder:text-[#C6A46C]/70 placeholder:text-xs placeholder:tracking-wider",
         // Focus: gold underline glow
         "focus:border-[#C6A46C] focus:shadow-[0_1px_0_0_#C6A46C]",
         // Disabled
