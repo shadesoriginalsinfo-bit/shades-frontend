@@ -8,6 +8,7 @@ export type IUserProfile = {
   role: Role;
   createdAt: string;
   updatedAt: string;
+  avatar?: string;
 };
 
 export interface IRegisterUser {

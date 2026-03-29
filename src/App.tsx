@@ -13,6 +13,7 @@ import DashboardPage from "./pages/admin/dashboard";
 import OrdersPage from "./pages/admin/orders";
 import UsersPage from "./pages/admin/users";
 import ProductsPage from "./pages/admin/products";
+import ShopPage from "./pages/shop";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/" element={<HomePage />} />
+        <Route path="/shop" element={<ShopPage />} />
 
         <Route element={<ProtectedRoute />}>
             {/* <Route path="/cart" element={<CartPage />} /> */}

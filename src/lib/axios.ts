@@ -54,7 +54,8 @@ axiosInstance.interceptors.response.use(
     const isAuthEndpoint =
       url.includes("/auth/refresh") ||
       url.includes("/refresh") ||
-      url.includes("/login");
+      url.includes("/login") || 
+      url.includes("/auth/me");
 
     // Only attempt refresh on 401 from protected APIs
     if (status === 401 && !originalRequest._retry && !isAuthEndpoint) {
