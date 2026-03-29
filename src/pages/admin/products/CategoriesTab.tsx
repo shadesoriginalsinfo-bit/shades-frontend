@@ -11,6 +11,7 @@ import { useDebounce } from "@/hooks/useDebounce";
 import CategoryItem from "./components/CategoryItem";
 import CategoryFormModal, { emptyForm, type CatForm } from "./components/CategoryFormModal";
 import ConfirmDeleteModal from "./components/ConfirmDeleteModal";
+import { CATEGORIES_QUERY_KEY, useCategories } from "@/hooks/useCategories";
 
 const generateSlug = (name: string) =>
   name
@@ -36,21 +37,16 @@ const CategoriesTab = () => {
     queryFn: () => getCategories({ search: debouncedSearch || undefined }),
   });
 
-  // Flat for parent selection in forms
-  const flatQuery = useQuery({
-    queryKey: ["admin-categories-flat"],
-    queryFn: () => getCategories({ flat: true }),
-  });
+  const { categories:flatCategories } = useCategories();
 
   const categories = treeQuery.data ?? [];
-  const flatCategories = flatQuery.data ?? [];
 
   const createMutation = useMutation({
     mutationFn: (payload: ICreateCategory) => createCategory(payload),
     onSuccess: () => {
       toast.success("Category created");
       queryClient.invalidateQueries({ queryKey: ["admin-categories-tree"] });
-      queryClient.invalidateQueries({ queryKey: ["admin-categories-flat"] });
+      queryClient.invalidateQueries({ queryKey: [CATEGORIES_QUERY_KEY] });
       setShowCreate(false);
       setForm(emptyForm());
     },
@@ -63,7 +59,7 @@ const CategoriesTab = () => {
     onSuccess: () => {
       toast.success("Category updated");
       queryClient.invalidateQueries({ queryKey: ["admin-categories-tree"] });
-      queryClient.invalidateQueries({ queryKey: ["admin-categories-flat"] });
+      queryClient.invalidateQueries({ queryKey: [CATEGORIES_QUERY_KEY] });
       setEditingCat(null);
     },
     onError: handleApiError,
@@ -74,7 +70,7 @@ const CategoriesTab = () => {
     onSuccess: () => {
       toast.success("Category deleted");
       queryClient.invalidateQueries({ queryKey: ["admin-categories-tree"] });
-      queryClient.invalidateQueries({ queryKey: ["admin-categories-flat"] });
+      queryClient.invalidateQueries({ queryKey: [CATEGORIES_QUERY_KEY] });
       setDeletingCat(null);
     },
     onError: handleApiError,

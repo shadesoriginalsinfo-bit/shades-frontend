@@ -1,13 +1,12 @@
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
-import { getProducts, getCategories } from "@/lib/api";
-import { type ICategory } from "@/types/category";
 import ProductCard from "./ProductCard";
 import ProductCardSkeleton from "./ProductCardSkeleton";
 import CategoryBar from "./CategoryBar";
 import SectionHeading from "./SectionHeading";
+import { useCategories } from "@/hooks/useCategories";
+import { useProducts } from "@/hooks/useProducts";
 
 interface ProductsSectionProps {
   /** Section heading eyebrow text */
@@ -36,31 +35,17 @@ const ProductsSection = ({
 }: ProductsSectionProps) => {
   const [selectedCategory, setSelectedCategory] = useState(fixedCategoryId ?? "");
 
-  const {
-    data: productsData,
-    isLoading: productsLoading,
-    isError: productsError,
-  } = useQuery({
-    queryKey: ["home-products", { selectedCategory, limit }],
-    queryFn: () =>
-      getProducts({
-        categoryId: selectedCategory || undefined,
-        isPublished: true,
-        limit,
-        page: 1,
-      }),
-    staleTime: 1000 * 60 * 5,
-  });
 
-  const { data: categoriesData } = useQuery<ICategory[]>({
-    queryKey: ["home-categories-flat"],
-    queryFn: () => getCategories({ flat: true }),
-    staleTime: 1000 * 60 * 10,
-    enabled: showCategoryFilter,
-  });
-
-  const products = productsData?.data ?? [];
-  const categories = categoriesData ?? [];
+  const { products, isLoading: productsLoading,
+    isError: productsError, } = useProducts(
+    {
+      categoryId: selectedCategory || undefined,
+      isPublished: true,
+      limit,
+      page: 1,
+    }
+  );
+  const { categories } = useCategories();
 
   return (
     <section className="py-16 bg-white">
