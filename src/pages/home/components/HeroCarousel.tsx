@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import carouselImg from "@/assets/carouselImg.png"
+import carouselImg2 from "@/assets/carouselImg2.png"
 
 interface HeroSlide {
   id: number;
@@ -13,6 +14,7 @@ interface HeroSlide {
   bg: string;
   accentBg: string;
   textDark: boolean;
+  img: string;
 }
 
 const SLIDES: HeroSlide[] = [
@@ -26,6 +28,7 @@ const SLIDES: HeroSlide[] = [
     bg: "bg-gradient-to-br from-[#F5EFE7] via-[#EDE0D0] to-[#E8D8C4]",
     accentBg: "from-[#C6A46C]/20 to-transparent",
     textDark: true,
+    img: carouselImg
   },
   {
     id: 2,
@@ -37,6 +40,7 @@ const SLIDES: HeroSlide[] = [
     bg: "bg-gradient-to-br from-[#2A1F14] via-[#3D2B1F] to-[#4A3525]",
     accentBg: "from-[#C6A46C]/30 to-transparent",
     textDark: false,
+    img: carouselImg
   },
   {
     id: 3,
@@ -48,6 +52,7 @@ const SLIDES: HeroSlide[] = [
     bg: "bg-gradient-to-br from-[#F0E6DA] via-[#E8DDD0] to-[#EDE3D8]",
     accentBg: "from-[#B8936A]/25 to-transparent",
     textDark: true,
+    img: carouselImg2
   },
 ];
 
@@ -133,11 +138,11 @@ const HeroCarousel = () => {
         />
         {/* Placeholder label for model image */}
         <div
-          className={`absolute bottom-8 right-12 text-[10px] tracking-[0.25em] uppercase ${
+          className={`absolute ${slide.id === 3 ? "bottom-0" : "bottom-8"} right-12 text-[10px] tracking-[0.25em] uppercase ${
             slide.textDark ? "text-[#C6A46C]/30" : "text-[#C6A46C]/50"
           } hidden md:block`}
         >
-          <img src={carouselImg} alt="" />
+          <img src={slide.img} alt="" />
         </div>
       </div>
 
