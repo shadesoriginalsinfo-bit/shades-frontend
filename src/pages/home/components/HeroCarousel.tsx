@@ -194,7 +194,7 @@ const HeroCarousel = () => {
 
         {/* CTAs */}
         <div
-          className="flex flex-wrap items-center gap-4 mt-8"
+          className="flex flex-wrap items-center gap-4 mt-8 mb-6 md:mb-0"
           style={{ animationDelay: "0.28s", animation: "heroFadeUp 0.65s ease both" }}
         >
           <Link
@@ -221,7 +221,7 @@ const HeroCarousel = () => {
       <button
         onClick={prev}
         aria-label="Previous slide"
-        className="absolute left-3 sm:left-5 top-1/2 -translate-y-1/2 z-20 w-10 h-10 flex items-center justify-center bg-white/80 hover:bg-[#C6A46C] hover:text-white text-[#C6A46C] rounded-full shadow-md transition-all duration-200 backdrop-blur-sm"
+        className="hidden md:flex absolute left-3 sm:left-5 top-1/2 -translate-y-1/2 z-20 w-10 h-10 items-center justify-center bg-white/80 hover:bg-[#C6A46C] hover:text-white text-[#C6A46C] rounded-full shadow-md transition-all duration-200 backdrop-blur-sm"
       >
         <ChevronLeft size={18} />
       </button>
@@ -230,7 +230,7 @@ const HeroCarousel = () => {
       <button
         onClick={next}
         aria-label="Next slide"
-        className="absolute right-3 sm:right-5 top-1/2 -translate-y-1/2 z-20 w-10 h-10 flex items-center justify-center bg-white/80 hover:bg-[#C6A46C] hover:text-white text-[#C6A46C] rounded-full shadow-md transition-all duration-200 backdrop-blur-sm"
+        className="hidden md:flex absolute right-3 sm:right-5 top-1/2 -translate-y-1/2 z-20 w-10 h-10 items-center justify-center bg-white/80 hover:bg-[#C6A46C] hover:text-white text-[#C6A46C] rounded-full shadow-md transition-all duration-200 backdrop-blur-sm"
       >
         <ChevronRight size={18} />
       </button>

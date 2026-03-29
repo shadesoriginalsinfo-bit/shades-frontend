@@ -83,6 +83,11 @@ export async function getProducts(params?: IProductQuery): Promise<IProductsResp
   return data;
 }
 
+export async function getProductById(id: string): Promise<IProduct> {
+  const { data } = await axios.get(`/products/${id}`);
+  return data.data;
+}
+
 export async function createProduct(payload: ICreateProduct): Promise<IProduct> {
   const { data } = await axios.post("/products", payload);
   return data.data;

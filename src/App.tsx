@@ -14,6 +14,7 @@ import OrdersPage from "./pages/admin/orders";
 import UsersPage from "./pages/admin/users";
 import ProductsPage from "./pages/admin/products";
 import ShopPage from "./pages/shop";
+import ProductDetailPage from "./pages/product-detail/ProductDetailPage";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/" element={<HomePage />} />
         <Route path="/shop" element={<ShopPage />} />
+        <Route path="/product/:id" element={<ProductDetailPage />} />
 
         <Route element={<ProtectedRoute />}>
             {/* <Route path="/cart" element={<CartPage />} /> */}

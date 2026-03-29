@@ -96,7 +96,7 @@ const LoginPage = () => {
               <Input
                 name="mobileNumber"
                 type="number"
-                placeholder="you@example.com"
+                placeholder="Enter Mobile Number"
                 value={form.mobileNumber}
                 onChange={handleOnChange}
                 disabled={LoginMutation.isPending}
@@ -112,7 +112,7 @@ const LoginPage = () => {
               </label>
               <PasswordInput
                 name="password"
-                placeholder="••••••••"
+                placeholder="Enter Password"
                 value={form.password}
                 onChange={handleOnChange}
                 disabled={LoginMutation.isPending}
