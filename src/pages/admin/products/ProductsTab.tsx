@@ -1,13 +1,11 @@
 import { useState } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Package, BarChart2, ImagePlus, Pencil, Trash2 } from "lucide-react";
 import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
 import { handleApiError } from "@/utils/handleApiError";
 import type { ICreateProduct, IProduct, IUpdateProduct } from "@/types/product";
 import {
-  getProducts,
-  getCategories,
   createProduct,
   updateProduct,
   deleteProduct,
@@ -22,6 +20,8 @@ import ProductFormModal, { emptyProductForm, type ProductForm } from "./componen
 import StockModal from "./components/StockModal";
 import ImagesModal, { type ImageForm } from "./components/ImagesModal";
 import ConfirmDeleteModal from "./components/ConfirmDeleteModal";
+import { useCategories } from "@/hooks/useCategories";
+import { PRODUCTS_QUERY_KEY, useProducts } from "@/hooks/useProducts";
 
 const LIMIT = 10;
 
@@ -47,34 +47,24 @@ const ProductsTab = () => {
   const [stockValue, setStockValue] = useState("");
   const [imageForm, setImageForm] = useState<ImageForm>({ url: "", altText: "", position: "" });
 
-  // Queries
-  const productsQuery = useQuery({
-    queryKey: ["admin-products", { debouncedSearch, categoryFilter, showUnpublished, page }],
-    queryFn: () =>
-      getProducts({
-        search: debouncedSearch || undefined,
-        categoryId: categoryFilter || undefined,
-        isPublished: showUnpublished ? false : undefined,
-        page,
-        limit: LIMIT,
-      }),
-  });
 
-  const categoriesQuery = useQuery({
-    queryKey: ["admin-categories-flat"],
-    queryFn: () => getCategories({ flat: true }),
-  });
-
-  const products = productsQuery.data?.data ?? [];
-  const meta = productsQuery.data?.meta;
-  const categories = categoriesQuery.data ?? [];
+  const { products, meta, isLoading: productsLoading } = useProducts(
+    {
+      search: debouncedSearch || undefined,
+      categoryId: categoryFilter || undefined,
+      isPublished: showUnpublished ? false : undefined,
+      page,
+      limit: LIMIT,
+    }
+  );
+  const { categories } = useCategories();
 
   // Mutations
   const createMutation = useMutation({
     mutationFn: (payload: ICreateProduct) => createProduct(payload),
     onSuccess: () => {
       toast.success("Product created");
-      queryClient.invalidateQueries({ queryKey: ["admin-products"] });
+      queryClient.invalidateQueries({ queryKey: [PRODUCTS_QUERY_KEY] });
       setShowCreate(false);
       setForm(emptyProductForm());
     },
@@ -86,7 +76,7 @@ const ProductsTab = () => {
       updateProduct(id, payload),
     onSuccess: () => {
       toast.success("Product updated");
-      queryClient.invalidateQueries({ queryKey: ["admin-products"] });
+      queryClient.invalidateQueries({ queryKey: [PRODUCTS_QUERY_KEY] });
       setEditingProduct(null);
     },
     onError: handleApiError,
@@ -96,7 +86,7 @@ const ProductsTab = () => {
     mutationFn: (id: string) => deleteProduct(id),
     onSuccess: () => {
       toast.success("Product deleted");
-      queryClient.invalidateQueries({ queryKey: ["admin-products"] });
+      queryClient.invalidateQueries({ queryKey: [PRODUCTS_QUERY_KEY] });
       setDeletingProduct(null);
     },
     onError: handleApiError,
@@ -106,7 +96,7 @@ const ProductsTab = () => {
     mutationFn: ({ id, stock }: { id: string; stock: number }) => updateProductStock(id, stock),
     onSuccess: () => {
       toast.success("Stock updated");
-      queryClient.invalidateQueries({ queryKey: ["admin-products"] });
+      queryClient.invalidateQueries({ queryKey: [PRODUCTS_QUERY_KEY] });
       setStockProduct(null);
     },
     onError: handleApiError,
@@ -122,7 +112,7 @@ const ProductsTab = () => {
     }) => addProductImage(productId, payload),
     onSuccess: () => {
       toast.success("Image added");
-      queryClient.invalidateQueries({ queryKey: ["admin-products"] });
+      queryClient.invalidateQueries({ queryKey: [PRODUCTS_QUERY_KEY] });
       setImageForm({ url: "", altText: "", position: "" });
     },
     onError: handleApiError,
@@ -133,7 +123,7 @@ const ProductsTab = () => {
       removeProductImage(productId, imageId),
     onSuccess: () => {
       toast.success("Image removed");
-      queryClient.invalidateQueries({ queryKey: ["admin-products"] });
+      queryClient.invalidateQueries({ queryKey: [PRODUCTS_QUERY_KEY] });
     },
     onError: handleApiError,
   });
@@ -227,13 +217,13 @@ const ProductsTab = () => {
         setCategoryFilter={setCategoryFilter}
         showUnpublished={showUnpublished}
         setShowUnpublished={setShowUnpublished}
-        categories={categoriesQuery.data ?? []}
+        categories={categories ?? []}
         onCreate={() => setShowCreate(true)}
       />
 
       {/* Table */}
       <div className="bg-white border border-[#E8DDD0] overflow-x-auto">
-        {productsQuery.isLoading ? (
+        {productsLoading ? (
           <div className="flex items-center justify-center py-16 text-[#C6A46C]">
             <svg className="animate-spin size-4" viewBox="0 0 24 24" fill="none">
               <circle className="opacity-30" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" />
