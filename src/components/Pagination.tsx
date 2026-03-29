@@ -93,10 +93,10 @@ export const Pagination: React.FC<PaginationProps> = ({
       <div className="hidden md:flex items-center space-x-3 text-sm text-gray-600">
         <div>
           Showing <span className="font-medium text-gray-800">{startItem}</span> to{" "}
-          <span className="font-medium text-gray-800">{endItem}</span>
+          <span className="font-medium text-gray-800">{endItem}</span> of <span className="font-medium text-gray-800">{totalItems}</span>
         </div>
 
-        <div className="flex items-center space-x-2">
+        {onLimitChange && <div className="flex items-center space-x-2">
           <label htmlFor="pageSize" className="text-xs text-gray-500">
             per page
           </label>
@@ -113,7 +113,7 @@ export const Pagination: React.FC<PaginationProps> = ({
               </option>
             ))}
           </select>
-        </div>
+        </div>}
       </div>
 
       {/* Right: Pagination controls */}
@@ -152,7 +152,7 @@ export const Pagination: React.FC<PaginationProps> = ({
                 aria-current={p === currentPage ? "page" : undefined}
                 className={`px-3 py-1 rounded-md text-sm font-medium border cursor-pointer ${
                   p === currentPage
-                    ? "bg-[#1B77BB] text-white border-[#155f96]"
+                    ? "bg-[#C6A46C] text-white border-[#C6A46C]"
                     : "bg-white text-gray-700 hover:bg-gray-100 border-gray-200"
                 }`}
               >
@@ -186,7 +186,7 @@ export const Pagination: React.FC<PaginationProps> = ({
        <div className="flex md:hidden items-center space-x-3 text-sm text-gray-600">
         <div>
           Showing <span className="font-medium text-gray-800">{startItem}</span> to{" "}
-          <span className="font-medium text-gray-800">{endItem}</span>
+          <span className="font-medium text-gray-800">{endItem}</span> of <span className="font-medium text-gray-800">{totalItems}</span>
         </div>
 
         <div className="flex items-center space-x-2">

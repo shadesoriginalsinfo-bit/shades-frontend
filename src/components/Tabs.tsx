@@ -27,12 +27,11 @@ export function Tabs<T extends string>({
           <button
             key={tab.key}
             onClick={() => onChange(tab.key)}
-            className={clsx(
-              "px-4 py-2 font-medium border-b-2 cursor-pointer transition",
+            className={`px-5 py-2 text-[11px] tracking-[0.2em] uppercase font-medium transition-colors border-b-2 -mb-px ${
               isActive
-                ? "border-[#1B77BB] text-[#1B77BB]"
-                : "border-transparent text-gray-500 hover:text-gray-700"
-            )}
+                ? "border-[#C6A46C] text-[#C6A46C] font-semibold"
+                : "border-transparent text-gray-400 hover:text-gray-600"
+            }`}
           >
             {tab.label}
           </button>
