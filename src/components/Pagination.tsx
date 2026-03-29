@@ -24,7 +24,7 @@ export const Pagination: React.FC<PaginationProps> = ({
   showFirstLast = false,
   maxPageButtons = 7,
 }) => {
-  // if (totalPages <= 1) return null;
+  if (totalPages <= 1) return null;
 
   const isFirst = currentPage === 1;
   const isLast = currentPage === totalPages;
@@ -189,7 +189,7 @@ export const Pagination: React.FC<PaginationProps> = ({
           <span className="font-medium text-gray-800">{endItem}</span> of <span className="font-medium text-gray-800">{totalItems}</span>
         </div>
 
-        <div className="flex items-center space-x-2">
+        { onLimitChange && <div className="flex items-center space-x-2">
           <label htmlFor="pageSize" className="text-xs text-gray-500">
             per page
           </label>
@@ -206,7 +206,7 @@ export const Pagination: React.FC<PaginationProps> = ({
               </option>
             ))}
           </select>
-        </div>
+        </div> }
       </div>
     </div>
   );

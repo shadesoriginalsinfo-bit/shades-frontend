@@ -2,7 +2,6 @@ import { PackageSearch } from "lucide-react";
 import { Link } from "react-router-dom";
 import { type IProduct } from "@/types/product";
 import { type ViewMode } from "./ShopToolbar";
-// Reuse home page cards — adjust import path to match your alias setup
 import ProductCard from "@/pages/home/components/ProductCard";
 import ProductCardSkeleton from "@/pages/home/components/ProductCardSkeleton";
 import ProductListCard from "./ProductListCard";

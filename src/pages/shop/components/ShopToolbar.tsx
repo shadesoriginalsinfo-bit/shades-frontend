@@ -6,7 +6,7 @@ export type SortOption =
   | "newest"
   | "price_asc"
   | "price_desc"
-  | "discount";
+  // | "discount";
 
 export type ViewMode = "grid" | "list";
 
@@ -14,7 +14,7 @@ const SORT_OPTIONS: { value: SortOption; label: string }[] = [
   { value: "newest",     label: "Newest First" },
   { value: "price_asc",  label: "Price: Low → High" },
   { value: "price_desc", label: "Price: High → Low" },
-  { value: "discount",   label: "Best Discount" },
+  // { value: "discount",   label: "Best Discount" },
 ];
 
 interface ShopToolbarProps {

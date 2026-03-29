@@ -1,7 +1,7 @@
 const ProductCardSkeleton = () => (
   <div className="bg-white border border-[#E8DDD0] rounded-sm overflow-hidden animate-pulse">
     {/* Image placeholder */}
-    <div className="aspect-[3/4] bg-gradient-to-b from-[#F0E8DC] to-[#EDE0D0]" />
+    <div className="aspect-3/4 bg-gradient-to-b from-[#F0E8DC] to-[#EDE0D0]" />
 
     {/* Info placeholder */}
     <div className="p-4 space-y-3">

@@ -25,7 +25,7 @@ const ProductListCard = ({ product }: ProductListCardProps) => {
   const category = product.productCategories[0]?.category;
 
   return (
-    <article className="group flex gap-4 md:gap-6 bg-white border border-[#E8DDD0] hover:border-[#C6A46C]/60 hover:shadow-[0_6px_28px_rgba(198,164,108,0.12)] transition-all duration-300 rounded-sm overflow-hidden p-3 md:p-4">
+    <Link to={`/product/${product.id}`} className="group flex gap-4 md:gap-6 bg-white border border-[#E8DDD0] hover:border-[#C6A46C]/60 hover:shadow-[0_6px_28px_rgba(198,164,108,0.12)] transition-all duration-300 rounded-sm overflow-hidden p-3 md:p-4">
       {/* Image */}
       <div className="relative w-28 md:w-36 aspect-[3/4] rounded-sm overflow-hidden bg-[#F5EFE7] shrink-0">
         {primaryImage ? (
@@ -120,7 +120,7 @@ const ProductListCard = ({ product }: ProductListCardProps) => {
           </Link>
         </div>
       </div>
-    </article>
+    </Link>
   );
 };
 

@@ -4,63 +4,30 @@ import Header from "@/pages/home/components/Header";
 import Footer from "@/pages/home/components/Footer";
 import ShopBanner from "./components/Banner";
 import ShopFilters, { type FilterState } from "./components/Filters";
-import ShopToolbar, { type SortOption, type ViewMode } from "./components/ShopToolbar";
+import ShopToolbar, {
+  type SortOption,
+  type ViewMode,
+} from "./components/ShopToolbar";
 import ProductGrid from "./components/ProductGrid";
-import ShopPagination from "./components/ShopPagination";
 import { useProducts } from "@/hooks/useProducts";
 import { useCategories } from "@/hooks/useCategories";
 import { useDebounce } from "@/hooks/useDebounce";
-
-const PAGE_LIMIT = 12;
-
-const DEFAULT_FILTERS: FilterState = {
-  categoryId: "",
-  minPrice: "",
-  maxPrice: "",
-  inStock: false,
-};
-
-/* ─── Sort helper ────────────────────────────────────────────────────── */
-/**
- * Client-side sort since the API may not support all sort options.
- * Swap with server-side sort params if your API supports it.
- */
-function applySortToApi(sort: SortOption): Partial<{
-  sortBy: string;
-  sortOrder: "asc" | "desc";
-}> {
-  switch (sort) {
-    case "price_asc":
-      return { sortBy: "discountPrice", sortOrder: "asc" };
-    case "price_desc":
-      return { sortBy: "discountPrice", sortOrder: "desc" };
-    case "newest":
-      return { sortBy: "createdAt", sortOrder: "desc" };
-    case "discount":
-      return { sortBy: "discount", sortOrder: "desc" };
-    default:
-      return {};
-  }
-}
-
-/* ─────────────────────────────────────────────────────────────────────── */
+import { applySortToApi, DEFAULT_FILTERS, PAGE_LIMIT } from "./constants";
+import { Pagination } from "@/components/Pagination";
 
 const ShopPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  /* ── Read initial state from URL ── */
-  const urlSearch   = searchParams.get("search")   ?? "";
-  const urlCategory = searchParams.get("category") ?? "";  // category slug
-  const urlPage     = Number(searchParams.get("page") ?? "1");
+  const urlSearch = searchParams.get("search") ?? "";
+  const urlCategory = searchParams.get("category") ?? "";
+  const urlPage = Number(searchParams.get("page") ?? "1");
 
-  /* ── Local UI state ── */
-  const [search, setSearch]         = useState(urlSearch);
-  const [page, setPage]             = useState(urlPage);
-  const [sort, setSort]             = useState<SortOption>("newest");
-  const [view, setView]             = useState<ViewMode>("grid");
+  const [search, setSearch] = useState(urlSearch);
+  const [page, setPage] = useState(urlPage);
+  const [sort, setSort] = useState<SortOption>("newest");
+  const [view, setView] = useState<ViewMode>("grid");
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
 
-  /* ── Filters (category comes from URL slug — resolved to ID below) ── */
   const [filters, setFilters] = useState<FilterState>({
     ...DEFAULT_FILTERS,
     categoryId: "", // will be resolved once categories load
@@ -68,7 +35,6 @@ const ShopPage = () => {
 
   const debouncedSearch = useDebounce(search, 600);
 
-  /* ── Data hooks ── */
   const { categories, isLoading: categoriesLoading } = useCategories();
 
   /* Resolve category slug → id on first load */
@@ -84,15 +50,15 @@ const ShopPage = () => {
   const syncUrl = useCallback(
     (newSearch: string, newPage: number, newCategoryId: string) => {
       const params: Record<string, string> = {};
-      if (newSearch)     params.search   = newSearch;
-      if (newPage > 1)   params.page     = String(newPage);
+      if (newSearch) params.search = newSearch;
+      if (newPage > 1) params.page = String(newPage);
       if (newCategoryId) {
         const cat = categories.find((c) => c.id === newCategoryId);
         if (cat) params.category = cat.slug;
       }
       setSearchParams(params, { replace: true });
     },
-    [categories, setSearchParams]
+    [categories, setSearchParams],
   );
 
   /* Update URL whenever relevant state changes */
@@ -117,15 +83,14 @@ const ShopPage = () => {
     setPage(1);
   };
 
-  /* ── Build API query params ── */
   const sortParams = applySortToApi(sort);
 
   const { products, meta, isLoading, isFetching, isError } = useProducts({
-    search:     debouncedSearch || undefined,
+    search: debouncedSearch || undefined,
     categoryId: filters.categoryId || undefined,
-    minPrice:   filters.minPrice ? Number(filters.minPrice) : undefined,
-    maxPrice:   filters.maxPrice ? Number(filters.maxPrice) : undefined,
-    inStock:    filters.inStock ? true : undefined,
+    minPrice: filters.minPrice ? Number(filters.minPrice) : undefined,
+    maxPrice: filters.maxPrice ? Number(filters.maxPrice) : undefined,
+    inStock: filters.inStock ? true : undefined,
     isPublished: true,
     page,
     limit: PAGE_LIMIT,
@@ -139,7 +104,6 @@ const ShopPage = () => {
 
   return (
     <div className="min-h-screen bg-[#FDFAF7] font-sans antialiased">
-      {/* Sticky header */}
       <Header />
 
       {/* Hero banner — search/category context */}
@@ -152,8 +116,6 @@ const ShopPage = () => {
       {/* Main layout: sidebar + content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-10">
         <div className="flex gap-7 lg:gap-9 items-start">
-
-          {/* ── Sidebar filters (desktop) / drawer (mobile) ── */}
           <ShopFilters
             categories={categories}
             filters={filters}
@@ -170,7 +132,10 @@ const ShopPage = () => {
               search={search}
               onSearchChange={handleSearchChange}
               sort={sort}
-              onSortChange={(s) => { setSort(s); setPage(1); }}
+              onSortChange={(s) => {
+                setSort(s);
+                setPage(1);
+              }}
               view={view}
               onViewChange={setView}
               filters={filters}
@@ -192,8 +157,11 @@ const ShopPage = () => {
 
             {/* Pagination */}
             {meta && (
-              <ShopPagination
-                meta={meta}
+              <Pagination
+                currentPage={meta.page}
+                totalPages={meta.totalPages}
+                totalItems={meta.total}
+                pageSize={PAGE_LIMIT}
                 onPageChange={(p) => {
                   setPage(p);
                   window.scrollTo({ top: 0, behavior: "smooth" });

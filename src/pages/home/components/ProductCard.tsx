@@ -28,30 +28,35 @@ const ProductCard = ({ product }: ProductCardProps) => {
   return (
     <article className="group relative bg-white border border-[#E8DDD0] hover:border-[#C6A46C]/60 hover:shadow-[0_8px_32px_rgba(198,164,108,0.14)] transition-all duration-300 rounded-sm overflow-hidden flex flex-col">
       {/* ─── Image block ─── */}
-      <div className="relative overflow-hidden aspect-[3/4] bg-[#F5EFE7] shrink-0">
+      <div className="relative overflow-hidden aspect-3/4 bg-[#F5EFE7] shrink-0">
         {primaryImage ? (
           <>
-            <img
-              src={primaryImage.url}
-              alt={primaryImage.altText ?? product.title}
-              className={`absolute inset-0 w-full h-full object-cover transition-all duration-500 ${
-                hoverImage
-                  ? "group-hover:opacity-0"
-                  : "group-hover:scale-105"
-              }`}
-            />
-            {hoverImage && (
+            <Link to={`/product/${product.id}`} className="absolute inset-0">
               <img
-                src={hoverImage.url}
-                alt={hoverImage.altText ?? product.title}
-                className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-500 scale-[1.03]"
+                src={primaryImage.url}
+                alt={primaryImage.altText ?? product.title}
+                className={`absolute inset-0 w-full h-full object-cover transition-all duration-500 ${
+                  hoverImage
+                    ? "group-hover:opacity-0"
+                    : "group-hover:scale-105"
+                }`}
               />
+            </Link>
+            
+            {hoverImage && (
+              <Link to={`/product/${product.id}`} className="absolute inset-0">
+                <img
+                  src={hoverImage.url}
+                  alt={hoverImage.altText ?? product.title}
+                  className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-500 scale-[1.03]"
+                />
+              </Link>
             )}
           </>
         ) : (
-          <div className="absolute inset-0 flex items-center justify-center">
+          <Link to={`/product/${product.id}`} className="absolute inset-0 flex items-center justify-center">
             <ShoppingBag size={44} className="text-[#C6A46C]/25" />
-          </div>
+          </Link>
         )}
 
         {/* Badges */}
@@ -118,30 +123,30 @@ const ProductCard = ({ product }: ProductCardProps) => {
 
         {/* Title */}
         <Link to={`/product/${product.id}`} className="flex-1">
-          <h3 className="text-sm font-medium text-gray-800 line-clamp-2 font-serif leading-snug hover:text-[#C6A46C] transition-colors">
+          <h3 className="text-sm font-medium text-gray-800 line-clamp-2 font-serif leading-snug">
             {product.title}
           </h3>
         </Link>
 
         {/* Short description if available */}
-        {product.shortDesc && (
+        {/* {product.shortDesc && (
           <p className="text-xs text-gray-400 line-clamp-1 mt-1 tracking-wide">
             {product.shortDesc}
           </p>
-        )}
+        )} */}
 
         {/* Price row */}
-        <div className="flex items-baseline gap-2 mt-3">
-          <span className="text-base font-semibold text-[#3D2B1F] tracking-tight">
+        <div className="flex items-baseline gap-1 md:gap-2 mt-3">
+          <span className="text-[15px] md:text-base font-semibold text-[#3D2B1F] tracking-tight">
             {formatINR(finalPrice)}
           </span>
           {product.discountPrice && (
-            <span className="text-sm text-gray-400 line-through font-normal">
+            <span className="text-[11px] md:text-sm text-gray-400 line-through font-normal">
               {formatINR(product.marketPrice)}
             </span>
           )}
           {discount && (
-            <span className="text-xs text-emerald-600 font-medium ml-auto">
+            <span className="text-[11px] md:text-xs text-emerald-600 font-medium ml-auto">
               Save {formatINR(product.marketPrice - finalPrice)}
             </span>
           )}
