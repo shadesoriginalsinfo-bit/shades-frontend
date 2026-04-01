@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Users, ChevronDown, X, Pencil, Trash2, RotateCcw, ShieldCheck, User } from "lucide-react";
+import { Users, ChevronDown, X, Trash2, RotateCcw, ShieldCheck, User } from "lucide-react";
 import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
 import { Pagination } from "@/components/Pagination";
@@ -62,7 +62,7 @@ interface EditModalProps {
 
 function EditModal({ user, onClose, onSave, isPending }: EditModalProps) {
   const [name, setName] = useState(user?.name ?? "");
-  const [role, setRole] = useState<Role>(user?.role ?? "USER");
+  // const [role, setRole] = useState<Role>(user?.role ?? "USER");
 
   if (!user) return null;
 
@@ -70,7 +70,7 @@ function EditModal({ user, onClose, onSave, isPending }: EditModalProps) {
     e.preventDefault();
     const payload: { name?: string; role?: Role } = {};
     if (name.trim() && name.trim() !== user.name) payload.name = name.trim();
-    if (role !== user.role) payload.role = role;
+    // if (role !== user.role) payload.role = role;
     if (Object.keys(payload).length === 0) {
       onClose();
       return;
@@ -101,7 +101,7 @@ function EditModal({ user, onClose, onSave, isPending }: EditModalProps) {
               className="w-full border border-[#E8DDD0] px-3 py-2 text-sm text-gray-700 focus:outline-none focus:border-[#C6A46C]"
             />
           </div>
-          <div className="space-y-1.5">
+          {/* <div className="space-y-1.5">
             <label className="text-[10px] tracking-[0.15em] uppercase text-[#C6A46C]/80 font-medium">
               Role
             </label>
@@ -116,7 +116,7 @@ function EditModal({ user, onClose, onSave, isPending }: EditModalProps) {
               </select>
               <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 size-3.5 text-gray-400" />
             </div>
-          </div>
+          </div> */}
           <div className="flex gap-2 pt-2">
             <Button type="button" variant="outline" onClick={onClose} className="flex-1 border-[#E8DDD0]">
               Cancel
@@ -143,7 +143,11 @@ interface DetailModalProps {
   onEdit: (user: IAdminUser) => void;
 }
 
-function DetailModal({ userId, onClose, onEdit }: DetailModalProps) {
+function DetailModal({ 
+  userId, 
+  onClose, 
+  // onEdit 
+}: DetailModalProps) {
   const { data, isLoading } = useQuery({
     queryKey: ["admin-user-detail", userId],
     queryFn: () => adminGetUser(userId!),
@@ -210,7 +214,7 @@ function DetailModal({ userId, onClose, onEdit }: DetailModalProps) {
                 })}
               </p>
             </div>
-            <div className="pt-1">
+            {/* <div className="pt-1">
               <Button
                 variant="outline"
                 onClick={() => { onClose(); onEdit(user); }}
@@ -219,7 +223,7 @@ function DetailModal({ userId, onClose, onEdit }: DetailModalProps) {
                 <Pencil className="size-3 mr-1.5" />
                 Edit User
               </Button>
-            </div>
+            </div> */}
           </div>
         ) : (
           <p className="px-6 py-8 text-sm text-gray-400 text-center">User not found</p>
@@ -469,7 +473,7 @@ const UsersPage = () => {
                       >
                         View
                       </Button>
-                      <Button
+                      {/* <Button
                         size="sm"
                         variant="outline"
                         onClick={() => setEditUser(user)}
@@ -477,7 +481,7 @@ const UsersPage = () => {
                         title="Edit"
                       >
                         <Pencil className="size-3.5" />
-                      </Button>
+                      </Button> */}
                       {user.isDeleted ? (
                         <Button
                           size="sm"

@@ -129,12 +129,20 @@ const LoginPage = () => {
             {/* Forgot password */}
             <div className="text-right -mt-5">
               <Link
+                to="/"
+                className="text-[11px] tracking-wider text-[#B8936A] hover:text-[#C6A46C] transition-colors underline underline-offset-2"
+              >
+                Go Back Home?
+              </Link>
+            </div>
+            {/* <div className="text-right -mt-5">
+              <Link
                 to="/forgot-password"
                 className="text-[11px] tracking-wider text-[#B8936A] hover:text-[#C6A46C] transition-colors underline underline-offset-2"
               >
                 Forgot password?
               </Link>
-            </div>
+            </div> */}
 
             {/* Submit */}
             <Button
