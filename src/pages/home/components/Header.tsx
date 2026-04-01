@@ -90,7 +90,7 @@ const Header = () => {
   const location = useLocation();
   const navigate = useNavigate();
   
-  const cartCount = 2;
+  // const cartCount = 2;
   const avatar = user?.avatar ? user.avatar : dummyAvatar;
 
   return (
@@ -119,7 +119,7 @@ const Header = () => {
             <div className="flex items-center gap-2 shrink-0">
               {/* Search */}
 
-              <div className="flex items-center gap-1 border border-[#c4b9a5] rounded-md">
+              {location.pathname !== "/shop" && <div className="flex items-center gap-1 border border-[#c4b9a5] rounded-md">
                 <input
                   type="text"
                   value={searchQuery}
@@ -138,7 +138,7 @@ const Header = () => {
                 >
                   <Search size={17} />
                 </button>
-              </div>
+              </div>}
 
               {!isLoading && user ? (
                 <Link
@@ -158,7 +158,7 @@ const Header = () => {
               )}
 
               {/* Cart */}
-              <Link
+              {/* <Link
                 to="/cart"
                 className="relative flex items-center gap-2 bg-[#1a1a1a] text-white text-xs px-4 py-2.5 hover:bg-[#C6A46C] transition-all duration-200 tracking-wider rounded-sm"
               >
@@ -169,7 +169,7 @@ const Header = () => {
                     {cartCount}
                   </span>
                 )}
-              </Link>
+              </Link> */}
 
               {/* Mobile menu toggle */}
               <button

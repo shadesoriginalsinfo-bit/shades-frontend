@@ -2,7 +2,7 @@ import type { IRegisterUser, IUserProfile } from "@/types/user";
 import type { ICategory, ICreateCategory, IUpdateCategory } from "@/types/category";
 import type { ICreateProduct, IProduct, IProductQuery, IProductsResponse, IUpdateProduct } from "@/types/product";
 import type { IAddress, ICreateAddress } from "@/types/address";
-import type { IOrder } from "@/types/order";
+import type { IAdminOrderQuery, IOrder, IOrdersResponse } from "@/types/order";
 import axios from "./axios";
 
 
@@ -144,5 +144,15 @@ export async function createOrder(payload: {
   items: { productId: string; quantity: number }[];
 }): Promise<IOrder> {
   const { data } = await axios.post("/orders", payload);
+  return data.data;
+}
+
+export async function adminGetOrders(params?: IAdminOrderQuery): Promise<IOrdersResponse> {
+  const { data } = await axios.get("/orders/admin/all", { params });
+  return data;
+}
+
+export async function adminUpdateOrderStatus(id: string, status: string): Promise<IOrder> {
+  const { data } = await axios.patch(`/orders/admin/${id}/status`, { status });
   return data.data;
 }

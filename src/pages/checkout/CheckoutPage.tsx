@@ -12,8 +12,8 @@ import Footer from "../home/components/Footer";
 
 // Keep these in sync with backend constants
 const TAX_RATE = 0.18;
-const SHIPPING_FREE_THRESHOLD = 999;
-const SHIPPING_FLAT = 99;
+const SHIPPING_FREE_THRESHOLD = 500;
+const SHIPPING_FLAT = 50;
 
 const formatINR = (amount: number) => `₹${amount.toLocaleString("en-IN")}`;
 

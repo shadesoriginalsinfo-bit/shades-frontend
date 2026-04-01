@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
-  Heart,
+  // Heart,
   // ShoppingBag,
-  Share2,
+  // Share2,
   ChevronDown,
   ChevronUp,
   Truck,
@@ -60,7 +60,7 @@ const Accordion = ({ label, defaultOpen = false, children }: AccordionProps) => 
 /* ── Main component ─────────────────────────────────────────────────── */
 const ProductInfo = ({ product }: ProductInfoProps) => {
   const [qty, setQty] = useState(1);
-  const [wishlisted, setWishlisted] = useState(false);
+  // const [wishlisted, setWishlisted] = useState(false);
   const navigate = useNavigate();
   const { data: user, isLoading: authLoading } = useAuthUser();
 
@@ -85,13 +85,13 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
   const isLowStock = !isOutOfStock && product.stock <= 5;
   const category = product.productCategories[0]?.category;
 
-  const handleShare = async () => {
-    try {
-      await navigator.share({ title: product.title, url: window.location.href });
-    } catch {
-      navigator.clipboard.writeText(window.location.href);
-    }
-  };
+  // const handleShare = async () => {
+  //   try {
+  //     await navigator.share({ title: product.title, url: window.location.href });
+  //   } catch {
+  //     navigator.clipboard.writeText(window.location.href);
+  //   }
+  // };
 
   return (
     <div className="space-y-5">
@@ -232,7 +232,7 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
         </button> */}
 
         {/* Wishlist */}
-        <button
+        {/* <button
           onClick={() => setWishlisted((w) => !w)}
           aria-label={wishlisted ? "Remove from wishlist" : "Add to wishlist"}
           className={`w-12 flex items-center justify-center border rounded-sm transition-all duration-200 ${
@@ -242,16 +242,16 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
           }`}
         >
           <Heart size={16} fill={wishlisted ? "currentColor" : "none"} />
-        </button>
+        </button> */}
 
         {/* Share */}
-        <button
+        {/* <button
           onClick={handleShare}
           aria-label="Share product"
           className="w-12 flex items-center justify-center border border-[#E8DDD0] text-gray-400 hover:border-[#C6A46C] hover:text-[#C6A46C] hover:bg-[#F5EFE7] rounded-sm transition-all duration-200"
         >
           <Share2 size={15} />
-        </button>
+        </button> */}
       </div>
 
       {/* ── Buy now ── */}
