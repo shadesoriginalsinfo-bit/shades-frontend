@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 import logo from "@/assets/transparentLogo.png";
 import { useState } from "react";
 import { PasswordInput } from "@/components/PasswordInput";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { login } from "@/lib/api";
 import { handleApiError } from "@/utils/handleApiError";
@@ -19,6 +19,7 @@ interface ILoginForm {
 
 const LoginPage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [form, setForm] = useState<ILoginForm>({ mobileNumber: "", password: "" });
 
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -30,7 +31,12 @@ const LoginPage = () => {
     mutationFn: login,
     onSuccess: (data) => {
       toast.success("Login Successful");
-      if(data.role === Role.ADMIN){
+      const state = location.state as { from?: string; checkoutState?: unknown } | null;
+      if (state?.from) {
+        navigate(state.from, { state: state.checkoutState, replace: true });
+        return;
+      }
+      if (data.role === Role.ADMIN) {
         navigate("/admin/dashboard");
         return;
       }

@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Heart,
-  ShoppingBag,
+  // ShoppingBag,
   Share2,
   ChevronDown,
   ChevronUp,
@@ -14,6 +14,7 @@ import {
   Plus,
 } from "lucide-react";
 import { type IProduct } from "@/types/product";
+import { useAuthUser } from "@/hooks/useAuth";
 
 interface ProductInfoProps {
   product: IProduct;
@@ -60,6 +61,17 @@ const Accordion = ({ label, defaultOpen = false, children }: AccordionProps) => 
 const ProductInfo = ({ product }: ProductInfoProps) => {
   const [qty, setQty] = useState(1);
   const [wishlisted, setWishlisted] = useState(false);
+  const navigate = useNavigate();
+  const { data: user, isLoading: authLoading } = useAuthUser();
+
+  const handleBuyNow = () => {
+    const checkoutState = { product, quantity: qty };
+    if (user) {
+      navigate("/checkout", { state: checkoutState });
+    } else {
+      navigate("/login", { state: { from: "/checkout", checkoutState } });
+    }
+  };
 
   const finalPrice = product.discountPrice ?? product.marketPrice;
   const discount =
@@ -211,13 +223,13 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
       {/* ── Action buttons ── */}
       <div className="flex items-stretch gap-3">
         {/* Add to cart */}
-        <button
+        {/* <button
           disabled={isOutOfStock}
           className="flex-1 flex items-center justify-center gap-2.5 py-3.5 bg-[#1a1a1a] text-white text-xs tracking-[0.2em] uppercase font-medium hover:bg-[#C6A46C] transition-all duration-200 rounded-sm disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_4px_20px_rgba(0,0,0,0.15)]"
         >
           <ShoppingBag size={15} />
           {isOutOfStock ? "Out of Stock" : "Add to Cart"}
-        </button>
+        </button> */}
 
         {/* Wishlist */}
         <button
@@ -244,8 +256,12 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
 
       {/* ── Buy now ── */}
       {!isOutOfStock && (
-        <button className="w-full py-3.5 border border-[#C6A46C] text-[#C6A46C] text-xs tracking-[0.2em] uppercase font-medium hover:bg-[#C6A46C] hover:text-white transition-all duration-200 rounded-sm">
-          Buy Now
+        <button
+          onClick={handleBuyNow}
+          disabled={authLoading}
+          className="w-full py-3.5 border border-[#C6A46C] text-[#C6A46C] text-xs tracking-[0.2em] uppercase font-medium hover:bg-[#C6A46C] hover:text-white transition-all duration-200 rounded-sm disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {authLoading ? "Please wait…" : "Buy Now"}
         </button>
       )}
 

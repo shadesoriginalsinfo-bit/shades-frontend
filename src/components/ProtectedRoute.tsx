@@ -1,7 +1,7 @@
 import { useAuthUser } from "@/hooks/useAuth";
 import LoadingModal from "@/pages/LoadingPage";
 import type { Role } from "@/types/enum";
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
 
 type Props = {
   allowedRoles?: Role[];
@@ -9,12 +9,13 @@ type Props = {
 
 function ProtectedRoute({ allowedRoles }: Props) {
   const { data: user, isLoading } = useAuthUser();
+  const location = useLocation();
 
   if (isLoading) return <LoadingModal />;
 
   // Not logged in
   if (!user) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/login" state={{ from: location.pathname }} replace />;
   }
 
   // Role check (if roles are provided)

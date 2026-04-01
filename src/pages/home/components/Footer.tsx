@@ -108,7 +108,7 @@ const Footer = () => (
       </div>
 
       {/* Newsletter bar */}
-      <div className="py-8 border-b border-white/[0.07] flex flex-col sm:flex-row items-center gap-4 justify-between">
+      {/* <div className="py-8 border-b border-white/[0.07] flex flex-col sm:flex-row items-center gap-4 justify-between">
         <div>
           <p className="text-[10px] tracking-[0.3em] uppercase text-[#C6A46C] mb-1">Newsletter</p>
           <p className="text-xs text-gray-500 tracking-wide">
@@ -125,7 +125,7 @@ const Footer = () => (
             Join
           </button>
         </div>
-      </div>
+      </div> */}
 
       {/* Bottom bar */}
       <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">

@@ -15,6 +15,8 @@ import UsersPage from "./pages/admin/users";
 import ProductsPage from "./pages/admin/products";
 import ShopPage from "./pages/shop";
 import ProductDetailPage from "./pages/product-detail/ProductDetailPage";
+import CheckoutPage from "./pages/checkout/CheckoutPage";
+import OrderSuccessPage from "./pages/order-success/OrderSuccessPage";
 
 function App() {
   return (
@@ -31,9 +33,11 @@ function App() {
         <Route path="/product/:id" element={<ProductDetailPage />} />
 
         <Route element={<ProtectedRoute />}>
+            <Route path="/checkout" element={<CheckoutPage />} />
+            <Route path="/order-success" element={<OrderSuccessPage />} />
             {/* <Route path="/cart" element={<CartPage />} /> */}
             {/* <Route path="/my-profile" element={<MyProfile />} /> */}
-            
+
           <Route element={<ProtectedRoute allowedRoles={[Role.ADMIN]} />}>
             <Route element={<AdminDashboardLayout />}>
               <Route path="/admin/dashboard" element={<DashboardPage />} />

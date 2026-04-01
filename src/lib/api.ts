@@ -1,6 +1,8 @@
 import type { IRegisterUser, IUserProfile } from "@/types/user";
 import type { ICategory, ICreateCategory, IUpdateCategory } from "@/types/category";
 import type { ICreateProduct, IProduct, IProductQuery, IProductsResponse, IUpdateProduct } from "@/types/product";
+import type { IAddress, ICreateAddress } from "@/types/address";
+import type { IOrder } from "@/types/order";
 import axios from "./axios";
 
 
@@ -118,5 +120,29 @@ export async function removeProductImage(productId: string, imageId: string) {
 
 export async function updateProductStock(productId: string, stock: number) {
   const { data } = await axios.patch(`/products/${productId}/stock`, { stock });
+  return data.data;
+}
+
+
+// ── Addresses ─────────────────────────────────────────────────────────────────
+
+export async function getAddresses(): Promise<IAddress[]> {
+  const { data } = await axios.get("/addresses");
+  return data.data;
+}
+
+export async function createAddress(payload: ICreateAddress): Promise<IAddress> {
+  const { data } = await axios.post("/addresses", payload);
+  return data.data;
+}
+
+
+// ── Orders ────────────────────────────────────────────────────────────────────
+
+export async function createOrder(payload: {
+  shippingAddressId: string;
+  items: { productId: string; quantity: number }[];
+}): Promise<IOrder> {
+  const { data } = await axios.post("/orders", payload);
   return data.data;
 }
