@@ -1,5 +1,5 @@
-import { Heart, Eye, ShoppingBag } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Eye, ShoppingBag } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 import { type IProduct } from "@/types/product";
 
 interface ProductCardProps {
@@ -24,6 +24,8 @@ const ProductCard = ({ product }: ProductCardProps) => {
 
   const isOutOfStock = product.stock === 0;
   const category = product.productCategories[0]?.category;
+
+  const navigate = useNavigate();
 
   return (
     <article className="group relative bg-white border border-[#E8DDD0] hover:border-[#C6A46C]/60 hover:shadow-[0_8px_32px_rgba(198,164,108,0.14)] transition-all duration-300 rounded-sm overflow-hidden flex flex-col">
@@ -83,12 +85,12 @@ const ProductCard = ({ product }: ProductCardProps) => {
 
         {/* Hover action buttons */}
         <div className="absolute top-3 right-3 flex flex-col gap-2 translate-x-10 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-300">
-          <button
+          {/* <button
             aria-label="Add to wishlist"
             className="w-9 h-9 bg-white rounded-full flex items-center justify-center text-gray-600 hover:bg-[#C6A46C] hover:text-white transition-all shadow-md"
           >
             <Heart size={15} />
-          </button>
+          </button> */}
           <Link
             to={`/product/${product.id}`}
             aria-label="Quick view"
@@ -102,9 +104,10 @@ const ProductCard = ({ product }: ProductCardProps) => {
         <div className="absolute bottom-0 left-0 right-0 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
           <button
             disabled={isOutOfStock}
+            onClick={()=>navigate(`/product/${product.id}`)}
             className="w-full py-3 bg-[#1a1a1a] text-white text-[11px] tracking-[0.2em] uppercase font-medium hover:bg-[#C6A46C] transition-colors duration-200 disabled:opacity-60 disabled:cursor-not-allowed"
           >
-            {isOutOfStock ? "Out of Stock" : "Add to Cart"}
+            {isOutOfStock ? "Out of Stock" : "View"}
           </button>
         </div>
       </div>
