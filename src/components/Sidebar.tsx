@@ -7,6 +7,8 @@ import {
   Settings,
   LogOut,
   ChartColumn,
+  Package,
+  ShoppingCart,
 } from "lucide-react";
 import { useLogout } from "@/hooks/useLogout";
 import LoadingModal from "@/pages/LoadingPage";
@@ -25,21 +27,15 @@ export const navLinks: SidebarItem[] = [
     key: "dashboard",
     path: "/admin/dashboard",
   },
-  // {
-  //   label: "Category",
-  //   icon: <FileText />,
-  //   key: "category",
-  //   path: "/admin/category",
-  // },
   {
     label: "Orders",
-    icon: <ChartColumn />,
+    icon: <ShoppingCart />,
     key: "orders",
     path: "/admin/orders",
   },
   {
     label: "Products",
-    icon: <ChartColumn />,
+    icon: <Package />,
     key: "products",
     path: "/admin/products",
   },

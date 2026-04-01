@@ -1,8 +1,10 @@
-import type { IRegisterUser, IUserProfile } from "@/types/user";
+import type { IAdminUser, IAdminUserDetail, IAdminUserQuery, IAdminUsersResponse, IRegisterUser, IUserProfile } from "@/types/user";
 import type { ICategory, ICreateCategory, IUpdateCategory } from "@/types/category";
 import type { ICreateProduct, IProduct, IProductQuery, IProductsResponse, IUpdateProduct } from "@/types/product";
 import type { IAddress, ICreateAddress } from "@/types/address";
 import type { IAdminOrderQuery, IOrder, IOrdersResponse } from "@/types/order";
+import type { IDashboardData } from "@/types/dashboard";
+import type { Role } from "@/types/enum";
 import axios from "./axios";
 
 
@@ -154,5 +156,41 @@ export async function adminGetOrders(params?: IAdminOrderQuery): Promise<IOrders
 
 export async function adminUpdateOrderStatus(id: string, status: string): Promise<IOrder> {
   const { data } = await axios.patch(`/orders/admin/${id}/status`, { status });
+  return data.data;
+}
+
+
+// ── Admin Users ───────────────────────────────────────────────────────────────
+
+export async function adminGetUsers(params?: IAdminUserQuery): Promise<IAdminUsersResponse> {
+  const { data } = await axios.get("/admin/users", { params });
+  return data;
+}
+
+export async function adminGetUser(id: string): Promise<IAdminUserDetail> {
+  const { data } = await axios.get(`/admin/users/${id}`);
+  return data.data;
+}
+
+export async function adminUpdateUser(id: string, payload: { name?: string; role?: Role }): Promise<IAdminUser> {
+  const { data } = await axios.patch(`/admin/users/${id}`, payload);
+  return data.data;
+}
+
+export async function adminDeleteUser(id: string): Promise<{ message: string }> {
+  const { data } = await axios.delete(`/admin/users/${id}`);
+  return data;
+}
+
+export async function adminRestoreUser(id: string): Promise<IAdminUser> {
+  const { data } = await axios.post(`/admin/users/${id}/restore`);
+  return data.data;
+}
+
+
+// ── Admin Dashboard ───────────────────────────────────────────────────────────
+
+export async function adminGetDashboard(): Promise<IDashboardData> {
+  const { data } = await axios.get("/admin/dashboard");
   return data.data;
 }
