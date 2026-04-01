@@ -58,6 +58,22 @@ export interface IAdminOrder extends IOrder {
   };
 }
 
+export interface IUserOrderQuery {
+  status?: OrderStatus;
+  page?: number;
+  limit?: number;
+}
+
+export interface IUserOrdersResponse {
+  data: IOrder[];
+  meta: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  };
+}
+
 export interface IAdminOrderQuery {
   status?: OrderStatus;
   userId?: string;

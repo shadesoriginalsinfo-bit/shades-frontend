@@ -1,8 +1,8 @@
 import type { IAdminUser, IAdminUserDetail, IAdminUserQuery, IAdminUsersResponse, IRegisterUser, IUserProfile } from "@/types/user";
 import type { ICategory, ICreateCategory, IUpdateCategory } from "@/types/category";
 import type { ICreateProduct, IProduct, IProductQuery, IProductsResponse, IUpdateProduct } from "@/types/product";
-import type { IAddress, ICreateAddress } from "@/types/address";
-import type { IAdminOrderQuery, IOrder, IOrdersResponse } from "@/types/order";
+import type { IAddress, ICreateAddress, IUpdateAddress } from "@/types/address";
+import type { IAdminOrderQuery, IOrder, IOrdersResponse, IUserOrderQuery, IUserOrdersResponse } from "@/types/order";
 import type { IDashboardData } from "@/types/dashboard";
 import type { Role } from "@/types/enum";
 import axios from "./axios";
@@ -138,6 +138,16 @@ export async function createAddress(payload: ICreateAddress): Promise<IAddress> 
   return data.data;
 }
 
+export async function updateAddress(id: string, payload: IUpdateAddress): Promise<IAddress> {
+  const { data } = await axios.patch(`/addresses/${id}`, payload);
+  return data.data;
+}
+
+export async function deleteAddress(id: string): Promise<{ message: string }> {
+  const { data } = await axios.delete(`/addresses/${id}`);
+  return data;
+}
+
 
 // ── Orders ────────────────────────────────────────────────────────────────────
 
@@ -146,6 +156,21 @@ export async function createOrder(payload: {
   items: { productId: string; quantity: number }[];
 }): Promise<IOrder> {
   const { data } = await axios.post("/orders", payload);
+  return data.data;
+}
+
+export async function getUserOrders(params?: IUserOrderQuery): Promise<IUserOrdersResponse> {
+  const { data } = await axios.get("/orders", { params });
+  return data;
+}
+
+export async function getUserOrder(id: string): Promise<IOrder> {
+  const { data } = await axios.get(`/orders/${id}`);
+  return data.data;
+}
+
+export async function cancelOrder(id: string): Promise<IOrder> {
+  const { data } = await axios.post(`/orders/${id}/cancel`);
   return data.data;
 }
 

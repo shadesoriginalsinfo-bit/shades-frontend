@@ -6,7 +6,6 @@ import {
   LucideLayoutDashboard,
   Settings,
   LogOut,
-  ChartColumn,
   Package,
   ShoppingCart,
 } from "lucide-react";

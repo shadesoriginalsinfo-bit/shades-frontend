@@ -142,7 +142,7 @@ const Header = () => {
 
               {!isLoading && user ? (
                 <Link
-                  to="/profile"
+                  to="/my-profile"
                   className="hidden md:flex items-center gap-1.5 text-xs tracking-wider text-gray-600 hover:text-[#c4b9a5] transition-colors border-2 border-[#C6A46C]  w-8 h-8 rounded-full"
                 >
                   <img src={avatar} alt={user.name} className="w-full object-cover rounded-full" />
@@ -202,7 +202,7 @@ const Header = () => {
             <div className="pt-3 flex items-center gap-3">
               {!isLoading && user ? (
                 <Link
-                  to="/profile"
+                  to="/my-profile"
                   className="flex items-center gap-1.5 text-xs tracking-wider text-gray-600 hover:text-[#c4b9a5] transition-colors border-2 border-[#C6A46C]  w-8 h-8 rounded-full"
                 >
                   <img src={avatar} alt={user.name} className="w-full object-cover rounded-full" />

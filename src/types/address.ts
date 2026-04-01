@@ -22,3 +22,5 @@ export interface ICreateAddress {
   postalCode: string;
   isDefault?: boolean;
 }
+
+export type IUpdateAddress = Partial<ICreateAddress>;

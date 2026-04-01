@@ -19,6 +19,7 @@ import { CornerOrnament, GoldDivider, GoldPattern } from "@/components/comps";
 export default function SignupPage() {
   const [form, setForm] = useState<IRegisterForm>(initialFormValue);
   const [tncOpen, setTncOpen] = useState(false);
+  const [tncAccepted, setTncAccepted] = useState(false);
   const navigate = useNavigate();
 
   const registerMutation = useMutation({
@@ -26,7 +27,7 @@ export default function SignupPage() {
     onSuccess: () => {
       setForm(initialFormValue);
       toast.success("Account created successfully");
-      navigate(`/`);
+      navigate(`/login`);
     },
     onError: (err: any) => {
       handleApiError(err);
@@ -52,6 +53,7 @@ export default function SignupPage() {
     if (form.password.length < 8) return toast.error("Password must be at least 8 characters");
     if (!PASSWORD_REGEX.test(form.password)) return toast.error('Password must contain uppercase, lowercase, number and at least one @ _ ! # $ % * special characters');
     if (form.password !== form.confirmPassword) return toast.error("Password & Confirm Password mismatch");
+    if (!tncAccepted) return toast.error("Please accept the Terms and Conditions to continue");
 
     try {
 
@@ -245,7 +247,11 @@ export default function SignupPage() {
 
             {/* Terms */}
             <div className="mt-7">
-              <TandC onOpenModal={() => setTncOpen(true)} />
+              <TandC
+                onOpenModal={() => setTncOpen(true)}
+                checked={tncAccepted}
+                onCheckedChange={setTncAccepted}
+              />
             </div>
 
             <TermsAndConditionsModal open={tncOpen} onOpenChange={setTncOpen} />

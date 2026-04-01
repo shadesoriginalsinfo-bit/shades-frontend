@@ -17,6 +17,7 @@ import ShopPage from "./pages/shop";
 import ProductDetailPage from "./pages/product-detail/ProductDetailPage";
 import CheckoutPage from "./pages/checkout/CheckoutPage";
 import OrderSuccessPage from "./pages/order-success/OrderSuccessPage";
+import MyProfile from "./pages/my-profile";
 
 function App() {
   return (
@@ -36,7 +37,7 @@ function App() {
             <Route path="/checkout" element={<CheckoutPage />} />
             <Route path="/order-success" element={<OrderSuccessPage />} />
             {/* <Route path="/cart" element={<CartPage />} /> */}
-            {/* <Route path="/my-profile" element={<MyProfile />} /> */}
+            <Route path="/my-profile" element={<MyProfile />} />
 
           <Route element={<ProtectedRoute allowedRoles={[Role.ADMIN]} />}>
             <Route element={<AdminDashboardLayout />}>

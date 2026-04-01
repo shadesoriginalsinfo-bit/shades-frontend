@@ -1,13 +1,14 @@
-import React, { useState } from "react";
+import React from "react";
 
 
 interface TandCProps {
-  onOpenModal: () => void
+  onOpenModal: () => void;
+  checked: boolean;
+  onCheckedChange: (checked: boolean) => void;
 }
 
-const TandC: React.FC<TandCProps> = ({ onOpenModal }) => {
+const TandC: React.FC<TandCProps> = ({ onOpenModal, checked, onCheckedChange }) => {
 
-  const [checked, setChecked] = useState(false);
   return (
     <div className="flex flex-col gap-3 text-sm mt-10">
       <label className="flex items-start gap-2">
@@ -15,7 +16,7 @@ const TandC: React.FC<TandCProps> = ({ onOpenModal }) => {
           type="checkbox"
           name="termsAndConditionAccepted"
           checked={checked}
-          onChange={(e)=>setChecked(e.target.checked)}
+          onChange={(e) => onCheckedChange(e.target.checked)}
           className="mt-1"
         />
         <span>
