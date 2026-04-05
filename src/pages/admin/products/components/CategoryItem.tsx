@@ -23,10 +23,15 @@ const CategoryItem = ({ category, depth, onEdit, onDelete }: Props) => (
         <p className="text-[11px] text-gray-400 font-mono">{category.slug}</p>
       </div>
       {category.description && (
-        <p className="text-xs text-gray-400 hidden md:block truncate max-w-52">
+        <p className="text-xs text-gray-400 hidden md:block truncate max-w-52 min-w-28 pr-4">
           {category.description}
         </p>
       )}
+
+      <p className="text-xs text-gray-400 hidden md:block truncate min-w-12">
+          {category.sortOrder}
+        </p>
+
       <div className="flex items-center gap-1 flex-shrink-0">
         <Button size="icon-xs" variant="ghost" onClick={() => onEdit(category)}>
           <Pencil className="size-3.5" />

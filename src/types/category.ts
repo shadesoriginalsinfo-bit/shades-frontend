@@ -3,6 +3,7 @@ export interface ICategory {
   name: string;
   slug: string;
   description?: string | null;
+  sortOrder: number;
   createdAt: string;
   updatedAt: string;
   isDeleted: boolean;
@@ -12,13 +13,13 @@ export interface ICategory {
 export interface ICreateCategory {
   name: string;
   slug: string;
+  sortOrder: number;
   description?: string;
-  parentId?: string;
 }
 
 export interface IUpdateCategory {
   name?: string;
   slug?: string;
   description?: string;
-  parentId?: string;
+  sortOrder?: number;
 }

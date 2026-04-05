@@ -11,7 +11,7 @@ import LabelField from "@/components/LabelField";
 import type { ICategory } from "@/types/category";
 import Spinner from "./Spinner";
 
-export const emptyForm = () => ({ name: "", slug: "", description: "", parentId: "" });
+export const emptyForm = () => ({ name: "", slug: "", description: "", sortOrder: 0 });
 export type CatForm = ReturnType<typeof emptyForm>;
 
 interface Props {
@@ -21,7 +21,6 @@ interface Props {
   form: CatForm;
   onNameChange: (name: string) => void;
   onFormChange: (updater: (prev: CatForm) => CatForm) => void;
-  flatCategories: ICategory[];
   isPending: boolean;
   onSubmit: (isEdit: boolean) => void;
 }
@@ -33,7 +32,6 @@ const CategoryFormModal = ({
   form,
   onNameChange,
   onFormChange,
-  flatCategories,
   isPending,
   onSubmit,
 }: Props) => (
@@ -72,23 +70,14 @@ const CategoryFormModal = ({
           />
         </LabelField>
 
-        <div>
-          <label>Parent Category</label>
-          <select
-            value={form.parentId}
-            onChange={(e) => onFormChange((prev) => ({ ...prev, parentId: e.target.value }))}
-            className="w-full h-8 border-b border-[#D4B896] bg-transparent text-sm text-gray-700 outline-none focus:border-[#C6A46C] pb-1"
-          >
-            <option value="">None (Root category)</option>
-            {flatCategories
-              .filter((c) => c.id !== editingCat?.id)
-              .map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.name}
-                </option>
-              ))}
-          </select>
-        </div>
+        <LabelField label="Sort Order">
+          <Input
+            type="number"
+            value={form.sortOrder}
+            onChange={(e) => onFormChange((prev) => ({ ...prev, sortOrder: Number(e.target.value) }))}
+            placeholder="0"
+          />
+        </LabelField>
       </div>
 
       <DialogFooter>

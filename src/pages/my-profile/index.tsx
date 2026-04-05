@@ -29,7 +29,7 @@ const MyProfile = () => {
     <div className="min-h-screen flex flex-col bg-[#FDFAF6]">
       <Header />
 
-      <main className="flex-1 max-w-5xl mx-auto w-full px-4 py-6">
+      <main className="flex-1 max-w-5xl mx-auto w-full px-4 py-6 min-h-[650px]">
         {/* Page heading */}
         <div className="mb-8">
           <div className="flex items-center gap-2 mb-2">

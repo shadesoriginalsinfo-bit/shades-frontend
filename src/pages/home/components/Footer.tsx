@@ -15,19 +15,9 @@ const FOOTER_LINKS = [
   {
     heading: "Help",
     links: [
-      { label: "FAQs", href: "/faqs" },
       { label: "Shipping Policy", href: "/shipping" },
       { label: "Return Policy", href: "/returns" },
       { label: "Track My Order", href: "/track" },
-      { label: "Contact Us", href: "/contact" },
-    ],
-  },
-  {
-    heading: "Company",
-    links: [
-      { label: "About Us", href: "/about" },
-      { label: "Careers", href: "/careers" },
-      { label: "Press", href: "/press" },
       { label: "Terms of Service", href: "/terms" },
       { label: "Privacy Policy", href: "/privacy" },
     ],

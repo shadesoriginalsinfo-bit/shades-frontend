@@ -12,6 +12,8 @@ export interface IProduct {
   marketPrice: number;
   discountPrice?: number | null;
   stock: number;
+  gstPercent: number
+  careInstruction?: string;
   description?: string | null;
   shortDesc?: string | null;
   isPublished: boolean;
@@ -42,6 +44,8 @@ export interface ICreateProduct {
   isPublished?: boolean;
   stock: number;
   categoryIds?: string[];
+  gstPercent: number
+  careInstruction?: string;
 }
 
 export interface IUpdateProduct {
@@ -52,6 +56,8 @@ export interface IUpdateProduct {
   shortDesc?: string;
   isPublished?: boolean;
   categoryIds?: string[];
+  gstPercent?: number
+  careInstruction?: string;
 }
 
 export interface IProductMeta {

@@ -34,10 +34,8 @@ const CategoriesTab = () => {
   // Tree for display
   const treeQuery = useQuery({
     queryKey: ["admin-categories-tree", debouncedSearch],
-    queryFn: () => getCategories({ search: debouncedSearch || undefined }),
+    queryFn: () => getCategories({ search: debouncedSearch || undefined, flat: true }),
   });
-
-  const { categories:flatCategories } = useCategories();
 
   const categories = treeQuery.data ?? [];
 
@@ -89,7 +87,7 @@ const CategoriesTab = () => {
 
   const openEdit = (cat: ICategory) => {
     setEditingCat(cat);
-    setForm({ name: cat.name, slug: cat.slug, description: cat.description ?? "", parentId: "" });
+    setForm({ name: cat.name, slug: cat.slug, description: cat.description ?? "", sortOrder: cat.sortOrder });
   };
 
   const handleSubmit = (isEdit: boolean) => {
@@ -98,7 +96,7 @@ const CategoriesTab = () => {
       name: form.name,
       slug: form.slug,
       description: form.description || undefined,
-      parentId: form.parentId || undefined,
+      sortOrder: form.sortOrder,
     };
     if (isEdit && editingCat) {
       updateMutation.mutate({ id: editingCat.id, payload });
@@ -140,6 +138,9 @@ const CategoriesTab = () => {
           </span>
           <span className="text-[10px] tracking-[0.2em] uppercase text-[#C6A46C]/80 font-medium hidden md:block">
             Description
+          </span>
+          <span className="text-[10px] tracking-[0.2em] uppercase text-[#C6A46C]/80 font-medium hidden md:block">
+            Sort Order
           </span>
           <span className="text-[10px] tracking-[0.2em] uppercase text-[#C6A46C]/80 font-medium">
             Actions
@@ -187,7 +188,6 @@ const CategoriesTab = () => {
         form={form}
         onNameChange={handleNameChange}
         onFormChange={setForm}
-        flatCategories={flatCategories}
         isPending={isPending}
         onSubmit={handleSubmit}
       />

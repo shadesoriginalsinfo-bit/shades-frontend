@@ -41,6 +41,7 @@ export interface IOrder {
   shippingAmount: number;
   discountAmount: number;
   totalAmount: number;
+  trackingNumber?: string | null;
   placedAt: string;
   createdAt: string;
   updatedAt: string;
