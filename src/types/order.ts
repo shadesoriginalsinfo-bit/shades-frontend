@@ -20,7 +20,7 @@ export const ORDER_STATUSES: OrderStatus[] = [
 ];
 
 export const STATUS_PROGRESSION: Record<OrderStatus, OrderStatus[]> = {
-  DRAFT: ["PENDING", "CANCELLED"],
+  DRAFT: ["CANCELLED"],
   PENDING: ["CONFIRMED", "CANCELLED"],
   CONFIRMED: ["SHIPPED", "CANCELLED"],
   SHIPPED: ["DELIVERED"],

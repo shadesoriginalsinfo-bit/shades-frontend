@@ -9,6 +9,7 @@ import {
 } from "./components/Banners";
 import ProductsSection from "./components/ProductsSection";
 import Footer from "./components/Footer";
+import FAQSection from "./components/FAQSection";
 
 
 const HomePage = () => {
@@ -48,6 +49,8 @@ const HomePage = () => {
       {/* 3-column mini category banners */}
       <ThreeBanners />
 
+      <FAQSection />
+      
       {/* Full-width discount banner */}
       <DiscountBanner />
 

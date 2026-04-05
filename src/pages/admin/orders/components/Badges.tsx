@@ -12,6 +12,7 @@ const STATUS_STYLES: Record<OrderStatus, string> = {
 
 const PAYMENT_STATUS_STYLES: Record<string, string> = {
   PAID: "bg-green-50 text-green-700",
+  SUCCESS : "bg-green-50 text-green-700",
   PENDING: "bg-yellow-50 text-yellow-700",
   FAILED: "bg-red-50 text-red-500",
   REFUNDED: "bg-gray-100 text-gray-500",
@@ -37,7 +38,7 @@ export function PaymentBadge({ status }: { status: string }) {
     <span
       className={`inline-flex items-center px-2 py-0.5 text-[10px] tracking-wider uppercase font-medium rounded-sm ${PAYMENT_STATUS_STYLES[status] ?? "bg-gray-100 text-gray-500"}`}
     >
-      {status}
+      {status === "SUCCESS" ? "PAID" : status}
     </span>
   );
 }

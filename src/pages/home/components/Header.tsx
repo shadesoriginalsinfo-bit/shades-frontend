@@ -5,28 +5,13 @@ import logo from "@/assets/transparentLogo.png";
 import { useAuthUser } from "@/hooks/useAuth";
 import { useLogout } from "@/hooks/useLogout";
 import dummyAvatar from "@/assets/profile.webp"
+import { useCategories } from "@/hooks/useCategories";
 
 interface NavItem {
   label: string;
   href: string;
   children?: { label: string; href: string }[];
 }
-
-const NAV_ITEMS: NavItem[] = [
-  { label: "Home", href: "/" },
-  {
-    label: "Shop",
-    href: "/shop",
-    children: [
-      { label: "Kurtas", href: "/shop?cat=kurtas" },
-      { label: "Sarees", href: "/shop?cat=sarees" },
-      { label: "Lehengas", href: "/shop?cat=lehengas" },
-      { label: "Dupattas", href: "/shop?cat=dupattas" },
-    ],
-  },
-  { label: "About", href: "#" },
-  { label: "Contact", href: "#" },
-];
 
 interface NavLinkProps {
   item: NavItem;
@@ -44,7 +29,7 @@ const NavLink = ({ item, isActive }: NavLinkProps) => {
     >
       <Link
         to={item.href}
-        className={`flex items-center gap-1 text-sm font-medium tracking-wide transition-colors duration-200 ${
+        className={`z-40 flex items-center gap-1 text-sm font-medium tracking-wide transition-colors duration-200 ${
           isActive
             ? "text-[#C6A46C]"
             : "text-gray-700 hover:text-[#C6A46C]"
@@ -66,7 +51,7 @@ const NavLink = ({ item, isActive }: NavLinkProps) => {
 
       {/* Dropdown */}
       {item.children && open && (
-        <div className="absolute top-full left-0 mt-5 w-48 bg-white border border-[#E8DDD0] shadow-[0_8px_30px_rgba(0,0,0,0.08)] z-50">
+        <div className="absolute top-full left-0 pt-1 w-48 bg-white border border-[#E8DDD0] shadow-[0_8px_30px_rgba(0,0,0,0.08)] z-50">
           {item.children.map((child) => (
             <Link
               key={child.href}
@@ -85,6 +70,22 @@ const NavLink = ({ item, isActive }: NavLinkProps) => {
 const Header = () => {
   const {data: user, isLoading} = useAuthUser()
   const { logout } = useLogout();
+  const { categories } = useCategories();
+
+  const NAV_ITEMS: NavItem[] = [
+    { label: "Home", href: "/" },
+    {
+      label: "Shop",
+      href: "/shop",
+      children: categories.slice(0, 4).map((cat) => ({
+        label: cat.name,
+        href: `/shop?category=${cat.slug}`,
+      })),
+    },
+    { label: "Help", href: "/help" },
+    // { label: "About", href: "/help" },
+    // { label: "Contact", href: "#" },
+  ];
 
   const [mobileOpen, setMobileOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);

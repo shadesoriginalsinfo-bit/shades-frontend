@@ -24,7 +24,7 @@ const SLIDES: HeroSlide[] = [
     title: "SHADES",
     subtitle: "Be Who You Are",
     ctaPrimary: { label: "Shop Diwan", href: "/shop" },
-    ctaSecondary: { label: "New Now", href: "/new-collection" },
+    ctaSecondary: { label: "New Trending", href: "/shop?category=trending" },
     bg: "bg-gradient-to-br from-[#F5EFE7] via-[#EDE0D0] to-[#E8D8C4]",
     accentBg: "from-[#C6A46C]/20 to-transparent",
     textDark: true,
@@ -35,7 +35,7 @@ const SLIDES: HeroSlide[] = [
     eyebrow: "Exclusive Summer Drops",
     title: "NEW ARRIVALS",
     subtitle: "Crafted For Every Moment",
-    ctaPrimary: { label: "Explore Now", href: "/new-collection" },
+    ctaPrimary: { label: "Explore Now", href: "/shop?category=trending" },
     ctaSecondary: { label: "View Lookbook", href: "/shop" },
     bg: "bg-gradient-to-br from-[#2A1F14] via-[#3D2B1F] to-[#4A3525]",
     accentBg: "from-[#C6A46C]/30 to-transparent",
@@ -164,7 +164,7 @@ const HeroCarousel = () => {
 
         {/* Main title */}
         <h1
-          className={`text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-bold font-serif tracking-wide leading-none ${
+          className={`text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-bold font-serif tracking-wide leading-none ${
             slide.textDark ? "text-[#2A1810]" : "text-white"
           }`}
           style={{ animationDelay: "0.1s", animation: "heroFadeUp 0.6s ease both" }}

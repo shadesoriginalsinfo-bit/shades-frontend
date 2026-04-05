@@ -4,10 +4,10 @@ import clsx from "clsx";
 import {
   Users,
   LucideLayoutDashboard,
-  Settings,
   LogOut,
   Package,
   ShoppingCart,
+  HomeIcon,
 } from "lucide-react";
 import { useLogout } from "@/hooks/useLogout";
 import LoadingModal from "@/pages/LoadingPage";
@@ -77,7 +77,7 @@ const Sidebar: React.FC = () => {
       </ul>
       <div className="absolute bottom-8 w-full">
         <NavLink
-          to="/admin/settings"
+          to="/"
           className={({ isActive }) =>
             clsx(
               "w-[89%] flex items-center gap-3 rounded-xl px-3 py-3 text-sm transition-colors duration-150",
@@ -87,8 +87,8 @@ const Sidebar: React.FC = () => {
             )
           }
         >
-          <Settings />
-          <span>Settings</span>
+          <HomeIcon />
+          <span>Home</span>
         </NavLink>
         <button
           onClick={logout}
