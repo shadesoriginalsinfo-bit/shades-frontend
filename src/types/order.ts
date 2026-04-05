@@ -1,6 +1,7 @@
 import type { IAddress } from "./address";
 
 export type OrderStatus =
+  "DRAFT"
   | "PENDING"
   | "CONFIRMED"
   | "SHIPPED"
@@ -9,6 +10,7 @@ export type OrderStatus =
   | "REFUNDED";
 
 export const ORDER_STATUSES: OrderStatus[] = [
+  "DRAFT",
   "PENDING",
   "CONFIRMED",
   "SHIPPED",
@@ -18,6 +20,7 @@ export const ORDER_STATUSES: OrderStatus[] = [
 ];
 
 export const STATUS_PROGRESSION: Record<OrderStatus, OrderStatus[]> = {
+  DRAFT: ["PENDING", "CANCELLED"],
   PENDING: ["CONFIRMED", "CANCELLED"],
   CONFIRMED: ["SHIPPED", "CANCELLED"],
   SHIPPED: ["DELIVERED"],
@@ -28,7 +31,10 @@ export const STATUS_PROGRESSION: Record<OrderStatus, OrderStatus[]> = {
 
 export interface IPayment {
   id: string;
+  method: string;
   provider: string;
+  providerOrderId?: string;
+  providerPaymentId?: string;
   status: string;
   amount: number;
   createdAt: string;
@@ -47,6 +53,7 @@ export interface IOrder {
   id: string;
   status: OrderStatus;
   paymentStatus: string;
+  paymentMethod: "ONLINE" | "COD";
   subtotal: number;
   taxAmount: number;
   shippingAmount: number;

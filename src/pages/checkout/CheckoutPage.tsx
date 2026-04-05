@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { MapPin, Plus, ChevronDown, ChevronUp, CheckCircle2, Loader2 } from "lucide-react";
-import { getAddresses, createAddress, createOrder } from "@/lib/api";
+import { MapPin, Plus, ChevronDown, ChevronUp, CheckCircle2, Loader2, CreditCard, Truck } from "lucide-react";
+import { getAddresses, createAddress, createOrder, initiatePayment, verifyPayment } from "@/lib/api";
 import { handleApiError } from "@/utils/handleApiError";
+import { useRazorpay } from "@/hooks/useRazorpay";
 import toast from "react-hot-toast";
 import type { IProduct } from "@/types/product";
 import type { ICreateAddress } from "@/types/address";
@@ -43,6 +44,7 @@ const CheckoutPage = () => {
   const [selectedAddressId, setSelectedAddressId] = useState<string | null>(null);
   const [showAddressForm, setShowAddressForm] = useState(false);
   const [addressForm, setAddressForm] = useState<ICreateAddress>(emptyAddressForm);
+  const [paymentMethod, setPaymentMethod] = useState<"ONLINE" | "COD">("ONLINE");
 
   // Redirect if no checkout state (direct navigation)
   if (!state?.product) {
@@ -84,13 +86,10 @@ const CheckoutPage = () => {
     onError: handleApiError,
   });
 
-  const orderMutation = useMutation({
-    mutationFn: createOrder,
-    onSuccess: (order) => {
-      navigate("/order-success", { state: { order } });
-    },
-    onError: handleApiError,
-  });
+  const { openRazorpay } = useRazorpay();
+  const [isPaymentProcessing, setIsPaymentProcessing] = useState(false);
+
+  const orderMutation = useMutation({ mutationFn: createOrder, onError: handleApiError });
 
   const handleAddressFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
@@ -108,14 +107,66 @@ const CheckoutPage = () => {
     addAddressMutation.mutate(payload);
   };
 
-  const handlePlaceOrder = () => {
+  const handlePlaceOrder = async () => {
     if (!selectedAddressId) {
       toast.error("Please select a delivery address");
       return;
     }
-    orderMutation.mutate({
-      shippingAddressId: selectedAddressId,
-      items: [{ productId: product.id, quantity }],
+
+    let order;
+    try {
+      order = await orderMutation.mutateAsync({
+        shippingAddressId: selectedAddressId,
+        paymentMethod,
+        items: [{ productId: product.id, quantity }],
+      });
+    } catch {
+      return;
+    }
+
+    if (paymentMethod === "COD") {
+      toast.success("Order placed successfully!");
+      navigate("/order-success", { state: { order } });
+      return;
+    }
+
+    let paymentData;
+    try {
+      setIsPaymentProcessing(true);
+      paymentData = await initiatePayment(order.id);
+    } catch (err) {
+      handleApiError(err);
+      setIsPaymentProcessing(false);
+      return;
+    }
+
+    openRazorpay({
+      key: paymentData.keyId,
+      amount: Math.round(Number(paymentData.amount) * 100),
+      currency: paymentData.currency,
+      order_id: paymentData.razorpayOrderId,
+      name: "Shades",
+      description: product.title,
+      image: product.images[0]?.url,
+      theme: { color: "#C6A46C" },
+      handler: async (response) => {
+        try {
+          await verifyPayment({
+            razorpayOrderId: response.razorpay_order_id,
+            razorpayPaymentId: response.razorpay_payment_id,
+            razorpaySignature: response.razorpay_signature,
+          });
+          toast.success("Payment successful!");
+          navigate("/order-success", { state: { order } });
+        } catch (err) {
+          handleApiError(err);
+        } finally {
+          setIsPaymentProcessing(false);
+        }
+      },
+      modal: {
+        ondismiss: () => setIsPaymentProcessing(false),
+      },
     });
   };
 
@@ -394,6 +445,44 @@ const CheckoutPage = () => {
                 </form>
               )}
             </section>
+            {/* Payment method */}
+            <section className="bg-white border border-[#E8DDD0] rounded-sm p-5">
+              <h2 className="text-[11px] tracking-[0.25em] uppercase font-semibold text-gray-700 mb-4">
+                Payment Method
+              </h2>
+              <div className="space-y-2">
+                <label className={`flex items-center gap-3 p-3.5 border rounded-sm cursor-pointer transition-all ${paymentMethod === "ONLINE" ? "border-[#C6A46C] bg-[#F5EFE7]" : "border-[#E8DDD0] hover:border-[#C6A46C]/50"}`}>
+                  <input
+                    type="radio"
+                    name="paymentMethod"
+                    value="ONLINE"
+                    checked={paymentMethod === "ONLINE"}
+                    onChange={() => setPaymentMethod("ONLINE")}
+                    className="accent-[#C6A46C]"
+                  />
+                  <CreditCard size={15} className="text-[#C6A46C] shrink-0" />
+                  <div>
+                    <p className="text-sm font-medium text-gray-800">Online Payment</p>
+                    <p className="text-[11px] text-gray-400 mt-0.5">Credit / Debit card, UPI, Net banking</p>
+                  </div>
+                </label>
+                <label className={`flex items-center gap-3 p-3.5 border rounded-sm cursor-pointer transition-all ${paymentMethod === "COD" ? "border-[#C6A46C] bg-[#F5EFE7]" : "border-[#E8DDD0] hover:border-[#C6A46C]/50"}`}>
+                  <input
+                    type="radio"
+                    name="paymentMethod"
+                    value="COD"
+                    checked={paymentMethod === "COD"}
+                    onChange={() => setPaymentMethod("COD")}
+                    className="accent-[#C6A46C]"
+                  />
+                  <Truck size={15} className="text-[#C6A46C] shrink-0" />
+                  <div>
+                    <p className="text-sm font-medium text-gray-800">Cash on Delivery</p>
+                    <p className="text-[11px] text-gray-400 mt-0.5">Pay when your order arrives</p>
+                  </div>
+                </label>
+              </div>
+            </section>
           </div>
 
           {/* ── Right column: order summary ── */}
@@ -449,13 +538,15 @@ const CheckoutPage = () => {
 
               <button
                 onClick={handlePlaceOrder}
-                disabled={orderMutation.isPending || !selectedAddressId}
+                disabled={orderMutation.isPending || isPaymentProcessing || !selectedAddressId}
                 className="mt-5 w-full flex items-center justify-center gap-2.5 py-3.5 bg-[#2A1810] text-white text-xs tracking-[0.2em] uppercase font-medium hover:bg-[#C6A46C] transition-all duration-200 rounded-sm disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_4px_20px_rgba(0,0,0,0.12)]"
               >
                 {orderMutation.isPending ? (
-                  <><Loader2 size={14} className="animate-spin" /> Placing Order…</>
+                  <><Loader2 size={14} className="animate-spin" /> Creating Order…</>
+                ) : isPaymentProcessing ? (
+                  <><Loader2 size={14} className="animate-spin" /> Processing Payment…</>
                 ) : (
-                  <><CheckCircle2 size={14} /> Place Order</>
+                  <><CheckCircle2 size={14} /> {paymentMethod === "COD" ? "Place Order" : "Proceed to Payment"}</>
                 )}
               </button>
 

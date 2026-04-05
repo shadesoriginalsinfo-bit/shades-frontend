@@ -162,6 +162,7 @@ export async function deleteAddress(id: string): Promise<{ message: string }> {
 
 export async function createOrder(payload: {
   shippingAddressId: string;
+  paymentMethod: "ONLINE" | "COD";
   items: { productId: string; quantity: number }[];
 }): Promise<IOrder> {
   const { data } = await axios.post("/orders", payload);
@@ -225,6 +226,32 @@ export async function adminDeleteUser(id: string): Promise<{ message: string }> 
 
 export async function adminRestoreUser(id: string): Promise<IAdminUser> {
   const { data } = await axios.post(`/admin/users/${id}/restore`);
+  return data.data;
+}
+
+
+// ── Payments ──────────────────────────────────────────────────────────────────
+
+export interface IInitiatePaymentResponse {
+  paymentId: string;
+  razorpayOrderId: string;
+  amount: number;
+  currency: string;
+  keyId: string;
+  status: string;
+}
+
+export async function initiatePayment(orderId: string): Promise<IInitiatePaymentResponse> {
+  const { data } = await axios.post("/payments/initiate", { orderId });
+  return data.data;
+}
+
+export async function verifyPayment(payload: {
+  razorpayOrderId: string;
+  razorpayPaymentId: string;
+  razorpaySignature: string;
+}): Promise<{ message: string }> {
+  const { data } = await axios.post("/payments/verify", payload);
   return data.data;
 }
 
