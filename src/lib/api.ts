@@ -237,7 +237,6 @@ export interface IInitiatePaymentResponse {
   razorpayOrderId: string;
   amount: number;
   currency: string;
-  keyId: string;
   status: string;
 }
 

@@ -9,7 +9,7 @@ import { adminUpdateOrderStatus } from "@/lib/api";
 import { ORDERS_QUERY_KEY, useOrders } from "@/hooks/useOrders";
 import { ORDER_STATUSES, type IAdminOrder, type OrderStatus } from "@/types/order";
 import { OrderDetailModal } from "./components/OrderModal";
-import { PaymentBadge, StatusBadge } from "./components/Badges";
+import { PaymentBadge, PaymentMethodBadge, StatusBadge } from "./components/Badges";
 
 const LIMIT = 20;
 
@@ -191,22 +191,22 @@ const OrdersPage = () => {
                 <th className="text-left px-4 py-3 text-[10px] tracking-[0.2em] uppercase text-[#C6A46C]/80 font-medium">
                   Customer
                 </th>
-                <th className="text-left px-4 py-3 text-[10px] tracking-[0.2em] uppercase text-[#C6A46C]/80 font-medium">
-                  Status
+                <th className="min-w-38 text-left px-4 py-3 text-[10px] tracking-[0.2em] uppercase text-[#C6A46C]/80 font-medium">
+                  Payment Method
                 </th>
-                <th className="text-left px-4 py-3 text-[10px] tracking-[0.2em] uppercase text-[#C6A46C]/80 font-medium ">
-                  Payment
+                <th className="min-w-40 text-left px-4 py-3 text-[10px] tracking-[0.2em] uppercase text-[#C6A46C]/80 font-medium">
+                  Order Status
                 </th>
-                <th className="text-left px-4 py-3 text-[10px] tracking-[0.2em] uppercase text-[#C6A46C]/80 font-medium">
-                  Items
+                <th className="min-w-40 text-left px-4 py-3 text-[10px] tracking-[0.2em] uppercase text-[#C6A46C]/80 font-medium ">
+                  Payment Status
                 </th>
                 <th className="text-left px-4 py-3 text-[10px] tracking-[0.2em] uppercase text-[#C6A46C]/80 font-medium">
                   Tracking Id
                 </th>
-                <th className="text-right px-4 py-3 text-[10px] tracking-[0.2em] uppercase text-[#C6A46C]/80 font-medium">
+                <th className="text-left px-4 py-3 text-[10px] tracking-[0.2em] uppercase text-[#C6A46C]/80 font-medium">
                   Total
                 </th>
-                <th className="text-left px-4 py-3 text-[10px] tracking-[0.2em] uppercase text-[#C6A46C]/80 font-medium">
+                <th className="min-w-40 text-center px-4 py-3 text-[10px] tracking-[0.2em] uppercase text-[#C6A46C]/80 font-medium">
                   Placed At
                 </th>
                 <th className="text-left px-4 py-3 text-[10px] tracking-[0.2em] uppercase text-[#C6A46C]/80 font-medium">
@@ -236,6 +236,11 @@ const OrdersPage = () => {
                     <p className="text-xs text-gray-400">{order.user.email}</p>
                   </td>
 
+                  {/* payment method */}
+                  <td className="px-4 py-3">
+                    <PaymentMethodBadge method={order.paymentMethod} />
+                  </td>
+
                   {/* Status */}
                   <td className="px-4 py-3">
                     <StatusBadge status={order.status} />
@@ -254,14 +259,14 @@ const OrdersPage = () => {
                   </td>
 
                   {/* Items count */}
-                  <td className="px-4 py-3 ">
+                  {/* <td className="px-4 py-3 ">
                     <span className="text-xs text-gray-500">
                       {order.items.length} {order.items.length === 1 ? "item" : "items"}
                     </span>
-                  </td>
+                  </td> */}
 
                   {/* Total */}
-                  <td className="px-4 py-3 text-right">
+                  <td className="px-4 py-3 text-left">
                     <span className="font-medium text-gray-800">
                       ₹{order.totalAmount.toLocaleString("en-IN")}
                     </span>
@@ -274,6 +279,8 @@ const OrdersPage = () => {
                         day: "numeric",
                         month: "short",
                         year: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit"
                       })}
                     </span>
                   </td>

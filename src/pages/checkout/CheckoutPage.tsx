@@ -141,7 +141,7 @@ const CheckoutPage = () => {
     }
 
     openRazorpay({
-      key: paymentData.keyId,
+      key: import.meta.env.VITE_RZP_KEY_ID,
       amount: Math.round(Number(paymentData.amount) * 100),
       currency: paymentData.currency,
       order_id: paymentData.razorpayOrderId,
