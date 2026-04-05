@@ -109,9 +109,15 @@ export async function deleteProduct(id: string): Promise<{ message: string }> {
 
 export async function addProductImage(
   productId: string,
-  payload: { url: string; altText?: string; position?: number },
+  payload: { file: File; altText?: string; position?: number },
 ) {
-  const { data } = await axios.post(`/products/${productId}/images`, payload);
+  const formData = new FormData();
+  formData.append("image", payload.file);
+  if (payload.altText) formData.append("altText", payload.altText);
+  if (payload.position !== undefined) formData.append("position", String(payload.position));
+  const { data } = await axios.post(`/products/${productId}/images`, formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
   return data.data;
 }
 

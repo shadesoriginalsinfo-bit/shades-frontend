@@ -10,8 +10,9 @@ import {
 import LabelField from "@/components/LabelField";
 import type { IProduct } from "@/types/product";
 import Spinner from "./Spinner";
+import { ImageUpload } from "@/components/ImageUpload";
 
-export type ImageForm = { url: string; altText: string; position: string };
+export type ImageForm = { file: File | null; altText: string; position: string };
 
 interface Props {
   open: boolean;
@@ -85,14 +86,13 @@ const ImagesModal = ({
           Add Image
         </p>
 
-        <LabelField label="Image URL *">
-          <Input
-            value={imageForm.url}
-            onChange={(e) => onImageFormChange((p) => ({ ...p, url: e.target.value }))}
-            placeholder="https://..."
-            restrictSpecialChars={false}
-          />
-        </LabelField>
+        <ImageUpload
+          label="Image"
+          required
+          file={imageForm.file}
+          onSelect={(f) => onImageFormChange((p) => ({ ...p, file: f }))}
+          onRemove={() => onImageFormChange((p) => ({ ...p, file: null }))}
+        />
 
         <div className="grid grid-cols-2 gap-3">
           <LabelField label="Alt Text">
@@ -117,7 +117,7 @@ const ImagesModal = ({
 
         <Button
           size="sm"
-          disabled={!imageForm.url || addImagePending}
+          disabled={!imageForm.file || addImagePending}
           onClick={onAddImage}
         >
           {addImagePending ? <Spinner /> : <Plus className="size-3.5" />}

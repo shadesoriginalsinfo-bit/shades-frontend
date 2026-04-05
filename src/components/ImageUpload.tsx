@@ -1,7 +1,6 @@
 import React, { useRef, useState } from "react";
-import { Button } from "@/components/ui/button";
 import { formatFileSize } from "@/utils/formatFileSize";
-import { Trash2, Image as ImageIcon, Upload } from "lucide-react";
+import { Trash2, Upload } from "lucide-react";
 import toast from "react-hot-toast";
 import imageCompression from "browser-image-compression";
 
@@ -14,8 +13,8 @@ interface ImageUploadProps {
   onRemove: () => void;
 }
 
-const MAX_INPUT_MB = 10;
-const TARGET_MB = 1.5;
+const MAX_INPUT_MB = 15;
+const TARGET_MB = 2;
 const MAX_INPUT_BYTES = MAX_INPUT_MB * 1024 * 1024;
 
 export const ImageUpload: React.FC<ImageUploadProps> = ({
@@ -136,80 +135,41 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
         onChange={handleFileChange}
       />
 
-      {!file && (
-        <div className="flex border rounded-md overflow-hidden">
-          <label
-            className="flex-1 flex items-center gap-2 px-3 text-gray-500 cursor-pointer"
-            onClick={() => inputRef.current?.click()}
-          >
-            <ImageIcon size={16} />
-            Select image
-          </label>
-
-          <Button
-            type="button"
-            className="rounded-none w-28"
-            onClick={handleUploadClick}
-            disabled={processing}
-          >
-            {processing ? "Compressing..." : "Upload"}
-          </Button>
-        </div>
-      )}
-
-      {file && (
-        <div className="border rounded-md p-3 flex gap-3 items-center justify-between">
-          <div className="flex items-center gap-3 min-w-0">
-            {previewUrl ? (
-              <img
-                src={previewUrl}
-                alt={file.name}
-                className="w-12 h-12 rounded object-cover border"
-              />
-            ) : (
-              <ImageIcon className="text-slate-500" />
-            )}
-
-            <div className="min-w-0">
-              <p className="text-sm font-medium truncate">{file.name}</p>
-              <p className="text-xs text-gray-500 mt-1">
-                {formatFileSize(file.size)}
-                {previewUrl && (
-                  <a
-                    href={previewUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="ml-2 text-blue-600 hover:underline"
-                  >
-                    View image
-                  </a>
-                )}
-              </p>
+      <div
+        onClick={handleUploadClick}
+        className="relative w-full h-44 border-2 border-dashed border-gray-300 rounded-md flex items-center justify-center cursor-pointer hover:border-gray-400 overflow-hidden group"
+      >
+        {file && previewUrl ? (
+          <>
+            <img
+              src={previewUrl}
+              alt={file.name}
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+              <Upload size={20} className="text-white" />
             </div>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={handleUploadClick}
-              disabled={processing}
-              className="gap-2"
-            >
-              <Upload size={16} />
-              Replace
-            </Button>
-
             <button
               type="button"
-              onClick={onRemove}
-              className="text-red-500 hover:text-red-600 cursor-pointer"
+              onClick={(e) => { e.stopPropagation(); onRemove(); }}
+              className="absolute top-1 right-1 bg-white rounded-full p-0.5 text-red-500 hover:text-red-600 opacity-0 group-hover:opacity-100 transition-opacity"
             >
-              <Trash2 size={16} />
+              <Trash2 size={12} />
             </button>
+          </>
+        ) : (
+          <div className="flex flex-col items-center gap-1 text-gray-400">
+            {processing ? (
+              <span className="text-xs text-center px-1">Compressing...</span>
+            ) : (
+              <>
+                <Upload size={20} />
+                <span className="text-xs">Upload</span>
+              </>
+            )}
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };

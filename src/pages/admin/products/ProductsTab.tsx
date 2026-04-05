@@ -45,7 +45,7 @@ const ProductsTab = () => {
   // Forms
   const [form, setForm] = useState<ProductForm>(emptyProductForm());
   const [stockValue, setStockValue] = useState("");
-  const [imageForm, setImageForm] = useState<ImageForm>({ url: "", altText: "", position: "" });
+  const [imageForm, setImageForm] = useState<ImageForm>({ file: null, altText: "", position: "" });
 
 
   const { products, meta, isLoading: productsLoading } = useProducts(
@@ -108,12 +108,12 @@ const ProductsTab = () => {
       payload,
     }: {
       productId: string;
-      payload: { url: string; altText?: string; position?: number };
+      payload: { file: File; altText?: string; position?: number };
     }) => addProductImage(productId, payload),
     onSuccess: () => {
       toast.success("Image added");
       queryClient.invalidateQueries({ queryKey: [PRODUCTS_QUERY_KEY] });
-      setImageForm({ url: "", altText: "", position: "" });
+      setImageForm({ file: null, altText: "", position: "" });
     },
     onError: handleApiError,
   });
@@ -166,7 +166,7 @@ const ProductsTab = () => {
 
   const openImages = (product: IProduct) => {
     setImagesProduct(product);
-    setImageForm({ url: "", altText: "", position: "" });
+    setImageForm({ file: null, altText: "", position: "" });
   };
 
   const handleSubmitProduct = (isEdit: boolean) => {
@@ -193,11 +193,11 @@ const ProductsTab = () => {
   };
 
   const handleAddImage = () => {
-    if (!imagesProduct || !imageForm.url) return;
+    if (!imagesProduct || !imageForm.file) return;
     addImageMutation.mutate({
       productId: imagesProduct.id,
       payload: {
-        url: imageForm.url,
+        file: imageForm.file,
         altText: imageForm.altText || undefined,
         position: imageForm.position ? Number(imageForm.position) : undefined,
       },
