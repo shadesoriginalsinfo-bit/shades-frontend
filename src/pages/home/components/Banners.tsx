@@ -44,7 +44,7 @@ interface TrustItem {
 
 const TRUST_ITEMS: TrustItem[] = [
   { icon: Truck,    label: "Free Delivery",    sub: "On orders above ₹999" },
-  { icon: RefreshCw, label: "Easy Returns",   sub: "7-day hassle-free returns" },
+  { icon: RefreshCw, label: "Easy Exchange",   sub: "Hassle-free exchange" },
   { icon: Shield,   label: "Secure Payment",  sub: "100% safe checkout" },
   { icon: Star,     label: "Premium Quality", sub: "Handcrafted with care" },
 ];

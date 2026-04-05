@@ -62,7 +62,8 @@ const CheckoutPage = () => {
   const { product, quantity } = state;
   const unitPrice = product.discountPrice ?? product.marketPrice;
   const subtotal = unitPrice * quantity;
-  const tax = parseFloat((subtotal * TAX_RATE).toFixed(2));
+  const gstRate = (product.gstPercent ?? 0) / 100;
+  const tax = parseFloat((subtotal * gstRate).toFixed(2));
   const shipping = subtotal >= SHIPPING_FREE_THRESHOLD ? 0 : SHIPPING_FLAT;
   const total = parseFloat((subtotal + tax + shipping).toFixed(2));
 
@@ -408,7 +409,7 @@ const CheckoutPage = () => {
                   <span className="font-medium text-gray-800">{formatINR(subtotal)}</span>
                 </div>
                 <div className="flex justify-between text-gray-600">
-                  <span>Tax (18% GST)</span>
+                  <span>Tax ({product.gstPercent ?? 0}% GST)</span>
                   <span className="font-medium text-gray-800">{formatINR(tax)}</span>
                 </div>
                 <div className="flex justify-between text-gray-600">

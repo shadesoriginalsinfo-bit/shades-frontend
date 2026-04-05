@@ -11,7 +11,7 @@ import { useDebounce } from "@/hooks/useDebounce";
 import CategoryItem from "./components/CategoryItem";
 import CategoryFormModal, { emptyForm, type CatForm } from "./components/CategoryFormModal";
 import ConfirmDeleteModal from "./components/ConfirmDeleteModal";
-import { CATEGORIES_QUERY_KEY, useCategories } from "@/hooks/useCategories";
+import { CATEGORIES_QUERY_KEY } from "@/hooks/useCategories";
 
 const generateSlug = (name: string) =>
   name
