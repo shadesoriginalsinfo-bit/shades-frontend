@@ -7,9 +7,9 @@ import { Link } from "react-router-dom";
 const PROMO_ITEMS = [
   "🚚 Free Shipping on Orders Above ₹999",
   "✨ New Festive Collection Now Live",
-  "🔄 Easy 7-Day Returns · No Questions Asked",
-  "💎 Flat 20% Off — Use Code: SHADES20",
-  "🎁 Gift Wrapping Available on All Orders",
+  "🔄 Easy 3-5-Day Exchange",
+  "💎 Buy Now to get good deals",
+  // "🎁 Gift Wrapping Available on All Orders",
 ];
 
 export const PromoStrip = () => (
@@ -141,7 +141,7 @@ const BannerCard = ({ eyebrow, title, cta, href, dark = false }: BannerCardProps
 );
 
 export const FeatureBanners = () => (
-  <section className="py-12 bg-white">
+  <section className="py-0 md:py-12 bg-white">
     <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-16">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <BannerCard
@@ -199,7 +199,7 @@ const MINI_BANNERS: MiniBannerItem[] = [
 ];
 
 export const ThreeBanners = () => (
-  <section className="py-12 bg-[#FDFAF7]">
+  <section className="py-0 md:py-12 bg-[#FDFAF7]">
     <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-16">
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {MINI_BANNERS.map(({ label, sub, href, gradient, textColor }) => (

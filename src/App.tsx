@@ -18,6 +18,7 @@ import ProductDetailPage from "./pages/product-detail/ProductDetailPage";
 import CheckoutPage from "./pages/checkout/CheckoutPage";
 import OrderSuccessPage from "./pages/order-success/OrderSuccessPage";
 import MyProfile from "./pages/my-profile";
+import HelpPage from "./pages/help/HelpPage";
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/" element={<HomePage />} />
         <Route path="/shop" element={<ShopPage />} />
+        <Route path="/help" element={<HelpPage />} />
         <Route path="/product/:id" element={<ProductDetailPage />} />
 
         <Route element={<ProtectedRoute />}>

@@ -9,8 +9,9 @@ import {
   createProduct,
   updateProduct,
   deleteProduct,
-  addProductImage,
+  addProductImages,
   removeProductImage,
+  reorderProductImages,
   updateProductStock,
 } from "@/lib/api";
 import { useDebounce } from "@/hooks/useDebounce";
@@ -18,7 +19,7 @@ import { ProductsToolbar } from "./components/ProductToolbar";
 import { Pagination } from "@/components/Pagination";
 import ProductFormModal, { emptyProductForm, type ProductForm } from "./components/ProductFormModal";
 import StockModal from "./components/StockModal";
-import ImagesModal, { type ImageForm } from "./components/ImagesModal";
+import ImagesModal from "./components/ImagesModal";
 import ConfirmDeleteModal from "./components/ConfirmDeleteModal";
 import { useCategories } from "@/hooks/useCategories";
 import { PRODUCTS_QUERY_KEY, useProducts } from "@/hooks/useProducts";
@@ -45,7 +46,6 @@ const ProductsTab = () => {
   // Forms
   const [form, setForm] = useState<ProductForm>(emptyProductForm());
   const [stockValue, setStockValue] = useState("");
-  const [imageForm, setImageForm] = useState<ImageForm>({ url: "", altText: "", position: "" });
 
 
   const { products, meta, isLoading: productsLoading } = useProducts(
@@ -102,18 +102,12 @@ const ProductsTab = () => {
     onError: handleApiError,
   });
 
-  const addImageMutation = useMutation({
-    mutationFn: ({
-      productId,
-      payload,
-    }: {
-      productId: string;
-      payload: { url: string; altText?: string; position?: number };
-    }) => addProductImage(productId, payload),
+  const addImagesMutation = useMutation({
+    mutationFn: ({ productId, files }: { productId: string; files: File[] }) =>
+      addProductImages(productId, files),
     onSuccess: () => {
-      toast.success("Image added");
+      toast.success("Images added");
       queryClient.invalidateQueries({ queryKey: [PRODUCTS_QUERY_KEY] });
-      setImageForm({ url: "", altText: "", position: "" });
     },
     onError: handleApiError,
   });
@@ -123,6 +117,21 @@ const ProductsTab = () => {
       removeProductImage(productId, imageId),
     onSuccess: () => {
       toast.success("Image removed");
+      queryClient.invalidateQueries({ queryKey: [PRODUCTS_QUERY_KEY] });
+    },
+    onError: handleApiError,
+  });
+
+  const reorderImagesMutation = useMutation({
+    mutationFn: ({
+      productId,
+      images,
+    }: {
+      productId: string;
+      images: { id: string; position: number }[];
+    }) => reorderProductImages(productId, images),
+    onSuccess: () => {
+      toast.success("Order saved");
       queryClient.invalidateQueries({ queryKey: [PRODUCTS_QUERY_KEY] });
     },
     onError: handleApiError,
@@ -166,7 +175,6 @@ const ProductsTab = () => {
 
   const openImages = (product: IProduct) => {
     setImagesProduct(product);
-    setImageForm({ url: "", altText: "", position: "" });
   };
 
   const handleSubmitProduct = (isEdit: boolean) => {
@@ -190,18 +198,6 @@ const ProductsTab = () => {
     } else {
       createMutation.mutate({ ...base, stock: Number(form.stock) });
     }
-  };
-
-  const handleAddImage = () => {
-    if (!imagesProduct || !imageForm.url) return;
-    addImageMutation.mutate({
-      productId: imagesProduct.id,
-      payload: {
-        url: imageForm.url,
-        altText: imageForm.altText || undefined,
-        position: imageForm.position ? Number(imageForm.position) : undefined,
-      },
-    });
   };
 
   // Use fresh product data from query for images modal
@@ -453,14 +449,18 @@ const ProductsTab = () => {
         open={!!imagesProduct}
         onClose={() => setImagesProduct(null)}
         product={freshImagesProduct ?? null}
-        imageForm={imageForm}
-        onImageFormChange={setImageForm}
-        onAddImage={handleAddImage}
+        onAddImages={(files) =>
+          imagesProduct && addImagesMutation.mutate({ productId: imagesProduct.id, files })
+        }
         onRemoveImage={(imageId) =>
           imagesProduct && removeImageMutation.mutate({ productId: imagesProduct.id, imageId })
         }
-        addImagePending={addImageMutation.isPending}
+        onReorderImages={(images) =>
+          imagesProduct && reorderImagesMutation.mutate({ productId: imagesProduct.id, images })
+        }
+        addImagesPending={addImagesMutation.isPending}
         removeImagePending={removeImageMutation.isPending}
+        reorderPending={reorderImagesMutation.isPending}
       />
     </>
   );

@@ -1,28 +1,16 @@
 import { GoldDivider } from "@/components/comps";
 import { Phone, Mail, ClockAlert, MessageCircle } from "lucide-react";
 import { Link } from "react-router-dom";
+import { type ICategory } from "@/types/category";
+import { useCategories } from "@/hooks/useCategories";
 
-const FOOTER_LINKS = [
-  {
-    heading: "Shop",
-    links: [
-      { label: "New Arrivals", href: "/new-collection" },
-      { label: "Kurtas", href: "/shop?category=kurtas" },
-      { label: "Sarees", href: "/shop?category=sarees" },
-      { label: "Lehengas", href: "/shop?category=lehengas" },
-      { label: "Sale", href: "/sale" },
-    ],
-  },
-  {
-    heading: "Help",
-    links: [
-      { label: "Shipping Policy", href: "/shipping" },
-      { label: "Return Policy", href: "/returns" },
-      { label: "Track My Order", href: "/track" },
-      { label: "Terms of Service", href: "/terms" },
-      { label: "Privacy Policy", href: "/privacy" },
-    ],
-  },
+const HELP_LINKS = [
+  { label: "Shipping Policy",   href: "/help#shipping" },
+  { label: "Return Policy",     href: "/help#exchange" },
+  { label: "Track My Order",    href: "/help#track" },
+  { label: "Terms of Service",  href: "/help#terms" },
+  { label: "Privacy Policy",    href: "/help#privacy" },
+  { label: "Cancellation",      href: "/help#cancellation" },
 ];
 
 // const SOCIAL_LINKS = [
@@ -32,7 +20,25 @@ const FOOTER_LINKS = [
 //   { Icon: Youtube, href: "#", label: "YouTube" },
 // ];
 
-const Footer = () => (
+const Footer = () => {
+
+  const { categories } = useCategories();
+
+  const FOOTER_LINKS = [
+    {
+      heading: "Shop",
+      links: categories.slice(0, 4).map((cat: ICategory) => ({
+        label: cat.name,
+        href: `/shop?category=${cat.slug}`,
+      })),
+    },
+    {
+      heading: "Help",
+      links: HELP_LINKS,
+    },
+  ];
+
+  return (
   <footer className="bg-[#100C07] text-white">
     <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-16 pt-14 pb-8">
       {/* Main grid */}
@@ -119,6 +125,6 @@ const Footer = () => (
       </div>
     </div>
   </footer>
-);
+)};
 
 export default Footer;
