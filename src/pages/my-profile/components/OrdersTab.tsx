@@ -11,6 +11,7 @@ const ORDER_STATUS_COLORS: Record<OrderStatus, string> = {
   CONFIRMED: "bg-blue-50 text-blue-700 border-blue-200",
   SHIPPED: "bg-purple-50 text-purple-700 border-purple-200",
   DELIVERED: "bg-emerald-50 text-emerald-700 border-emerald-200",
+  REFUNDED: "bg-emerald-50 text-emerald-700 border-emerald-200",
   CANCELLED: "bg-rose-100 text-rose-700 border-rose-200",
 };
 
@@ -222,6 +223,18 @@ const OrdersTab = () => {
                       <span>{formatINR(order.totalAmount)}</span>
                     </div>
                   </div>
+
+                  {/* Tracking number */}
+                  
+                  <div className="border-t border-[#E8DDD0] pt-3">
+                    <p className="text-[10px] tracking-[0.2em] uppercase text-gray-400 font-medium mb-1">
+                      Tracking Number
+                    </p>
+                    <p className="text-xs font-mono text-gray-700">
+                      {order.trackingNumber ?? "N/A"}
+                    </p>
+                  </div>
+                  
 
                   {/* Shipping address */}
                   <div className="border-t border-[#E8DDD0] pt-3">

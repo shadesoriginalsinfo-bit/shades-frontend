@@ -1,8 +1,9 @@
-import { ShoppingBag, User, Search, Menu, X, ChevronDown } from "lucide-react";
+import { ShoppingBag, User, Search, Menu, X, ChevronDown, LogOut } from "lucide-react";
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import logo from "@/assets/transparentLogo.png";
 import { useAuthUser } from "@/hooks/useAuth";
+import { useLogout } from "@/hooks/useLogout";
 import dummyAvatar from "@/assets/profile.webp"
 
 interface NavItem {
@@ -83,8 +84,10 @@ const NavLink = ({ item, isActive }: NavLinkProps) => {
 
 const Header = () => {
   const {data: user, isLoading} = useAuthUser()
+  const { logout } = useLogout();
 
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
   const location = useLocation();
@@ -141,12 +144,36 @@ const Header = () => {
               </div>}
 
               {!isLoading && user ? (
-                <Link
-                  to="/my-profile"
-                  className="hidden md:flex items-center gap-1.5 text-xs tracking-wider text-gray-600 hover:text-[#c4b9a5] transition-colors border-2 border-[#C6A46C]  w-8 h-8 rounded-full"
+                <div
+                  className="relative hidden md:flex"
+                  onMouseEnter={() => setProfileOpen(true)}
+                  onMouseLeave={() => setProfileOpen(false)}
                 >
-                  <img src={avatar} alt={user.name} className="w-full object-cover rounded-full" />
-                </Link>
+                  <button className="flex items-center border-2 border-[#C6A46C] w-8 h-8 rounded-full overflow-hidden">
+                    <img src={avatar} alt={user.name} className="w-full object-cover rounded-full" />
+                  </button>
+                  {profileOpen && (
+                    <div className="absolute top-full right-0 pt-2 w-44 z-50">
+                      <div className="bg-white border border-[#E8DDD0] shadow-[0_8px_30px_rgba(0,0,0,0.08)]">
+                        <Link
+                          to="/my-profile"
+                          className="flex items-center gap-2 px-4 py-3 text-xs tracking-wider text-gray-600 hover:text-[#C6A46C] hover:bg-[#F5EFE7] transition-colors border-b border-[#E8DDD0]/50"
+                          onClick={() => setProfileOpen(false)}
+                        >
+                          <User size={13} />
+                          My Profile
+                        </Link>
+                        <button
+                          onClick={logout}
+                          className="flex w-full items-center gap-2 px-4 py-3 text-xs tracking-wider text-gray-600 hover:text-red-500 hover:bg-red-50 transition-colors"
+                        >
+                          <LogOut size={13} />
+                          Logout
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
               ) : (
                 <Link
                   to="/login"
@@ -201,12 +228,22 @@ const Header = () => {
             ))}
             <div className="pt-3 flex items-center gap-3">
               {!isLoading && user ? (
-                <Link
-                  to="/my-profile"
-                  className="flex items-center gap-1.5 text-xs tracking-wider text-gray-600 hover:text-[#c4b9a5] transition-colors border-2 border-[#C6A46C]  w-8 h-8 rounded-full"
-                >
-                  <img src={avatar} alt={user.name} className="w-full object-cover rounded-full" />
-                </Link>
+                <>
+                  <Link
+                    to="/my-profile"
+                    className="flex items-center gap-1.5 text-xs tracking-wider text-gray-600 hover:text-[#c4b9a5] transition-colors border-2 border-[#C6A46C] w-8 h-8 rounded-full"
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    <img src={avatar} alt={user.name} className="w-full object-cover rounded-full" />
+                  </Link>
+                  <button
+                    onClick={() => { logout(); setMobileOpen(false); }}
+                    className="flex items-center gap-1.5 text-xs tracking-wider text-gray-600 hover:text-red-500 transition-colors border border-[#E8DDD0] hover:border-red-300 rounded-sm px-3 py-2"
+                  >
+                    <LogOut size={14} />
+                    <span>Logout</span>
+                  </button>
+                </>
               ) : (
                 <Link
                   to="/login"

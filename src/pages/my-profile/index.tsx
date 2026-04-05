@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { User, MapPin, ShoppingBag, Shield, LogOut } from "lucide-react";
+import { User, MapPin, ShoppingBag, Shield } from "lucide-react";
 import { Link } from "react-router-dom";
 import Footer from "@/pages/home/components/Footer";
 import Header from "../home/components/Header";
@@ -7,8 +7,6 @@ import ProfileTab from "./components/ProfileTab";
 import AddressesTab from "./components/AddressTab";
 import OrdersTab from "./components/OrdersTab";
 import SecurityTab from "./components/SecurityTab";
-import { useLogout } from "@/hooks/useLogout";
-import LoadingModal from "@/pages/LoadingPage";
 
 type Tab = "profile" | "addresses" | "orders" | "security";
 
@@ -21,9 +19,6 @@ const TABS: { key: Tab; label: string; icon: React.ReactNode }[] = [
 
 const MyProfile = () => {
   const [activeTab, setActiveTab] = useState<Tab>("profile");
-  const { logout, logoutLoading } = useLogout();
-
-  if (logoutLoading) return <LoadingModal />;
 
   return (
     <div className="min-h-screen flex flex-col bg-[#FDFAF6]">
@@ -70,13 +65,6 @@ const MyProfile = () => {
               {label}
             </button>
           ))}
-          <button
-            onClick={logout}
-            className="flex items-center gap-2 px-5 py-3 text-xs tracking-[0.15em] uppercase font-medium whitespace-nowrap transition-all border-b-2 -mb-px border-transparent text-gray-500 hover:text-red-500 ml-auto"
-          >
-            <LogOut size={15} />
-            Logout
-          </button>
         </div>
 
         {/* Tab content */}
