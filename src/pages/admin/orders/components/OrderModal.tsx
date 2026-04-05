@@ -1,4 +1,4 @@
-import { ORDER_STATUSES, type IAdminOrder, type OrderStatus } from "@/types/order";
+import { STATUS_PROGRESSION, type IAdminOrder, type OrderStatus } from "@/types/order";
 import { useState } from "react";
 import { PaymentBadge, StatusBadge } from "./Badges";
 import { ChevronDown, X } from "lucide-react";
@@ -7,19 +7,31 @@ import { Button } from "@/components/ui/button";
 interface DetailModalProps {
   order: IAdminOrder | null;
   onClose: () => void;
-  onStatusUpdate: (id: string, status: OrderStatus) => void;
+  onStatusUpdate: (id: string, status: OrderStatus, trackingNumber?: string) => void;
   isPending: boolean;
 }
 
-
 export function OrderDetailModal({ order, onClose, onStatusUpdate, isPending }: DetailModalProps) {
   const [selectedStatus, setSelectedStatus] = useState<OrderStatus | "">("");
+  const [trackingNumber, setTrackingNumber] = useState("");
 
   if (!order) return null;
 
+  const allowedStatuses = STATUS_PROGRESSION[order.status];
+  const requiresTracking = selectedStatus === "SHIPPED";
+  const canSubmit =
+    !!selectedStatus &&
+    selectedStatus !== order.status &&
+    (!requiresTracking || trackingNumber.trim().length > 0);
+
   const handleUpdate = () => {
-    if (!selectedStatus || selectedStatus === order.status) return;
-    onStatusUpdate(order.id, selectedStatus);
+    if (!selectedStatus || !canSubmit) return;
+    onStatusUpdate(order.id, selectedStatus, requiresTracking ? trackingNumber.trim() : undefined);
+  };
+
+  const handleStatusChange = (val: OrderStatus | "") => {
+    setSelectedStatus(val);
+    if (val !== "SHIPPED") setTrackingNumber("");
   };
 
   return (
@@ -52,6 +64,62 @@ export function OrderDetailModal({ order, onClose, onStatusUpdate, isPending }: 
               })}
             </span>
           </div>
+
+          {/* Update Status */}
+          {allowedStatuses.length > 0 ? (
+            <div>
+              <p className="text-[10px] tracking-[0.2em] uppercase text-[#C6A46C]/80 font-medium mb-2">
+                Update Status
+              </p>
+              <div className="space-y-2">
+                <div className="flex gap-2">
+                  <div className="relative flex-1">
+                    <select
+                      value={selectedStatus}
+                      onChange={(e) => handleStatusChange(e.target.value as OrderStatus | "")}
+                      className="w-full cursor-pointer appearance-none border border-[#E8DDD0] bg-white px-3 py-2.5 pr-9 text-sm text-gray-700 transition-colors hover:border-[#C6A46C]/60 focus:outline-none focus:border-[#C6A46C] focus:ring-1 focus:ring-[#C6A46C]/20"
+                    >
+                      <option value="">Select new status…</option>
+                      {allowedStatuses.map((s) => (
+                        <option key={s} value={s}>
+                          {s}
+                        </option>
+                      ))}
+                    </select>
+                    <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 size-3.5 text-gray-400" />
+                  </div>
+                  <Button
+                    onClick={handleUpdate}
+                    disabled={!canSubmit || isPending}
+                    className="bg-[#C6A46C] hover:bg-[#b8935d] text-white"
+                  >
+                    {isPending ? "Saving…" : "Update"}
+                  </Button>
+                </div>
+
+                {requiresTracking && (
+                  <div>
+                    <input
+                      type="text"
+                      placeholder="Tracking number (required)"
+                      value={trackingNumber}
+                      onChange={(e) => setTrackingNumber(e.target.value)}
+                      className="w-full border border-[#E8DDD0] px-3 py-2.5 text-sm text-gray-700 placeholder:text-gray-300 transition-colors hover:border-[#C6A46C]/60 focus:outline-none focus:border-[#C6A46C] focus:ring-1 focus:ring-[#C6A46C]/20"
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+          ) : (
+            <div>
+              <p className="text-[10px] tracking-[0.2em] uppercase text-[#C6A46C]/80 font-medium mb-2">
+                Update Status
+              </p>
+              <p className="text-xs text-gray-400 bg-[#F8F4EE] px-3 py-2.5">
+                No further status transitions available for this order.
+              </p>
+            </div>
+          )}
 
           {/* Customer */}
           <div>
@@ -160,36 +228,6 @@ export function OrderDetailModal({ order, onClose, onStatusUpdate, isPending }: 
             </div>
           )}
 
-          {/* Update Status */}
-          <div>
-            <p className="text-[10px] tracking-[0.2em] uppercase text-[#C6A46C]/80 font-medium mb-2">
-              Update Status
-            </p>
-            <div className="flex gap-2">
-              <div className="relative flex-1">
-                <select
-                  value={selectedStatus}
-                  onChange={(e) => setSelectedStatus(e.target.value as OrderStatus)}
-                  className="w-full appearance-none border border-[#E8DDD0] bg-white px-3 py-2 pr-8 text-sm text-gray-700 focus:outline-none focus:border-[#C6A46C]"
-                >
-                  <option value="">Select new status…</option>
-                  {ORDER_STATUSES.filter((s) => s !== order.status).map((s) => (
-                    <option key={s} value={s}>
-                      {s}
-                    </option>
-                  ))}
-                </select>
-                <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 size-3.5 text-gray-400" />
-              </div>
-              <Button
-                onClick={handleUpdate}
-                disabled={!selectedStatus || selectedStatus === order.status || isPending}
-                className="bg-[#C6A46C] hover:bg-[#b8935d] text-white"
-              >
-                {isPending ? "Saving…" : "Update"}
-              </Button>
-            </div>
-          </div>
         </div>
       </div>
     </div>

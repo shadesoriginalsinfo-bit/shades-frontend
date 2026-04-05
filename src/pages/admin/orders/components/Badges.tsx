@@ -5,6 +5,7 @@ const STATUS_STYLES: Record<OrderStatus, string> = {
   CONFIRMED: "bg-blue-50 text-blue-700 border-blue-200",
   SHIPPED: "bg-purple-50 text-purple-700 border-purple-200",
   DELIVERED: "bg-green-50 text-green-700 border-green-200",
+  REFUNDED: "bg-green-50 text-green-700 border-green-200",
   CANCELLED: "bg-red-50 text-red-500 border-red-200",
 };
 

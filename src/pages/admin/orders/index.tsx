@@ -38,8 +38,8 @@ const OrdersPage = () => {
   });
 
   const updateStatusMutation = useMutation({
-    mutationFn: ({ id, status }: { id: string; status: OrderStatus }) =>
-      adminUpdateOrderStatus(id, status),
+    mutationFn: ({ id, status, trackingNumber }: { id: string; status: OrderStatus; trackingNumber?: string }) =>
+      adminUpdateOrderStatus(id, status, trackingNumber),
     onSuccess: (updated) => {
       toast.success("Order status updated");
       queryClient.invalidateQueries({ queryKey: [ORDERS_QUERY_KEY] });
@@ -79,7 +79,7 @@ const OrdersPage = () => {
                   setStatusFilter(e.target.value as OrderStatus | "");
                   setPage(1);
                 }}
-                className="w-full appearance-none border border-[#E8DDD0] bg-white px-3 py-2 pr-8 text-sm text-gray-700 focus:outline-none focus:border-[#C6A46C]"
+                className="w-full cursor-pointer appearance-none border border-[#E8DDD0] bg-white px-3 py-2 pr-9 text-sm text-gray-700 transition-colors hover:border-[#C6A46C]/60 focus:outline-none focus:border-[#C6A46C] focus:ring-1 focus:ring-[#C6A46C]/20"
               >
                 <option value="">All statuses</option>
                 {ORDER_STATUSES.map((s) => (
@@ -188,23 +188,29 @@ const OrdersPage = () => {
                 <th className="text-left px-4 py-3 text-[10px] tracking-[0.2em] uppercase text-[#C6A46C]/80 font-medium">
                   Order ID
                 </th>
-                <th className="text-left px-4 py-3 text-[10px] tracking-[0.2em] uppercase text-[#C6A46C]/80 font-medium hidden md:table-cell">
+                <th className="text-left px-4 py-3 text-[10px] tracking-[0.2em] uppercase text-[#C6A46C]/80 font-medium">
                   Customer
                 </th>
                 <th className="text-left px-4 py-3 text-[10px] tracking-[0.2em] uppercase text-[#C6A46C]/80 font-medium">
                   Status
                 </th>
-                <th className="text-left px-4 py-3 text-[10px] tracking-[0.2em] uppercase text-[#C6A46C]/80 font-medium hidden sm:table-cell">
+                <th className="text-left px-4 py-3 text-[10px] tracking-[0.2em] uppercase text-[#C6A46C]/80 font-medium ">
                   Payment
                 </th>
-                <th className="text-left px-4 py-3 text-[10px] tracking-[0.2em] uppercase text-[#C6A46C]/80 font-medium hidden lg:table-cell">
+                <th className="text-left px-4 py-3 text-[10px] tracking-[0.2em] uppercase text-[#C6A46C]/80 font-medium">
                   Items
+                </th>
+                <th className="text-left px-4 py-3 text-[10px] tracking-[0.2em] uppercase text-[#C6A46C]/80 font-medium">
+                  Tracking Id
                 </th>
                 <th className="text-right px-4 py-3 text-[10px] tracking-[0.2em] uppercase text-[#C6A46C]/80 font-medium">
                   Total
                 </th>
-                <th className="text-left px-4 py-3 text-[10px] tracking-[0.2em] uppercase text-[#C6A46C]/80 font-medium hidden md:table-cell">
-                  Date
+                <th className="text-left px-4 py-3 text-[10px] tracking-[0.2em] uppercase text-[#C6A46C]/80 font-medium">
+                  Placed At
+                </th>
+                <th className="text-left px-4 py-3 text-[10px] tracking-[0.2em] uppercase text-[#C6A46C]/80 font-medium">
+                  Updated At
                 </th>
                 <th className="text-right px-4 py-3 text-[10px] tracking-[0.2em] uppercase text-[#C6A46C]/80 font-medium">
                   Actions
@@ -220,12 +226,12 @@ const OrdersPage = () => {
                   {/* Order ID */}
                   <td className="px-4 py-3">
                     <span className="font-mono text-xs text-gray-600">
-                      {order.id.slice(0, 8)}…
+                      {order.id}
                     </span>
                   </td>
 
                   {/* Customer */}
-                  <td className="px-4 py-3 hidden md:table-cell">
+                  <td className="px-4 py-3 ">
                     <p className="font-medium text-gray-800 leading-tight">{order.user.name}</p>
                     <p className="text-xs text-gray-400">{order.user.email}</p>
                   </td>
@@ -236,12 +242,19 @@ const OrdersPage = () => {
                   </td>
 
                   {/* Payment status */}
-                  <td className="px-4 py-3 hidden sm:table-cell">
+                  <td className="px-4 py-3">
                     <PaymentBadge status={order.paymentStatus} />
                   </td>
 
+                  {/* Tracking Id */}
+                  <td className="px-4 py-3 ">
+                    <span className="text-xs text-gray-500">
+                      {order.trackingNumber || "N/A"}
+                    </span>
+                  </td>
+
                   {/* Items count */}
-                  <td className="px-4 py-3 hidden lg:table-cell">
+                  <td className="px-4 py-3 ">
                     <span className="text-xs text-gray-500">
                       {order.items.length} {order.items.length === 1 ? "item" : "items"}
                     </span>
@@ -255,9 +268,19 @@ const OrdersPage = () => {
                   </td>
 
                   {/* Date */}
-                  <td className="px-4 py-3 hidden md:table-cell">
+                  <td className="px-4 py-3 min-w-28 ">
                     <span className="text-xs text-gray-400">
                       {new Date(order.placedAt ?? order.createdAt).toLocaleDateString("en-IN", {
+                        day: "numeric",
+                        month: "short",
+                        year: "numeric",
+                      })}
+                    </span>
+                  </td>
+
+                  <td className="px-4 py-3 min-w-28 ">
+                    <span className="text-xs text-gray-400">
+                      {new Date(order.updatedAt).toLocaleDateString("en-IN", {
                         day: "numeric",
                         month: "short",
                         year: "numeric",
@@ -298,7 +321,9 @@ const OrdersPage = () => {
       <OrderDetailModal
         order={selectedOrder}
         onClose={() => setSelectedOrder(null)}
-        onStatusUpdate={(id, status) => updateStatusMutation.mutate({ id, status })}
+        onStatusUpdate={(id, status, trackingNumber) =>
+          updateStatusMutation.mutate({ id, status, trackingNumber })
+        }
         isPending={updateStatusMutation.isPending}
       />
     </div>

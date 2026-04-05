@@ -179,8 +179,15 @@ export async function adminGetOrders(params?: IAdminOrderQuery): Promise<IOrders
   return data;
 }
 
-export async function adminUpdateOrderStatus(id: string, status: string): Promise<IOrder> {
-  const { data } = await axios.patch(`/orders/admin/${id}/status`, { status });
+export async function adminUpdateOrderStatus(
+  id: string,
+  status: string,
+  trackingNumber?: string,
+): Promise<IOrder> {
+  const { data } = await axios.patch(`/orders/admin/${id}/status`, {
+    status,
+    ...(trackingNumber !== undefined && { trackingNumber }),
+  });
   return data.data;
 }
 

@@ -5,7 +5,8 @@ export type OrderStatus =
   | "CONFIRMED"
   | "SHIPPED"
   | "DELIVERED"
-  | "CANCELLED";
+  | "CANCELLED"
+  | "REFUNDED";
 
 export const ORDER_STATUSES: OrderStatus[] = [
   "PENDING",
@@ -13,7 +14,17 @@ export const ORDER_STATUSES: OrderStatus[] = [
   "SHIPPED",
   "DELIVERED",
   "CANCELLED",
+  "REFUNDED",
 ];
+
+export const STATUS_PROGRESSION: Record<OrderStatus, OrderStatus[]> = {
+  PENDING: ["CONFIRMED", "CANCELLED"],
+  CONFIRMED: ["SHIPPED", "CANCELLED"],
+  SHIPPED: ["DELIVERED"],
+  DELIVERED: ["REFUNDED"],
+  CANCELLED: [],
+  REFUNDED: [],
+};
 
 export interface IPayment {
   id: string;
