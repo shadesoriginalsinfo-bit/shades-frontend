@@ -153,7 +153,7 @@ const ImagesModal = ({
                     key={img.id}
                     className="flex items-center gap-2.5 border border-[#E8DDD0] rounded-sm p-2 bg-white hover:bg-[#FDFAF6] transition-colors"
                   >
-                    <span className="text-[10px] text-gray-300 w-4 text-center tabular-nums select-none shrink-0">
+                    <span className="text-[10px] text-gray-500 w-4 text-center tabular-nums select-none shrink-0">
                       {index + 1}
                     </span>
                     <img
@@ -163,7 +163,7 @@ const ImagesModal = ({
                     />
                     <div className="flex-1 min-w-0">
                       <p className="text-xs text-gray-600 truncate">{img.altText || "—"}</p>
-                      <p className="text-[10px] text-gray-300 truncate">{img.url.split("/").pop()}</p>
+                      {/* <p className="text-[10px] text-gray-300 truncate">{img.url.split("/").pop()}</p> */}
                     </div>
 
                     {/* Reorder buttons */}
