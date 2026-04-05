@@ -107,14 +107,9 @@ export async function deleteProduct(id: string): Promise<{ message: string }> {
   return data;
 }
 
-export async function addProductImage(
-  productId: string,
-  payload: { file: File; altText?: string; position?: number },
-) {
+export async function addProductImages(productId: string, files: File[]) {
   const formData = new FormData();
-  formData.append("image", payload.file);
-  if (payload.altText) formData.append("altText", payload.altText);
-  if (payload.position !== undefined) formData.append("position", String(payload.position));
+  files.forEach((file) => formData.append("images", file));
   const { data } = await axios.post(`/products/${productId}/images`, formData, {
     headers: { "Content-Type": "multipart/form-data" },
   });
@@ -124,6 +119,14 @@ export async function addProductImage(
 export async function removeProductImage(productId: string, imageId: string) {
   const { data } = await axios.delete(`/products/${productId}/images/${imageId}`);
   return data;
+}
+
+export async function reorderProductImages(
+  productId: string,
+  images: { id: string; position: number }[],
+) {
+  const { data } = await axios.patch(`/products/${productId}/images/reorder`, { images });
+  return data.data;
 }
 
 export async function updateProductStock(productId: string, stock: number) {
