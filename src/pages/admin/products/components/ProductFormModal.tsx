@@ -17,8 +17,10 @@ export const emptyProductForm = () => ({
   marketPrice: "",
   discountPrice: "",
   stock: "",
+  gstPercent: "",
   shortDesc: "",
   description: "",
+  careInstruction: "",
   isPublished: true,
   categoryIds: [] as string[],
 });
@@ -30,7 +32,7 @@ interface Props {
   onOpenChange: (open: boolean) => void;
   editingProduct: IProduct | null;
   form: ProductForm;
-  onFormChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onFormChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   onTogglePublished: () => void;
   onToggleCategory: (id: string) => void;
   categories: ICategory[];
@@ -93,6 +95,17 @@ const ProductFormModal = ({
           </LabelField>
         </div>
 
+        <LabelField label="GST (%)">
+          <Input
+            name="gstPercent"
+            type="number"
+            value={form.gstPercent}
+            onChange={onFormChange}
+            placeholder="e.g. 18"
+            restrictSpecialChars={false}
+          />
+        </LabelField>
+
         {!editingProduct && (
           <LabelField label="Stock *">
             <Input
@@ -120,12 +133,26 @@ const ProductFormModal = ({
 
         <div>
           <LabelField label="Description">
-            <Input
+            <textarea
               name="description"
               value={form.description}
               onChange={onFormChange}
-              placeholder="Full product description..."
-              restrictSpecialChars={false}
+              placeholder={"Each line becomes a bullet point\nLine 1\nLine 2"}
+              rows={4}
+              className="w-full bg-transparent text-sm text-gray-800 outline-none border border-[#D4B896] px-2 pb-1 pt-1.5 placeholder:text-[#C6A46C]/70 placeholder:text-xs placeholder:tracking-wider focus:border-[#C6A46C] focus:shadow-[0_1px_0_0_#C6A46C] resize-none"
+            />
+          </LabelField>
+        </div>
+
+        <div>
+          <LabelField label="Care Instructions">
+            <textarea
+              name="careInstruction"
+              value={form.careInstruction}
+              onChange={onFormChange}
+              placeholder={"Each line becomes a bullet point\nHand wash in cold water\nDo not bleach"}
+              rows={4}
+              className="w-full bg-transparent text-sm text-gray-800 outline-none border border-[#D4B896] px-2 pb-1 pt-1.5 placeholder:text-[#C6A46C]/70 placeholder:text-xs placeholder:tracking-wider focus:border-[#C6A46C] focus:shadow-[0_1px_0_0_#C6A46C] resize-none"
             />
           </LabelField>
         </div>

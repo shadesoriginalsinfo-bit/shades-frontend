@@ -163,6 +163,13 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
         </p>
       )}
 
+      {/* GST note */}
+      {product.gstPercent > 0 && (
+        <p className="text-[11px] text-gray-400 tracking-wide -mt-2">
+          Inclusive of {product.gstPercent}% GST
+        </p>
+      )}
+
       {/* ── Stock badge ── */}
       <div>
         {isOutOfStock ? (
@@ -269,7 +276,7 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
       <div className="grid grid-cols-3 gap-2 py-4 border-y border-[#E8DDD0]">
         {[
           { Icon: Truck,     label: "Free Delivery", sub: "Above ₹999" },
-          { Icon: RefreshCw, label: "7-Day Return",  sub: "Hassle free" },
+          { Icon: RefreshCw, label: "Easy Exchange",  sub: "Hassle free" },
           { Icon: Shield,    label: "Secure Pay",    sub: "100% safe" },
         ].map(({ Icon, label, sub }) => (
           <div key={label} className="flex flex-col items-center text-center gap-1.5">
@@ -317,38 +324,64 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
       <div className="border-t border-[#E8DDD0] mt-2">
         {product.description && (
           <Accordion label="Product Description" defaultOpen>
-            <div
-              className="prose prose-sm max-w-none text-gray-600 leading-relaxed"
-              dangerouslySetInnerHTML={{ __html: product.description }}
-            />
+            <ul className="space-y-2 text-gray-600">
+              {product.description
+                .split("\n")
+                .map((line) => line.trim())
+                .filter(Boolean)
+                .map((line, i) => (
+                  <li key={i} className="flex items-start gap-2">
+                    <span className="text-[#C6A46C] mt-0.5 shrink-0">·</span>
+                    {line}
+                  </li>
+                ))}
+            </ul>
           </Accordion>
         )}
 
-        <Accordion label="Care Instructions">
+        {product.careInstruction && (
+          <Accordion label="Care Instructions">
+            <ul className="space-y-2 text-gray-600">
+              {product.careInstruction
+                .split("\n")
+                .map((line) => line.trim())
+                .filter(Boolean)
+                .map((line, i) => (
+                  <li key={i} className="flex items-start gap-2">
+                    <span className="text-[#C6A46C] mt-0.5 shrink-0">·</span>
+                    {line}
+                  </li>
+                ))}
+            </ul>
+          </Accordion>
+        )}
+
+        <Accordion label="Shipping Policy">
           <ul className="space-y-2 text-gray-600">
             {[
-              "Dry clean recommended for embroidered pieces",
-              "Hand wash in cold water with mild detergent",
-              "Do not wring — gently squeeze out excess water",
-              "Iron on reverse side at medium heat",
-              "Store in a breathable cloth bag away from direct sunlight",
-            ].map((tip) => (
-              <li key={tip} className="flex items-start gap-2">
+              "Orders are processed within 24-48 hours.",
+              "Delivery time: 3–5 working days across India. depending on your pin code.",
+              "Free shipping on orders above ₹999.",
+              "₹70 shipping charge for orders below ₹999.",
+              "You will receive a tracking link after dispatch.",
+            ].map((info) => (
+              <li key={info} className="flex items-start gap-2">
                 <span className="text-[#C6A46C] mt-0.5 shrink-0">·</span>
-                {tip}
+                {info}
               </li>
             ))}
           </ul>
         </Accordion>
 
-        <Accordion label="Shipping & Returns">
+        <Accordion label="Exchange Policy">
           <ul className="space-y-2 text-gray-600">
             {[
-              "Free standard delivery on orders above ₹999",
-              "Delivery within 4–7 business days across India",
-              "Express delivery available at checkout",
-              "Easy 7-day returns — no questions asked",
-              "Refund processed within 3–5 business days",
+              "We do not offer refunds under any circumstances.",
+              "Exchange is available only for size issues or damaged products (Opening video is mandatory for damaged product claims.)",
+              "Exchange request must be raised within 3 days of delivery.",
+              "Product must be unused, unwashed, with tags intact.",
+              "Reverse pickup available (depending on location).",
+              "Only one-time exchange is allowed per order.",
             ].map((info) => (
               <li key={info} className="flex items-start gap-2">
                 <span className="text-[#C6A46C] mt-0.5 shrink-0">·</span>

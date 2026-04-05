@@ -129,7 +129,7 @@ const ProductsTab = () => {
   });
 
   // Helpers
-  const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
@@ -150,8 +150,10 @@ const ProductsTab = () => {
       marketPrice: String(product.marketPrice),
       discountPrice: product.discountPrice ? String(product.discountPrice) : "",
       stock: String(product.stock),
+      gstPercent: String(product.gstPercent),
       shortDesc: product.shortDesc ?? "",
       description: product.description ?? "",
+      careInstruction: product.careInstruction ?? "",
       isPublished: product.isPublished,
       categoryIds: product.productCategories.map((pc) => pc.category.id),
     });
@@ -175,8 +177,10 @@ const ProductsTab = () => {
       title: form.title,
       marketPrice: Number(form.marketPrice),
       discountPrice: form.discountPrice ? Number(form.discountPrice) : undefined,
+      gstPercent: Number(form.gstPercent) || 0,
       shortDesc: form.shortDesc || undefined,
       description: form.description || undefined,
+      careInstruction: form.careInstruction || undefined,
       isPublished: form.isPublished,
       categoryIds: form.categoryIds.length ? form.categoryIds : undefined,
     };
