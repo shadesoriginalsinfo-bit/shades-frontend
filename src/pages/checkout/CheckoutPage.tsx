@@ -66,7 +66,7 @@ const CheckoutPage = () => {
   const subtotal = unitPrice * quantity;
   const gstRate = (product.gstPercent ?? 0) / 100;
   const tax = parseFloat((subtotal * gstRate).toFixed(2));
-  const shipping = subtotal >= SHIPPING_FREE_THRESHOLD ? 0 : SHIPPING_FLAT;
+  const shipping = subtotal >= 1 && subtotal < SHIPPING_FREE_THRESHOLD ? SHIPPING_FLAT : 0;
   const total = parseFloat((subtotal + tax + shipping).toFixed(2));
 
   const { data: addresses = [], isLoading: addressesLoading } = useQuery({

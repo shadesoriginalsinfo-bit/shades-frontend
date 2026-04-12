@@ -181,6 +181,12 @@ const ProductsTab = () => {
     if (!form.title || !form.marketPrice) {
       return toast.error("Title and market price are required");
     }
+    if (form.categoryIds.length === 0) {
+      return toast.error("Select at least one category");
+    }
+    if (form.discountPrice && Number(form.discountPrice) >= Number(form.marketPrice)) {
+      return toast.error("Discount price must be less than market price");
+    }
     const base = {
       title: form.title,
       marketPrice: Number(form.marketPrice),
@@ -407,6 +413,7 @@ const ProductsTab = () => {
           if (!open) {
             setShowCreate(false);
             setEditingProduct(null);
+            setForm(emptyProductForm());
           }
         }}
         editingProduct={editingProduct}

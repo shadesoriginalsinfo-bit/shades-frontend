@@ -178,7 +178,7 @@ const ProductFormModal = ({
 
         {categories.length > 0 && (
           <div>
-            <label>Categories</label>
+            <label>Categories *</label>
             <div className="max-h-36 overflow-y-auto border border-[#E8DDD0] rounded-sm p-2 space-y-1.5">
               {categories.map((cat) => (
                 <label
