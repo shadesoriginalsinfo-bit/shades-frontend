@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { LogOut, Menu, Settings, X } from "lucide-react";
+import { HomeIcon, LogOut, Menu, X } from "lucide-react";
 import { Link, NavLink } from "react-router-dom";
 import clsx from "clsx";
 import logo from "@/assets/transparentLogo.png";
@@ -16,7 +16,7 @@ const MobileHeader = () => {
   if (logoutLoading) return <LoadingModal />;
 
   return (
-    <div className="fixed md:hidden w-full bg-white z-50 shadow-md text-lg">
+    <div className="fixed md:hidden w-full bg-white z-50 shadow-md text-base">
       <div className="w-full flex justify-between items-center py-3 px-4">
         <Link to="/">
           <img src={logo} alt="bpXchange" className=" h-11" />
@@ -56,11 +56,11 @@ const MobileHeader = () => {
             ))}
           </ul>
           <NavLink
-            to={"/settings"}
-            onClick={() => setMobileMenuOpen(false)}
+            to="/"
             className="flex w-full items-center gap-2 px-7 py-3 font-medium rounded-md transition-colors duration-150 text-gray-800 hover:bg-gray-100 border-b border-gray-200 shadow-sm cursor-pointer"
           >
-            <Settings className="mr-2 h-8" /> Account Settings
+            <HomeIcon className="mr-2 h-8"/>
+            <span>Home</span>
           </NavLink>
           <button
             onClick={logout}

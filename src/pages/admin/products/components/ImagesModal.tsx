@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { ChevronDown, ChevronUp, ImagePlus, Trash2, Upload, X } from "lucide-react";
+import { ChevronDown, ChevronUp, ImagePlus, Loader2, Trash2, Upload, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -9,6 +9,15 @@ import {
 } from "@/components/ui/dialog";
 import type { IProduct, IProductImage } from "@/types/product";
 import Spinner from "./Spinner";
+import imageCompression from "browser-image-compression";
+import toast from "react-hot-toast";
+import { formatFileSize } from "@/utils/formatFileSize";
+
+const MAX_INPUT_MB = 10;
+const TARGET_MB = 2;
+const MAX_OUTPUT_MB = 5;
+const MAX_INPUT_BYTES = MAX_INPUT_MB * 1024 * 1024;
+const MAX_OUTPUT_BYTES = MAX_OUTPUT_MB * 1024 * 1024;
 
 interface Props {
   open: boolean;
@@ -36,7 +45,23 @@ const ImagesModal = ({
   const inputRef = useRef<HTMLInputElement>(null);
   const [pendingFiles, setPendingFiles] = useState<File[]>([]);
   const [localImages, setLocalImages] = useState<IProductImage[]>([]);
+  const [compressing, setCompressing] = useState(false);
   const wasAddingRef = useRef(false);
+
+  const compressImage = async (f: File): Promise<File> => {
+    const compressedBlob = await imageCompression(f, {
+      maxSizeMB: TARGET_MB,
+      maxWidthOrHeight: 1600,
+      useWebWorker: true,
+      fileType: f.type || "image/jpeg",
+    });
+    const ext = (f.name.split(".").pop() ?? "jpg").toLowerCase();
+    const finalName = f.name.replace(/\.[^.]+$/, "") + (ext === "png" ? ".png" : ".jpg");
+    return new File([compressedBlob], finalName, {
+      type: compressedBlob.type || f.type || "image/jpeg",
+      lastModified: Date.now(),
+    });
+  };
 
   // Sync local order whenever product data updates
   useEffect(() => {
@@ -98,10 +123,42 @@ const ImagesModal = ({
     onReorderImages(localImages.map((img, i) => ({ id: img.id, position: i })));
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files ?? []);
-    if (files.length) setPendingFiles((prev) => [...prev, ...files]);
     e.currentTarget.value = "";
+    if (!files.length) return;
+
+    setCompressing(true);
+    const accepted: File[] = [];
+
+    for (const f of files) {
+      if (f.size > MAX_INPUT_BYTES) {
+        toast.error(`"${f.name}" exceeds ${MAX_INPUT_MB} MB limit — skipped`);
+        continue;
+      }
+
+      if (f.size <= MAX_OUTPUT_BYTES) {
+        accepted.push(f);
+        continue;
+      }
+
+      try {
+        const compressed = await compressImage(f);
+        if (compressed.size > MAX_OUTPUT_BYTES) {
+          toast.error(
+            `"${f.name}" is still ${formatFileSize(compressed.size)} after compression (limit ${MAX_OUTPUT_MB} MB) — skipped`,
+          );
+        } else {
+          toast.success(`"${f.name}" compressed to ${formatFileSize(compressed.size)}`);
+          accepted.push(compressed);
+        }
+      } catch {
+        toast.error(`Compression failed for "${f.name}" — skipped`);
+      }
+    }
+
+    setCompressing(false);
+    if (accepted.length) setPendingFiles((prev) => [...prev, ...accepted]);
   };
 
   const removePending = (index: number) => {
@@ -216,12 +273,24 @@ const ImagesModal = ({
 
             <button
               type="button"
+              disabled={compressing}
               onClick={() => inputRef.current?.click()}
-              className="w-full border-2 border-dashed border-[#E8DDD0] rounded hover:border-[#C6A46C]/40 transition-colors py-5 flex flex-col items-center gap-1.5 text-gray-400 hover:text-[#C6A46C]/60"
+              className="w-full border-2 border-dashed border-[#E8DDD0] rounded hover:border-[#C6A46C]/40 transition-colors py-5 flex flex-col items-center gap-1.5 text-gray-400 hover:text-[#C6A46C]/60 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:border-[#E8DDD0] disabled:hover:text-gray-400"
             >
-              <ImagePlus className="size-5" />
-              <span className="text-xs">Click to select images</span>
-              <span className="text-[10px] text-gray-300">Multiple selection supported</span>
+              {compressing ? (
+                <>
+                  <Loader2 className="size-5 animate-spin" />
+                  <span className="text-xs">Compressing…</span>
+                </>
+              ) : (
+                <>
+                  <ImagePlus className="size-5" />
+                  <span className="text-xs">Click to select images</span>
+                  <span className="text-[10px] text-gray-300">
+                    Max {MAX_INPUT_MB} MB per file · Multiple selection supported
+                  </span>
+                </>
+              )}
             </button>
 
             {pendingFiles.length > 0 && (
@@ -252,7 +321,7 @@ const ImagesModal = ({
 
                 <Button
                   size="sm"
-                  disabled={addImagesPending}
+                  disabled={addImagesPending || compressing}
                   onClick={() => onAddImages(pendingFiles)}
                   className="mt-3"
                 >

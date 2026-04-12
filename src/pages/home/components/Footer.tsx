@@ -1,16 +1,17 @@
 import { GoldDivider } from "@/components/comps";
 import { Phone, Mail, ClockAlert, MessageCircle } from "lucide-react";
-import { Link } from "react-router-dom";
 import { type ICategory } from "@/types/category";
 import { useCategories } from "@/hooks/useCategories";
 
+const base = window.location.origin;
+
 const HELP_LINKS = [
-  { label: "Shipping Policy",   href: "/help#shipping" },
-  { label: "Return Policy",     href: "/help#exchange" },
-  { label: "Track My Order",    href: "/help#track" },
-  { label: "Terms of Service",  href: "/help#terms" },
-  { label: "Privacy Policy",    href: "/help#privacy" },
-  { label: "Cancellation",      href: "/help#cancellation" },
+  { label: "Shipping Policy",   href: `${base}/help#shipping` },
+  { label: "Return Policy",     href: `${base}/help#exchange` },
+  { label: "Track My Order",    href: `${base}/help#track` },
+  { label: "Terms of Service",  href: `${base}/help#terms` },
+  { label: "Privacy Policy",    href: `${base}/help#privacy` },
+  { label: "Cancellation",      href: `${base}/help#cancellation` },
 ];
 
 // const SOCIAL_LINKS = [
@@ -101,12 +102,12 @@ const Footer = () => {
             <ul className="space-y-3">
               {links.map(({ label, href }) => (
                 <li key={label}>
-                  <Link
-                    to={href}
+                  <a
+                    href={href}
                     className="text-xs text-gray-500 hover:text-[#C6A46C] transition-colors duration-200 tracking-wide"
                   >
                     {label}
-                  </Link>
+                  </a>
                 </li>
               ))}
             </ul>
