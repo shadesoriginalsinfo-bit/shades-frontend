@@ -1,4 +1,5 @@
-import { User, Loader2 } from "lucide-react";
+import { User, Loader2, ExternalLink } from "lucide-react";
+import { Link } from "react-router-dom";
 import { useAuthUser } from "@/hooks/useAuth";
 import { formatDate } from "./OrdersTab";
 
@@ -60,9 +61,19 @@ const ProfileTab = () => {
               <span className="text-[10px] tracking-[0.2em] uppercase text-gray-400 font-medium w-36 shrink-0">
                 {label}
               </span>
-              <span className="text-sm text-gray-800 font-medium text-right">
-                {value}
-              </span>
+              {label === "Role" && user.role === "ADMIN" ? (
+                <Link
+                  to="/admin/dashboard"
+                  className="flex items-center gap-1.5 text-sm text-[#C6A46C] font-medium hover:underline text-right"
+                >
+                  {value}
+                  <ExternalLink size={13} />
+                </Link>
+              ) : (
+                <span className="text-sm text-gray-800 font-medium text-right">
+                  {value}
+                </span>
+              )}
             </div>
           ))}
         </div>
