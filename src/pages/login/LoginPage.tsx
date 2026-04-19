@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import logo from "@/assets/transparentLogo.png";
+import logo from "@/assets/logo2.png";
 import { useState } from "react";
 import { PasswordInput } from "@/components/PasswordInput";
 import { Link, useLocation, useNavigate } from "react-router-dom";

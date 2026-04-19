@@ -90,7 +90,7 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
       : null;
 
   const isOutOfStock = product.stock === 0;
-  const isLowStock = !isOutOfStock && product.stock <= 5;
+  const isLowStock = !isOutOfStock && product.stock <= 10;
   const category = product.productCategories[0]?.category;
 
   // const handleShare = async () => {

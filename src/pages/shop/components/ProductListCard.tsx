@@ -97,7 +97,7 @@ const ProductListCard = ({ product }: ProductListCardProps) => {
         </div>
 
         {/* Stock */}
-        {!isOutOfStock && product.stock <= 5 && (
+        {!isOutOfStock && product.stock <= 10 && (
           <p className="text-[10px] text-red-500 tracking-wide mt-1">
             Only {product.stock} left in stock
           </p>

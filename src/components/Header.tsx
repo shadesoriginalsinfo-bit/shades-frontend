@@ -1,9 +1,8 @@
 import React from "react";
-import logo from "@/assets/transparentLogo.png";
+import logo from "@/assets/logo2.png";
 import MobileHeader from "./MobileHeader";
 import { useAuthContext } from "@/hooks/useAuthContext";
 import { Link } from "react-router-dom";
-
 
 const Header: React.FC = () => {
   const { user } = useAuthContext();

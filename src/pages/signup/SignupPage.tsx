@@ -11,7 +11,7 @@ import { INDIAN_MOBILE_REGEX, PASSWORD_REGEX } from "@/utils/validation";
 import TermsAndConditionsModal from "./components/T&CModal";
 import TandC from "./components/TandC";
 import { initialFormValue, type IRegisterForm } from "./constants";
-import logo from "@/assets/transparentLogo.png";
+import logo from "@/assets/logo2.png";
 import LabelField from "@/components/LabelField";
 import { CornerOrnament, GoldDivider, GoldPattern } from "@/components/comps";
 

@@ -2,14 +2,12 @@ import { useState } from "react";
 import { HomeIcon, LogOut, Menu, X } from "lucide-react";
 import { Link, NavLink } from "react-router-dom";
 import clsx from "clsx";
-import logo from "@/assets/transparentLogo.png";
+import logo from "@/assets/logo2.png";
 import LoadingModal from "@/pages/LoadingPage";
 import { useLogout } from "@/hooks/useLogout";
 import { navLinks } from "./Sidebar";
 
 const MobileHeader = () => {
-
-
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
   const { logout, logoutLoading } = useLogout();
 
@@ -45,7 +43,7 @@ const MobileHeader = () => {
                     "flex items-center gap-3 p-3 font-medium rounded-md transition-colors duration-150 border-b border-gray-200",
                     isActive
                       ? "bg-gray-100 text-[#1B77BB] font-bold"
-                      : "text-[#496c87] hover:bg-gray-100 font-medium"
+                      : "text-[#496c87] hover:bg-gray-100 font-medium",
                   )
                 }
               >
@@ -59,7 +57,7 @@ const MobileHeader = () => {
             to="/"
             className="flex w-full items-center gap-2 px-7 py-3 font-medium rounded-md transition-colors duration-150 text-gray-800 hover:bg-gray-100 border-b border-gray-200 shadow-sm cursor-pointer"
           >
-            <HomeIcon className="mr-2 h-8"/>
+            <HomeIcon className="mr-2 h-8" />
             <span>Home</span>
           </NavLink>
           <button

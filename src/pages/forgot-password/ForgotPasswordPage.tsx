@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import img from "@/assets/forgotPasswordImg.svg";
-import logo from "@/assets/transparentLogo.png";
+import logo from "@/assets/logo2.png";
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { forgotPassword } from "@/lib/api";
@@ -10,14 +10,13 @@ import { ArrowLeft, Info } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const ForgotPasswordPage = () => {
-
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
 
   const forgotPasswordMutation = useMutation({
     mutationFn: forgotPassword,
     onSuccess: () => {
-      navigate('/forgot-password/success')
+      navigate("/forgot-password/success");
     },
     onError: (error: any) => {
       handleApiError(error);
@@ -79,8 +78,8 @@ const ForgotPasswordPage = () => {
             <div className="flex items-start gap-1 mb-10">
               <Info className="flex items-center mt-0.5" size={16} />
               <p className="text-gray-500 text-xs leading-relaxed">
-                Please enter the email address you used to register.
-                We will send you a link to reset your password.
+                Please enter the email address you used to register. We will
+                send you a link to reset your password.
               </p>
             </div>
 
