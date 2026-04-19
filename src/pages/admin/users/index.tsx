@@ -21,12 +21,13 @@ import {
 } from "@/lib/api";
 import { USERS_QUERY_KEY, useUsers } from "@/hooks/useUsers";
 import { useDebounce } from "@/hooks/useDebounce";
+import ConfirmDeleteModal from "@/components/ConfirmDeleteModal";
 import type { IAdminUser, IAdminUserDetail } from "@/types/user";
 import type { Role } from "@/types/enum";
 
 const LIMIT = 20;
 
-type RoleFilter = Role | "";
+// type RoleFilter = Role | "";
 type DeletedFilter = "true" | "false" | "";
 
 // ── Badges ─────────────────────────────────────────────────────────────────
@@ -291,6 +292,7 @@ const UsersPage = () => {
   // Modals
   const [detailUserId, setDetailUserId] = useState<string | null>(null);
   const [editUser, setEditUser] = useState<IAdminUser | null>(null);
+  const [deleteUser, setDeleteUser] = useState<IAdminUser | null>(null);
 
   const search = useDebounce(searchInput, 400);
 
@@ -335,6 +337,7 @@ const UsersPage = () => {
     onSuccess: () => {
       toast.success("User deleted");
       queryClient.invalidateQueries({ queryKey: [USERS_QUERY_KEY] });
+      setDeleteUser(null);
     },
     onError: handleApiError,
   });
@@ -349,11 +352,7 @@ const UsersPage = () => {
   });
 
   const handleDelete = (user: IAdminUser) => {
-    if (
-      confirm(`Delete "${user.name}"? This is a soft delete and can be undone.`)
-    ) {
-      deleteMutation.mutate(user.id);
-    }
+    setDeleteUser(user);
   };
 
   const handleRestore = (user: IAdminUser) => {
@@ -619,6 +618,16 @@ const UsersPage = () => {
         onClose={() => setEditUser(null)}
         onSave={(id, payload) => updateMutation.mutate({ id, payload })}
         isPending={updateMutation.isPending}
+      />
+
+      {/* Delete Confirmation Modal */}
+      <ConfirmDeleteModal
+        open={!!deleteUser}
+        onClose={() => setDeleteUser(null)}
+        onConfirm={() => deleteUser && deleteMutation.mutate(deleteUser.id)}
+        loading={deleteMutation.isPending}
+        title="Delete User"
+        description={`Are you sure to delete "${deleteUser?.name}" from users?`}
       />
     </div>
   );
