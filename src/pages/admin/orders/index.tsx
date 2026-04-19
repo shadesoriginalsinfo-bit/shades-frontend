@@ -207,6 +207,9 @@ const OrdersPage = () => {
           <table className="w-full text-sm">
             <thead>
               <tr className="bg-[#F8F4EE] border-b border-[#E8DDD0]">
+                <th className="text-right px-4 py-3 text-[10px] tracking-[0.2em] uppercase text-[#9A7A46]/80 font-medium">
+                  Actions
+                </th>
                 <th className="text-left px-4 py-3 text-[10px] tracking-[0.2em] uppercase text-[#9A7A46]/80 font-medium">
                   Order ID
                 </th>
@@ -234,9 +237,6 @@ const OrdersPage = () => {
                 <th className="text-left px-4 py-3 text-[10px] tracking-[0.2em] uppercase text-[#9A7A46]/80 font-medium">
                   Updated At
                 </th>
-                <th className="text-right px-4 py-3 text-[10px] tracking-[0.2em] uppercase text-[#9A7A46]/80 font-medium">
-                  Actions
-                </th>
               </tr>
             </thead>
             <tbody>
@@ -245,6 +245,18 @@ const OrdersPage = () => {
                   key={order.id}
                   className="border-b border-[#E8DDD0] hover:bg-[#FDFAF6] transition-colors"
                 >
+                  {/* Actions */}
+                  <td className="px-4 py-3 text-right">
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => setSelectedOrder(order)}
+                      className="border-[#E8DDD0] text-[#9A7A50] hover:bg-[#F8F4EE] hover:border-[#9A7A46] text-xs"
+                    >
+                      View
+                    </Button>
+                  </td>
+
                   {/* Order ID */}
                   <td className="px-4 py-3">
                     <span className="font-mono text-xs text-gray-600">
@@ -319,18 +331,6 @@ const OrdersPage = () => {
                         year: "numeric",
                       })}
                     </span>
-                  </td>
-
-                  {/* Actions */}
-                  <td className="px-4 py-3 text-right">
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => setSelectedOrder(order)}
-                      className="border-[#E8DDD0] text-[#9A7A50] hover:bg-[#F8F4EE] hover:border-[#9A7A46] text-xs"
-                    >
-                      View
-                    </Button>
                   </td>
                 </tr>
               ))}

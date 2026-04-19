@@ -26,7 +26,9 @@ export function OrderDetailModal({
   isPending,
 }: DetailModalProps) {
   const [selectedStatus, setSelectedStatus] = useState<OrderStatus | "">("");
-  const [trackingNumber, setTrackingNumber] = useState("");
+  const [trackingNumber, setTrackingNumber] = useState(
+    order?.trackingNumber ?? "",
+  );
 
   if (!order) return null;
 
@@ -46,9 +48,19 @@ export function OrderDetailModal({
     );
   };
 
+  const handleOnClose = () => {
+    setSelectedStatus("");
+    setTrackingNumber("");
+    onClose();
+  };
+
   const handleStatusChange = (val: OrderStatus | "") => {
     setSelectedStatus(val);
-    if (val !== "SHIPPED") setTrackingNumber("");
+    if (val === "SHIPPED") {
+      setTrackingNumber(order?.trackingNumber ?? "");
+    } else {
+      setTrackingNumber("");
+    }
   };
 
   return (
@@ -65,7 +77,7 @@ export function OrderDetailModal({
             </h2>
           </div>
           <button
-            onClick={onClose}
+            onClick={handleOnClose}
             className="text-gray-400 hover:text-gray-600 transition-colors"
           >
             <X className="size-4" />
@@ -144,6 +156,18 @@ export function OrderDetailModal({
               </p>
               <p className="text-xs text-gray-400 bg-[#F8F4EE] px-3 py-2.5">
                 No further status transitions available for this order.
+              </p>
+            </div>
+          )}
+
+          {/* Tracking Number */}
+          {order.trackingNumber && (
+            <div>
+              <p className="text-[10px] tracking-[0.2em] uppercase text-[#9A7A46]/80 font-medium mb-2">
+                Tracking Number
+              </p>
+              <p className="bg-[#F8F4EE] px-3 py-2.5 text-sm text-gray-700 font-mono">
+                {order.trackingNumber}
               </p>
             </div>
           )}
