@@ -1,4 +1,14 @@
 import { useState } from "react";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  Cell,
+} from "recharts";
 import { useDashboard } from "@/hooks/useDashboard";
 import {
   Users,
@@ -15,12 +25,12 @@ import {
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
-const STATUS_COLORS: Record<string, string> = {
-  PENDING: "bg-amber-400",
-  CONFIRMED: "bg-blue-400",
-  SHIPPED: "bg-indigo-400",
-  DELIVERED: "bg-emerald-400",
-  CANCELLED: "bg-red-400",
+const STATUS_HEX: Record<string, string> = {
+  PENDING: "#FBBF24",
+  CONFIRMED: "#60A5FA",
+  SHIPPED: "#818CF8",
+  DELIVERED: "#34D399",
+  CANCELLED: "#F87171",
 };
 
 const STATUS_TEXT: Record<string, string> = {
@@ -194,7 +204,7 @@ const DashboardPage = () => {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3">
+      <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
         <StatCard
           label="Total Users"
           value={stats.totalUsers.toLocaleString("en-IN")}
@@ -242,34 +252,43 @@ const DashboardPage = () => {
           <h2 className="text-[10px] tracking-[0.2em] uppercase text-[#9A7A46] font-semibold mb-4">
             Orders by Status
           </h2>
-          {/* Bar */}
-          <div className="flex h-3 rounded-full overflow-hidden gap-px mb-4">
-            {ordersByStatus.map((s) => (
-              <div
-                key={s.status}
-                title={`${s.status}: ${s.count}`}
-                className={`${STATUS_COLORS[s.status] ?? "bg-gray-300"} transition-all`}
-                style={{ width: `${(s.count / totalOrdersForBar) * 100}%` }}
+          <ResponsiveContainer width="100%" height={220}>
+            <BarChart
+              data={ordersByStatus}
+              margin={{ top: 16, right: 8, left: -16, bottom: 4 }}
+              barCategoryGap="30%"
+            >
+              <CartesianGrid strokeDasharray="3 3" stroke="#F0EAE2" vertical={false} />
+              <XAxis
+                dataKey="status"
+                tick={{ fontSize: 10, fill: "#9CA3AF" }}
+                axisLine={false}
+                tickLine={false}
               />
-            ))}
-          </div>
-          {/* Legend */}
-          <div className="flex flex-wrap gap-x-5 gap-y-2">
-            {ordersByStatus.map((s) => (
-              <div key={s.status} className="flex items-center gap-2">
-                <span
-                  className={`size-2.5 rounded-full inline-block ${STATUS_COLORS[s.status] ?? "bg-gray-300"}`}
-                />
-                <span className="text-xs text-gray-500">{s.status}</span>
-                <span className="text-xs font-medium text-gray-700">
-                  {s.count}
-                </span>
-                <span className="text-[10px] text-gray-400">
-                  ({Math.round((s.count / totalOrdersForBar) * 100)}%)
-                </span>
-              </div>
-            ))}
-          </div>
+              <YAxis
+                allowDecimals={false}
+                tick={{ fontSize: 10, fill: "#9CA3AF" }}
+                axisLine={false}
+                tickLine={false}
+              />
+              <Tooltip
+                cursor={{ fill: "#F8F4EE" }}
+                contentStyle={{ fontSize: 12, borderRadius: 4, border: "1px solid #E8DDD0" }}
+                formatter={(value) => {
+                  const num = Number(value) || 0;
+                  return `${num} (${Math.round((num / totalOrdersForBar) * 100)}%)`;
+                }}
+              />
+              <Bar dataKey="count" radius={[4, 4, 0, 0]}>
+                {ordersByStatus.map((s) => (
+                  <Cell
+                    key={s.status}
+                    fill={STATUS_HEX[s.status] ?? "#D1D5DB"}
+                  />
+                ))}
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
         </div>
       )}
 
