@@ -20,8 +20,7 @@ interface ProductInfoProps {
   product: IProduct;
 }
 
-const formatINR = (amount: number) =>
-  `₹${amount.toLocaleString("en-IN")}`;
+const formatINR = (amount: number) => `₹${amount.toLocaleString("en-IN")}`;
 
 /* ── Collapsible accordion row ───────────────────────────────────────── */
 interface AccordionProps {
@@ -30,7 +29,11 @@ interface AccordionProps {
   children: React.ReactNode;
 }
 
-const Accordion = ({ label, defaultOpen = false, children }: AccordionProps) => {
+const Accordion = ({
+  label,
+  defaultOpen = false,
+  children,
+}: AccordionProps) => {
   const [open, setOpen] = useState(defaultOpen);
   return (
     <div className="border-b border-[#E8DDD0] last:border-0">
@@ -39,13 +42,16 @@ const Accordion = ({ label, defaultOpen = false, children }: AccordionProps) => 
         className="w-full flex items-center justify-between py-4 text-left group"
         aria-expanded={open}
       >
-        <span className="text-[11px] tracking-[0.25em] uppercase font-semibold text-gray-700 group-hover:text-[#C6A46C] transition-colors">
+        <span className="text-[11px] tracking-[0.25em] uppercase font-semibold text-gray-700 group-hover:text-[#9A7A46] transition-colors">
           {label}
         </span>
         {open ? (
-          <ChevronUp size={14} className="text-[#C6A46C] shrink-0" />
+          <ChevronUp size={14} className="text-[#9A7A46] shrink-0" />
         ) : (
-          <ChevronDown size={14} className="text-gray-400 group-hover:text-[#C6A46C] transition-colors shrink-0" />
+          <ChevronDown
+            size={14}
+            className="text-gray-400 group-hover:text-[#9A7A46] transition-colors shrink-0"
+          />
         )}
       </button>
       {open && (
@@ -77,7 +83,9 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
   const discount =
     product.discountPrice && product.marketPrice > product.discountPrice
       ? Math.round(
-          ((product.marketPrice - product.discountPrice) / product.marketPrice) * 100
+          ((product.marketPrice - product.discountPrice) /
+            product.marketPrice) *
+            100,
         )
       : null;
 
@@ -99,14 +107,14 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
       <div className="flex items-center gap-2 flex-wrap">
         <Link
           to="/"
-          className="text-[10px] tracking-[0.2em] uppercase text-gray-400 hover:text-[#C6A46C] transition-colors"
+          className="text-[10px] tracking-[0.2em] uppercase text-gray-400 hover:text-[#9A7A46] transition-colors"
         >
           Home
         </Link>
         <span className="text-gray-300 text-xs">·</span>
         <Link
           to="/shop"
-          className="text-[10px] tracking-[0.2em] uppercase text-gray-400 hover:text-[#C6A46C] transition-colors"
+          className="text-[10px] tracking-[0.2em] uppercase text-gray-400 hover:text-[#9A7A46] transition-colors"
         >
           Shop
         </Link>
@@ -115,7 +123,7 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
             <span className="text-gray-300 text-xs">·</span>
             <Link
               to={`/shop?category=${category.slug}`}
-              className="text-[10px] tracking-[0.2em] uppercase text-[#C6A46C] font-medium hover:text-[#B8936A] transition-colors"
+              className="text-[10px] tracking-[0.2em] uppercase text-[#9A7A46] font-medium hover:text-[#B8936A] transition-colors"
             >
               {category.name}
             </Link>
@@ -130,9 +138,9 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
 
       {/* ── Ornamental divider ── */}
       <div className="flex items-center gap-2">
-        <div className="h-px w-10 bg-[#C6A46C]" />
-        <div className="h-1.5 w-1.5 rounded-full bg-[#C6A46C]" />
-        <div className="h-px w-6 bg-[#C6A46C]/50" />
+        <div className="h-px w-10 bg-[#9A7A46]" />
+        <div className="h-1.5 w-1.5 rounded-full bg-[#9A7A46]" />
+        <div className="h-px w-6 bg-[#9A7A46]/50" />
       </div>
 
       {/* ── Price block ── */}
@@ -192,7 +200,7 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
 
       {/* ── Short description ── */}
       {product.shortDesc && (
-        <p className="text-sm text-gray-600 leading-relaxed tracking-wide border-l-2 border-[#C6A46C]/40 pl-4">
+        <p className="text-sm text-gray-600 leading-relaxed tracking-wide border-l-2 border-[#9A7A46]/40 pl-4">
           {product.shortDesc}
         </p>
       )}
@@ -208,7 +216,7 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
               onClick={() => setQty((q) => Math.max(1, q - 1))}
               disabled={qty <= 1}
               aria-label="Decrease quantity"
-              className="w-9 h-9 flex items-center justify-center text-gray-500 hover:text-[#C6A46C] hover:bg-[#F5EFE7] transition-colors disabled:opacity-30 disabled:cursor-not-allowed border-r border-[#E8DDD0]"
+              className="w-9 h-9 flex items-center justify-center text-gray-500 hover:text-[#9A7A46] hover:bg-[#F5EFE7] transition-colors disabled:opacity-30 disabled:cursor-not-allowed border-r border-[#E8DDD0]"
             >
               <Minus size={13} />
             </button>
@@ -219,7 +227,7 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
               onClick={() => setQty((q) => Math.min(product.stock, q + 1))}
               disabled={qty >= product.stock}
               aria-label="Increase quantity"
-              className="w-9 h-9 flex items-center justify-center text-gray-500 hover:text-[#C6A46C] hover:bg-[#F5EFE7] transition-colors disabled:opacity-30 disabled:cursor-not-allowed border-l border-[#E8DDD0]"
+              className="w-9 h-9 flex items-center justify-center text-gray-500 hover:text-[#9A7A46] hover:bg-[#F5EFE7] transition-colors disabled:opacity-30 disabled:cursor-not-allowed border-l border-[#E8DDD0]"
             >
               <Plus size={13} />
             </button>
@@ -232,7 +240,7 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
         {/* Add to cart */}
         {/* <button
           disabled={isOutOfStock}
-          className="flex-1 flex items-center justify-center gap-2.5 py-3.5 bg-[#1a1a1a] text-white text-xs tracking-[0.2em] uppercase font-medium hover:bg-[#C6A46C] transition-all duration-200 rounded-sm disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_4px_20px_rgba(0,0,0,0.15)]"
+          className="flex-1 flex items-center justify-center gap-2.5 py-3.5 bg-[#1a1a1a] text-white text-xs tracking-[0.2em] uppercase font-medium hover:bg-[#9A7A46] transition-all duration-200 rounded-sm disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_4px_20px_rgba(0,0,0,0.15)]"
         >
           <ShoppingBag size={15} />
           {isOutOfStock ? "Out of Stock" : "Add to Cart"}
@@ -245,7 +253,7 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
           className={`w-12 flex items-center justify-center border rounded-sm transition-all duration-200 ${
             wishlisted
               ? "border-red-300 bg-red-50 text-red-500 shadow-inner"
-              : "border-[#E8DDD0] text-gray-400 hover:border-[#C6A46C] hover:text-[#C6A46C] hover:bg-[#F5EFE7]"
+              : "border-[#E8DDD0] text-gray-400 hover:border-[#9A7A46] hover:text-[#9A7A46] hover:bg-[#F5EFE7]"
           }`}
         >
           <Heart size={16} fill={wishlisted ? "currentColor" : "none"} />
@@ -255,7 +263,7 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
         {/* <button
           onClick={handleShare}
           aria-label="Share product"
-          className="w-12 flex items-center justify-center border border-[#E8DDD0] text-gray-400 hover:border-[#C6A46C] hover:text-[#C6A46C] hover:bg-[#F5EFE7] rounded-sm transition-all duration-200"
+          className="w-12 flex items-center justify-center border border-[#E8DDD0] text-gray-400 hover:border-[#9A7A46] hover:text-[#9A7A46] hover:bg-[#F5EFE7] rounded-sm transition-all duration-200"
         >
           <Share2 size={15} />
         </button> */}
@@ -266,7 +274,7 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
         <button
           onClick={handleBuyNow}
           disabled={authLoading}
-          className="w-full py-3.5 border border-[#C6A46C] text-[#C6A46C] text-xs tracking-[0.2em] uppercase font-medium hover:bg-[#C6A46C] hover:text-white transition-all duration-200 rounded-sm disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full py-3.5 border border-[#9A7A46] text-[#9A7A46] text-xs tracking-[0.2em] uppercase font-medium hover:bg-[#9A7A46] hover:text-white transition-all duration-200 rounded-sm disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {authLoading ? "Please wait…" : "Buy Now"}
         </button>
@@ -275,18 +283,23 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
       {/* ── Trust icons row ── */}
       <div className="grid grid-cols-3 gap-2 py-4 border-y border-[#E8DDD0]">
         {[
-          { Icon: Truck,     label: "Free Delivery", sub: "Above ₹999" },
-          { Icon: RefreshCw, label: "Easy Exchange",  sub: "Hassle free" },
-          { Icon: Shield,    label: "Secure Pay",    sub: "100% safe" },
+          { Icon: Truck, label: "Free Delivery", sub: "Above ₹999" },
+          { Icon: RefreshCw, label: "Easy Exchange", sub: "Hassle free" },
+          { Icon: Shield, label: "Secure Pay", sub: "100% safe" },
         ].map(({ Icon, label, sub }) => (
-          <div key={label} className="flex flex-col items-center text-center gap-1.5">
+          <div
+            key={label}
+            className="flex flex-col items-center text-center gap-1.5"
+          >
             <div className="w-9 h-9 rounded-full bg-[#F5EFE7] border border-[#E8DDD0] flex items-center justify-center">
-              <Icon size={14} className="text-[#C6A46C]" />
+              <Icon size={14} className="text-[#9A7A46]" />
             </div>
             <span className="text-[10px] font-medium text-gray-700 tracking-wide leading-tight">
               {label}
             </span>
-            <span className="text-[9px] text-gray-400 tracking-wide">{sub}</span>
+            <span className="text-[9px] text-gray-400 tracking-wide">
+              {sub}
+            </span>
           </div>
         ))}
       </div>
@@ -298,7 +311,7 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
             <span className="text-gray-400 w-20 shrink-0">Category</span>
             <Link
               to={`/shop?category=${category.slug}`}
-              className="text-[#C6A46C] hover:text-[#B8936A] transition-colors font-medium"
+              className="text-[#9A7A46] hover:text-[#B8936A] transition-colors font-medium"
             >
               {category.name}
             </Link>
@@ -306,7 +319,9 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
         )}
         <div className="flex gap-3">
           <span className="text-gray-400 w-20 shrink-0">Product ID</span>
-          <span className="text-gray-500 font-mono text-[11px]">{product.id.slice(0, 8).toUpperCase()}</span>
+          <span className="text-gray-500 font-mono text-[11px]">
+            {product.id.slice(0, 8).toUpperCase()}
+          </span>
         </div>
         <div className="flex gap-3">
           <span className="text-gray-400 w-20 shrink-0">Updated</span>
@@ -331,7 +346,7 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
                 .filter(Boolean)
                 .map((line, i) => (
                   <li key={i} className="flex items-start gap-2">
-                    <span className="text-[#C6A46C] mt-0.5 shrink-0">·</span>
+                    <span className="text-[#9A7A46] mt-0.5 shrink-0">·</span>
                     {line}
                   </li>
                 ))}
@@ -348,7 +363,7 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
                 .filter(Boolean)
                 .map((line, i) => (
                   <li key={i} className="flex items-start gap-2">
-                    <span className="text-[#C6A46C] mt-0.5 shrink-0">·</span>
+                    <span className="text-[#9A7A46] mt-0.5 shrink-0">·</span>
                     {line}
                   </li>
                 ))}
@@ -366,7 +381,7 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
               "You will receive a tracking link after dispatch.",
             ].map((info) => (
               <li key={info} className="flex items-start gap-2">
-                <span className="text-[#C6A46C] mt-0.5 shrink-0">·</span>
+                <span className="text-[#9A7A46] mt-0.5 shrink-0">·</span>
                 {info}
               </li>
             ))}
@@ -384,7 +399,7 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
               "Only one-time exchange is allowed per order.",
             ].map((info) => (
               <li key={info} className="flex items-start gap-2">
-                <span className="text-[#C6A46C] mt-0.5 shrink-0">·</span>
+                <span className="text-[#9A7A46] mt-0.5 shrink-0">·</span>
                 {info}
               </li>
             ))}

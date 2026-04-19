@@ -1,4 +1,8 @@
-import { STATUS_PROGRESSION, type IAdminOrder, type OrderStatus } from "@/types/order";
+import {
+  STATUS_PROGRESSION,
+  type IAdminOrder,
+  type OrderStatus,
+} from "@/types/order";
 import { useState } from "react";
 import { PaymentBadge, StatusBadge } from "./Badges";
 import { ChevronDown, X } from "lucide-react";
@@ -7,13 +11,24 @@ import { Button } from "@/components/ui/button";
 interface DetailModalProps {
   order: IAdminOrder | null;
   onClose: () => void;
-  onStatusUpdate: (id: string, status: OrderStatus, trackingNumber?: string) => void;
+  onStatusUpdate: (
+    id: string,
+    status: OrderStatus,
+    trackingNumber?: string,
+  ) => void;
   isPending: boolean;
 }
 
-export function OrderDetailModal({ order, onClose, onStatusUpdate, isPending }: DetailModalProps) {
+export function OrderDetailModal({
+  order,
+  onClose,
+  onStatusUpdate,
+  isPending,
+}: DetailModalProps) {
   const [selectedStatus, setSelectedStatus] = useState<OrderStatus | "">("");
-  const [trackingNumber, setTrackingNumber] = useState("");
+  const [trackingNumber, setTrackingNumber] = useState(
+    order?.trackingNumber ?? "",
+  );
 
   if (!order) return null;
 
@@ -26,12 +41,26 @@ export function OrderDetailModal({ order, onClose, onStatusUpdate, isPending }: 
 
   const handleUpdate = () => {
     if (!selectedStatus || !canSubmit) return;
-    onStatusUpdate(order.id, selectedStatus, requiresTracking ? trackingNumber.trim() : undefined);
+    onStatusUpdate(
+      order.id,
+      selectedStatus,
+      requiresTracking ? trackingNumber.trim() : undefined,
+    );
+  };
+
+  const handleOnClose = () => {
+    setSelectedStatus("");
+    setTrackingNumber("");
+    onClose();
   };
 
   const handleStatusChange = (val: OrderStatus | "") => {
     setSelectedStatus(val);
-    if (val !== "SHIPPED") setTrackingNumber("");
+    if (val === "SHIPPED") {
+      setTrackingNumber(order?.trackingNumber ?? "");
+    } else {
+      setTrackingNumber("");
+    }
   };
 
   return (
@@ -40,12 +69,17 @@ export function OrderDetailModal({ order, onClose, onStatusUpdate, isPending }: 
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-[#E8DDD0]">
           <div>
-            <p className="text-[10px] tracking-[0.2em] uppercase text-[#C6A46C]/80 font-medium mb-0.5">
+            <p className="text-[10px] tracking-[0.2em] uppercase text-[#9A7A46]/80 font-medium mb-0.5">
               Order
             </p>
-            <h2 className="text-sm font-medium text-gray-800 font-mono">{order.id}</h2>
+            <h2 className="text-sm font-medium text-gray-800 font-mono">
+              {order.id}
+            </h2>
           </div>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600 transition-colors">
+          <button
+            onClick={handleOnClose}
+            className="text-gray-400 hover:text-gray-600 transition-colors"
+          >
             <X className="size-4" />
           </button>
         </div>
@@ -57,18 +91,21 @@ export function OrderDetailModal({ order, onClose, onStatusUpdate, isPending }: 
             <PaymentBadge status={order.paymentStatus} />
             <span className="text-xs text-gray-400">
               Placed{" "}
-              {new Date(order.placedAt ?? order.createdAt).toLocaleDateString("en-IN", {
-                day: "numeric",
-                month: "short",
-                year: "numeric",
-              })}
+              {new Date(order.placedAt ?? order.createdAt).toLocaleDateString(
+                "en-IN",
+                {
+                  day: "numeric",
+                  month: "short",
+                  year: "numeric",
+                },
+              )}
             </span>
           </div>
 
           {/* Update Status */}
           {allowedStatuses.length > 0 ? (
             <div>
-              <p className="text-[10px] tracking-[0.2em] uppercase text-[#C6A46C]/80 font-medium mb-2">
+              <p className="text-[10px] tracking-[0.2em] uppercase text-[#9A7A46]/80 font-medium mb-2">
                 Update Status
               </p>
               <div className="space-y-2">
@@ -76,8 +113,10 @@ export function OrderDetailModal({ order, onClose, onStatusUpdate, isPending }: 
                   <div className="relative flex-1">
                     <select
                       value={selectedStatus}
-                      onChange={(e) => handleStatusChange(e.target.value as OrderStatus | "")}
-                      className="w-full cursor-pointer appearance-none border border-[#E8DDD0] bg-white px-3 py-2.5 pr-9 text-sm text-gray-700 transition-colors hover:border-[#C6A46C]/60 focus:outline-none focus:border-[#C6A46C] focus:ring-1 focus:ring-[#C6A46C]/20"
+                      onChange={(e) =>
+                        handleStatusChange(e.target.value as OrderStatus | "")
+                      }
+                      className="w-full cursor-pointer appearance-none border border-[#E8DDD0] bg-white px-3 py-2.5 pr-9 text-sm text-gray-700 transition-colors hover:border-[#9A7A46]/60 focus:outline-none focus:border-[#9A7A46] focus:ring-1 focus:ring-[#9A7A46]/20"
                     >
                       <option value="">Select new status…</option>
                       {allowedStatuses.map((s) => (
@@ -91,7 +130,7 @@ export function OrderDetailModal({ order, onClose, onStatusUpdate, isPending }: 
                   <Button
                     onClick={handleUpdate}
                     disabled={!canSubmit || isPending}
-                    className="bg-[#C6A46C] hover:bg-[#b8935d] text-white"
+                    className="bg-[#9A7A46] hover:bg-[#b8935d] text-white"
                   >
                     {isPending ? "Saving…" : "Update"}
                   </Button>
@@ -104,7 +143,7 @@ export function OrderDetailModal({ order, onClose, onStatusUpdate, isPending }: 
                       placeholder="Tracking number (required)"
                       value={trackingNumber}
                       onChange={(e) => setTrackingNumber(e.target.value)}
-                      className="w-full border border-[#E8DDD0] px-3 py-2.5 text-sm text-gray-700 placeholder:text-gray-300 transition-colors hover:border-[#C6A46C]/60 focus:outline-none focus:border-[#C6A46C] focus:ring-1 focus:ring-[#C6A46C]/20"
+                      className="w-full border border-[#E8DDD0] px-3 py-2.5 text-sm text-gray-700 placeholder:text-gray-300 transition-colors hover:border-[#9A7A46]/60 focus:outline-none focus:border-[#9A7A46] focus:ring-1 focus:ring-[#9A7A46]/20"
                     />
                   </div>
                 )}
@@ -112,7 +151,7 @@ export function OrderDetailModal({ order, onClose, onStatusUpdate, isPending }: 
             </div>
           ) : (
             <div>
-              <p className="text-[10px] tracking-[0.2em] uppercase text-[#C6A46C]/80 font-medium mb-2">
+              <p className="text-[10px] tracking-[0.2em] uppercase text-[#9A7A46]/80 font-medium mb-2">
                 Update Status
               </p>
               <p className="text-xs text-gray-400 bg-[#F8F4EE] px-3 py-2.5">
@@ -121,13 +160,27 @@ export function OrderDetailModal({ order, onClose, onStatusUpdate, isPending }: 
             </div>
           )}
 
+          {/* Tracking Number */}
+          {order.trackingNumber && (
+            <div>
+              <p className="text-[10px] tracking-[0.2em] uppercase text-[#9A7A46]/80 font-medium mb-2">
+                Tracking Number
+              </p>
+              <p className="bg-[#F8F4EE] px-3 py-2.5 text-sm text-gray-700 font-mono">
+                {order.trackingNumber}
+              </p>
+            </div>
+          )}
+
           {/* Customer */}
           <div>
-            <p className="text-[10px] tracking-[0.2em] uppercase text-[#C6A46C]/80 font-medium mb-2">
+            <p className="text-[10px] tracking-[0.2em] uppercase text-[#9A7A46]/80 font-medium mb-2">
               Customer
             </p>
             <div className="bg-[#F8F4EE] p-3 space-y-0.5">
-              <p className="text-sm font-medium text-gray-800">{order.user.name}</p>
+              <p className="text-sm font-medium text-gray-800">
+                {order.user.name}
+              </p>
               <p className="text-xs text-gray-500">{order.user.email}</p>
               <p className="text-xs text-gray-500">{order.user.mobileNumber}</p>
             </div>
@@ -135,16 +188,22 @@ export function OrderDetailModal({ order, onClose, onStatusUpdate, isPending }: 
 
           {/* Items */}
           <div>
-            <p className="text-[10px] tracking-[0.2em] uppercase text-[#C6A46C]/80 font-medium mb-2">
+            <p className="text-[10px] tracking-[0.2em] uppercase text-[#9A7A46]/80 font-medium mb-2">
               Items
             </p>
             <div className="border border-[#E8DDD0] divide-y divide-[#E8DDD0]">
               {order.items.map((item, i) => (
-                <div key={i} className="flex items-center justify-between px-3 py-2.5">
+                <div
+                  key={i}
+                  className="flex items-center justify-between px-3 py-2.5"
+                >
                   <div>
-                    <p className="text-sm text-gray-800">{item.product.title}</p>
+                    <p className="text-sm text-gray-800">
+                      {item.product.title}
+                    </p>
                     <p className="text-xs text-gray-400">
-                      {item.quantity} × ₹{item.unitPrice.toLocaleString("en-IN")}
+                      {item.quantity} × ₹
+                      {item.unitPrice.toLocaleString("en-IN")}
                     </p>
                   </div>
                   <p className="text-sm font-medium text-gray-800">
@@ -188,15 +247,19 @@ export function OrderDetailModal({ order, onClose, onStatusUpdate, isPending }: 
           {/* Shipping Address */}
           {order.shippingAddress && (
             <div>
-              <p className="text-[10px] tracking-[0.2em] uppercase text-[#C6A46C]/80 font-medium mb-2">
+              <p className="text-[10px] tracking-[0.2em] uppercase text-[#9A7A46]/80 font-medium mb-2">
                 Shipping Address
               </p>
               <div className="bg-[#F8F4EE] p-3 text-sm text-gray-600 space-y-0.5">
                 {order.shippingAddress.label && (
-                  <p className="font-medium text-gray-800">{order.shippingAddress.label}</p>
+                  <p className="font-medium text-gray-800">
+                    {order.shippingAddress.label}
+                  </p>
                 )}
                 <p>{order.shippingAddress.line1}</p>
-                {order.shippingAddress.line2 && <p>{order.shippingAddress.line2}</p>}
+                {order.shippingAddress.line2 && (
+                  <p>{order.shippingAddress.line2}</p>
+                )}
                 <p>
                   {order.shippingAddress.city}, {order.shippingAddress.state}{" "}
                   {order.shippingAddress.postalCode}
@@ -209,14 +272,19 @@ export function OrderDetailModal({ order, onClose, onStatusUpdate, isPending }: 
           {/* Payment */}
           {order.payments?.length > 0 && (
             <div>
-              <p className="text-[10px] tracking-[0.2em] uppercase text-[#C6A46C]/80 font-medium mb-2">
+              <p className="text-[10px] tracking-[0.2em] uppercase text-[#9A7A46]/80 font-medium mb-2">
                 Payment
               </p>
               <div className="border border-[#E8DDD0] divide-y divide-[#E8DDD0]">
                 {order.payments.map((p) => (
-                  <div key={p.id} className="flex items-center justify-between px-3 py-2">
+                  <div
+                    key={p.id}
+                    className="flex items-center justify-between px-3 py-2"
+                  >
                     <div className="flex items-center gap-2">
-                      <span className="text-sm text-gray-700 capitalize">{p.provider}</span>
+                      <span className="text-sm text-gray-700 capitalize">
+                        {p.provider}
+                      </span>
                       <PaymentBadge status={p.status} />
                     </div>
                     <span className="text-sm font-medium text-gray-800">
@@ -227,7 +295,6 @@ export function OrderDetailModal({ order, onClose, onStatusUpdate, isPending }: 
               </div>
             </div>
           )}
-
         </div>
       </div>
     </div>

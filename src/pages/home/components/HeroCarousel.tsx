@@ -1,8 +1,8 @@
 import { useState, useEffect, useCallback } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
-import carouselImg from "@/assets/carouselImg.png"
-import carouselImg2 from "@/assets/carouselImg2.png"
+import carouselImg from "@/assets/carouselImg.png";
+import carouselImg2 from "@/assets/carouselImg2.png";
 
 interface HeroSlide {
   id: number;
@@ -26,9 +26,9 @@ const SLIDES: HeroSlide[] = [
     ctaPrimary: { label: "Shop Diwan", href: "/shop" },
     ctaSecondary: { label: "New Trending", href: "/shop?category=trending" },
     bg: "bg-gradient-to-br from-[#F5EFE7] via-[#EDE0D0] to-[#E8D8C4]",
-    accentBg: "from-[#C6A46C]/20 to-transparent",
+    accentBg: "from-[#9A7A46]/20 to-transparent",
     textDark: true,
-    img: carouselImg
+    img: carouselImg,
   },
   {
     id: 2,
@@ -38,9 +38,9 @@ const SLIDES: HeroSlide[] = [
     ctaPrimary: { label: "Explore Now", href: "/shop?category=trending" },
     ctaSecondary: { label: "View Lookbook", href: "/shop" },
     bg: "bg-gradient-to-br from-[#2A1F14] via-[#3D2B1F] to-[#4A3525]",
-    accentBg: "from-[#C6A46C]/30 to-transparent",
+    accentBg: "from-[#9A7A46]/30 to-transparent",
     textDark: false,
-    img: carouselImg
+    img: carouselImg,
   },
   {
     id: 3,
@@ -52,7 +52,7 @@ const SLIDES: HeroSlide[] = [
     bg: "bg-gradient-to-br from-[#F0E6DA] via-[#E8DDD0] to-[#EDE3D8]",
     accentBg: "from-[#B8936A]/25 to-transparent",
     textDark: true,
-    img: carouselImg2
+    img: carouselImg2,
   },
 ];
 
@@ -72,8 +72,8 @@ const SlideIndicator = ({ total, current, onSelect, dark }: IndicatorProps) => (
         aria-label={`Go to slide ${i + 1}`}
         className={`rounded-full transition-all duration-300 ${
           i === current
-            ? "w-7 h-2 bg-[#C6A46C]"
-            : `w-2 h-2 ${dark ? "bg-[#C6A46C]/40" : "bg-white/40"}`
+            ? "w-7 h-2 bg-[#9A7A46]"
+            : `w-2 h-2 ${dark ? "bg-[#9A7A46]/40" : "bg-white/40"}`
         }`}
       />
     ))}
@@ -91,12 +91,12 @@ const HeroCarousel = () => {
 
   const prev = useCallback(
     () => goTo((current - 1 + SLIDES.length) % SLIDES.length),
-    [current, goTo]
+    [current, goTo],
   );
 
   const next = useCallback(
     () => goTo((current + 1) % SLIDES.length),
-    [current, goTo]
+    [current, goTo],
   );
 
   useEffect(() => {
@@ -118,7 +118,7 @@ const HeroCarousel = () => {
       />
 
       {/* Decorative pattern overlay */}
-      <div className="absolute inset-0 opacity-[0.025] bg-[repeating-linear-gradient(45deg,#C6A46C_0px,#C6A46C_1px,transparent_1px,transparent_12px)]" />
+      <div className="absolute inset-0 opacity-[0.025] bg-[repeating-linear-gradient(45deg,#9A7A46_0px,#9A7A46_1px,transparent_1px,transparent_12px)]" />
 
       {/* Decorative right-side silhouette block */}
       <div className="absolute right-0 top-0 bottom-0 w-2/5 pointer-events-none overflow-hidden">
@@ -128,18 +128,18 @@ const HeroCarousel = () => {
         {/* Decorative arch */}
         <div
           className={`absolute bottom-0 right-8 w-52 h-[85%] rounded-t-full border-2 ${
-            slide.textDark ? "border-[#C6A46C]/15" : "border-[#C6A46C]/20"
+            slide.textDark ? "border-[#9A7A46]/15" : "border-[#9A7A46]/20"
           } hidden md:block`}
         />
         <div
           className={`absolute bottom-0 right-20 w-36 h-[70%] rounded-t-full ${
-            slide.textDark ? "bg-[#C6A46C]/06" : "bg-[#C6A46C]/08"
+            slide.textDark ? "bg-[#9A7A46]/06" : "bg-[#9A7A46]/08"
           } hidden md:block`}
         />
         {/* Placeholder label for model image */}
         <div
           className={`absolute ${slide.id === 3 ? "bottom-0" : "bottom-8"} right-12 text-[10px] tracking-[0.25em] uppercase ${
-            slide.textDark ? "text-[#C6A46C]/30" : "text-[#C6A46C]/50"
+            slide.textDark ? "text-[#9A7A46]/30" : "text-[#9A7A46]/50"
           } hidden md:block`}
         >
           <img src={slide.img} alt="" />
@@ -155,9 +155,12 @@ const HeroCarousel = () => {
         {/* Eyebrow */}
         <p
           className={`text-[10px] tracking-[0.35em] uppercase font-medium mb-4 ${
-            slide.textDark ? "text-[#C6A46C]" : "text-[#C6A46C]"
+            slide.textDark ? "text-[#9A7A46]" : "text-[#9A7A46]"
           }`}
-          style={{ animationDelay: "0.05s", animation: "heroFadeUp 0.55s ease both" }}
+          style={{
+            animationDelay: "0.05s",
+            animation: "heroFadeUp 0.55s ease both",
+          }}
         >
           {slide.eyebrow}
         </p>
@@ -167,7 +170,10 @@ const HeroCarousel = () => {
           className={`text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-bold font-serif tracking-wide leading-none ${
             slide.textDark ? "text-[#2A1810]" : "text-white"
           }`}
-          style={{ animationDelay: "0.1s", animation: "heroFadeUp 0.6s ease both" }}
+          style={{
+            animationDelay: "0.1s",
+            animation: "heroFadeUp 0.6s ease both",
+          }}
         >
           {slide.title}
         </h1>
@@ -175,11 +181,14 @@ const HeroCarousel = () => {
         {/* Decorative divider */}
         <div
           className="flex items-center gap-3 my-5"
-          style={{ animationDelay: "0.15s", animation: "heroFadeUp 0.6s ease both" }}
+          style={{
+            animationDelay: "0.15s",
+            animation: "heroFadeUp 0.6s ease both",
+          }}
         >
-          <div className="h-px w-14 bg-[#C6A46C]" />
-          <div className="h-1.5 w-1.5 rounded-full bg-[#C6A46C]" />
-          <div className="h-px w-8 bg-[#C6A46C]/50" />
+          <div className="h-px w-14 bg-[#9A7A46]" />
+          <div className="h-1.5 w-1.5 rounded-full bg-[#9A7A46]" />
+          <div className="h-px w-8 bg-[#9A7A46]/50" />
         </div>
 
         {/* Subtitle / tagline */}
@@ -187,7 +196,10 @@ const HeroCarousel = () => {
           className={`text-2xl sm:text-3xl md:text-4xl font-light italic font-serif leading-snug ${
             slide.textDark ? "text-[#5C3D2A]" : "text-[#E8D0B0]"
           }`}
-          style={{ animationDelay: "0.2s", animation: "heroFadeUp 0.65s ease both" }}
+          style={{
+            animationDelay: "0.2s",
+            animation: "heroFadeUp 0.65s ease both",
+          }}
         >
           {slide.subtitle}
         </p>
@@ -195,11 +207,14 @@ const HeroCarousel = () => {
         {/* CTAs */}
         <div
           className="flex flex-wrap items-center gap-4 mt-8 mb-6 md:mb-0"
-          style={{ animationDelay: "0.28s", animation: "heroFadeUp 0.65s ease both" }}
+          style={{
+            animationDelay: "0.28s",
+            animation: "heroFadeUp 0.65s ease both",
+          }}
         >
           <Link
             to={slide.ctaPrimary.href}
-            className="inline-flex items-center px-8 py-3.5 bg-[#C6A46C] text-white text-xs font-medium tracking-[0.2em] uppercase hover:bg-[#B8936A] transition-all duration-200 shadow-[0_4px_20px_rgba(198,164,108,0.4)] rounded-sm"
+            className="inline-flex items-center px-8 py-3.5 bg-[#9A7A46] text-white text-xs font-medium tracking-[0.2em] uppercase hover:bg-[#B8936A] transition-all duration-200 shadow-[0_4px_20px_rgba(198,164,108,0.4)] rounded-sm"
           >
             {slide.ctaPrimary.label}
           </Link>
@@ -221,7 +236,7 @@ const HeroCarousel = () => {
       <button
         onClick={prev}
         aria-label="Previous slide"
-        className="hidden md:flex absolute left-3 sm:left-5 top-1/2 -translate-y-1/2 z-20 w-10 h-10 items-center justify-center bg-white/80 hover:bg-[#C6A46C] hover:text-white text-[#C6A46C] rounded-full shadow-md transition-all duration-200 backdrop-blur-sm"
+        className="hidden md:flex absolute left-3 sm:left-5 top-1/2 -translate-y-1/2 z-20 w-10 h-10 items-center justify-center bg-white/80 hover:bg-[#9A7A46] hover:text-white text-[#9A7A46] rounded-full shadow-md transition-all duration-200 backdrop-blur-sm"
       >
         <ChevronLeft size={18} />
       </button>
@@ -230,18 +245,18 @@ const HeroCarousel = () => {
       <button
         onClick={next}
         aria-label="Next slide"
-        className="hidden md:flex absolute right-3 sm:right-5 top-1/2 -translate-y-1/2 z-20 w-10 h-10 items-center justify-center bg-white/80 hover:bg-[#C6A46C] hover:text-white text-[#C6A46C] rounded-full shadow-md transition-all duration-200 backdrop-blur-sm"
+        className="hidden md:flex absolute right-3 sm:right-5 top-1/2 -translate-y-1/2 z-20 w-10 h-10 items-center justify-center bg-white/80 hover:bg-[#9A7A46] hover:text-white text-[#9A7A46] rounded-full shadow-md transition-all duration-200 backdrop-blur-sm"
       >
         <ChevronRight size={18} />
       </button>
 
       {/* Slide number */}
       <div className="absolute bottom-6 right-6 sm:right-10 z-20 hidden sm:flex items-center gap-2">
-        <span className="text-[#C6A46C] text-sm font-light font-serif">
+        <span className="text-[#9A7A46] text-sm font-light font-serif">
           0{current + 1}
         </span>
-        <span className="text-[#C6A46C]/30 text-xs">/</span>
-        <span className="text-[#C6A46C]/50 text-xs">0{SLIDES.length}</span>
+        <span className="text-[#9A7A46]/30 text-xs">/</span>
+        <span className="text-[#9A7A46]/50 text-xs">0{SLIDES.length}</span>
       </div>
 
       {/* Dot indicators */}

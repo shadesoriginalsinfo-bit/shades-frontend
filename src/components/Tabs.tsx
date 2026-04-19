@@ -29,7 +29,7 @@ export function Tabs<T extends string>({
             onClick={() => onChange(tab.key)}
             className={`px-5 py-2 text-[11px] tracking-[0.2em] uppercase font-medium transition-colors border-b-2 -mb-px ${
               isActive
-                ? "border-[#C6A46C] text-[#C6A46C] font-semibold"
+                ? "border-[#9A7A46] text-[#9A7A46] font-semibold"
                 : "border-transparent text-gray-400 hover:text-gray-600"
             }`}
           >

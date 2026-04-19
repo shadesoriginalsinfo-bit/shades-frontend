@@ -32,7 +32,9 @@ interface Props {
   onOpenChange: (open: boolean) => void;
   editingProduct: IProduct | null;
   form: ProductForm;
-  onFormChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  onFormChange: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => void;
   onTogglePublished: () => void;
   onToggleCategory: (id: string) => void;
   categories: ICategory[];
@@ -139,7 +141,7 @@ const ProductFormModal = ({
               onChange={onFormChange}
               placeholder={"Each line becomes a bullet point\nLine 1\nLine 2"}
               rows={4}
-              className="w-full bg-transparent text-sm text-gray-800 outline-none border border-[#D4B896] px-2 pb-1 pt-1.5 placeholder:text-[#C6A46C]/70 placeholder:text-xs placeholder:tracking-wider focus:border-[#C6A46C] focus:shadow-[0_1px_0_0_#C6A46C] resize-none"
+              className="w-full bg-transparent text-sm text-gray-800 outline-none border border-[#D4B896] px-2 pb-1 pt-1.5 placeholder:text-[#9A7A46]/70 placeholder:text-xs placeholder:tracking-wider focus:border-[#9A7A46] focus:shadow-[0_1px_0_0_#9A7A46] resize-none"
             />
           </LabelField>
         </div>
@@ -150,9 +152,11 @@ const ProductFormModal = ({
               name="careInstruction"
               value={form.careInstruction}
               onChange={onFormChange}
-              placeholder={"Each line becomes a bullet point\nHand wash in cold water\nDo not bleach"}
+              placeholder={
+                "Each line becomes a bullet point\nHand wash in cold water\nDo not bleach"
+              }
               rows={4}
-              className="w-full bg-transparent text-sm text-gray-800 outline-none border border-[#D4B896] px-2 pb-1 pt-1.5 placeholder:text-[#C6A46C]/70 placeholder:text-xs placeholder:tracking-wider focus:border-[#C6A46C] focus:shadow-[0_1px_0_0_#C6A46C] resize-none"
+              className="w-full bg-transparent text-sm text-gray-800 outline-none border border-[#D4B896] px-2 pb-1 pt-1.5 placeholder:text-[#9A7A46]/70 placeholder:text-xs placeholder:tracking-wider focus:border-[#9A7A46] focus:shadow-[0_1px_0_0_#9A7A46] resize-none"
             />
           </LabelField>
         </div>
@@ -162,7 +166,7 @@ const ProductFormModal = ({
             type="button"
             onClick={onTogglePublished}
             className={`relative w-9 h-5 rounded-full transition-colors ${
-              form.isPublished ? "bg-[#C6A46C]" : "bg-gray-200"
+              form.isPublished ? "bg-[#9A7A46]" : "bg-gray-200"
             }`}
           >
             <span
@@ -171,7 +175,7 @@ const ProductFormModal = ({
               }`}
             />
           </button>
-          <span className="text-[10px] tracking-[0.25em] uppercase text-[#C6A46C] font-medium">
+          <span className="text-[10px] tracking-[0.25em] uppercase text-[#9A7A46] font-medium">
             Published
           </span>
         </div>
@@ -183,13 +187,13 @@ const ProductFormModal = ({
               {categories.map((cat) => (
                 <label
                   key={cat.id}
-                  className="flex items-center gap-2 cursor-pointer hover:text-[#C6A46C] transition-colors"
+                  className="flex items-center gap-2 cursor-pointer hover:text-[#9A7A46] transition-colors"
                 >
                   <input
                     type="checkbox"
                     checked={form.categoryIds.includes(cat.id)}
                     onChange={() => onToggleCategory(cat.id)}
-                    className="accent-[#C6A46C] size-3.5"
+                    className="accent-[#9A7A46] size-3.5"
                   />
                   <span className="text-xs text-gray-700">{cat.name}</span>
                 </label>
@@ -200,11 +204,7 @@ const ProductFormModal = ({
       </div>
 
       <DialogFooter>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => onOpenChange(false)}
-        >
+        <Button variant="outline" size="sm" onClick={() => onOpenChange(false)}>
           Cancel
         </Button>
         <Button

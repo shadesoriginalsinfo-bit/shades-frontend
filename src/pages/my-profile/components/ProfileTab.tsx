@@ -3,14 +3,13 @@ import { Link } from "react-router-dom";
 import { useAuthUser } from "@/hooks/useAuth";
 import { formatDate } from "./OrdersTab";
 
-
 const ProfileTab = () => {
   const { data: user, isLoading } = useAuthUser();
 
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-16">
-        <Loader2 size={24} className="animate-spin text-[#C6A46C]" />
+        <Loader2 size={24} className="animate-spin text-[#9A7A46]" />
       </div>
     );
   }
@@ -30,7 +29,7 @@ const ProfileTab = () => {
       <div className="bg-white border border-[#E8DDD0] rounded-sm overflow-hidden">
         {/* Avatar strip */}
         <div className="bg-linear-to-r from-[#2A1810] to-[#4a2c1a] px-6 py-8 flex items-center gap-5">
-          <div className="w-16 h-16 rounded-full bg-[#C6A46C]/20 border-2 border-[#C6A46C] flex items-center justify-center">
+          <div className="w-16 h-16 rounded-full bg-[#9A7A46]/20 border-2 border-[#9A7A46] flex items-center justify-center">
             {user.avatar ? (
               <img
                 src={user.avatar}
@@ -38,14 +37,14 @@ const ProfileTab = () => {
                 className="w-full h-full object-cover rounded-full"
               />
             ) : (
-              <User size={28} className="text-[#C6A46C]" />
+              <User size={28} className="text-[#9A7A46]" />
             )}
           </div>
           <div>
             <p className="font-serif font-bold text-white text-xl leading-tight">
               {user.name}
             </p>
-            <p className="text-[10px] tracking-[0.2em] uppercase text-[#C6A46C] mt-0.5">
+            <p className="text-[10px] tracking-[0.2em] uppercase text-[#9A7A46] mt-0.5">
               {user.role}
             </p>
           </div>
@@ -64,7 +63,7 @@ const ProfileTab = () => {
               {label === "Role" && user.role === "ADMIN" ? (
                 <Link
                   to="/admin/dashboard"
-                  className="flex items-center gap-1.5 text-sm text-[#C6A46C] font-medium hover:underline text-right"
+                  className="flex items-center gap-1.5 text-sm text-[#9A7A46] font-medium hover:underline text-right"
                 >
                   {value}
                   <ExternalLink size={13} />

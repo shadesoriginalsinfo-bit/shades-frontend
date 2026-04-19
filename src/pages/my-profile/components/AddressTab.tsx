@@ -77,7 +77,7 @@ const AddressesTab = () => {
             setEditingAddress(null);
             setModalOpen(true);
           }}
-          className="flex items-center gap-2 px-4 py-2 bg-[#2A1810] text-white text-xs tracking-[0.2em] uppercase font-medium hover:bg-[#C6A46C] transition-all rounded-sm"
+          className="flex items-center gap-2 px-4 py-2 bg-[#2A1810] text-white text-xs tracking-[0.2em] uppercase font-medium hover:bg-[#9A7A46] transition-all rounded-sm"
         >
           <Plus size={13} /> Add Address
         </button>
@@ -85,11 +85,11 @@ const AddressesTab = () => {
 
       {isLoading ? (
         <div className="flex items-center justify-center py-12">
-          <Loader2 size={22} className="animate-spin text-[#C6A46C]" />
+          <Loader2 size={22} className="animate-spin text-[#9A7A46]" />
         </div>
       ) : addresses.length === 0 ? (
         <div className="bg-white border border-[#E8DDD0] rounded-sm py-14 flex flex-col items-center gap-3">
-          <MapPin size={32} className="text-[#C6A46C]/40" />
+          <MapPin size={32} className="text-[#9A7A46]/40" />
           <p className="text-sm text-gray-400 tracking-wide">
             No addresses saved yet
           </p>
@@ -103,13 +103,13 @@ const AddressesTab = () => {
             >
               {/* Default badge */}
               {addr.isDefault && (
-                <span className="absolute top-3 right-3 flex items-center gap-1 text-[9px] tracking-wider uppercase px-1.5 py-0.5 bg-[#C6A46C]/10 text-[#C6A46C] border border-[#C6A46C]/30 rounded-sm">
+                <span className="absolute top-3 right-3 flex items-center gap-1 text-[9px] tracking-wider uppercase px-1.5 py-0.5 bg-[#9A7A46]/10 text-[#9A7A46] border border-[#9A7A46]/30 rounded-sm">
                   <Star size={8} fill="currentColor" /> Default
                 </span>
               )}
 
               {addr.label && (
-                <p className="text-[10px] tracking-[0.2em] uppercase font-semibold text-[#C6A46C] mb-1">
+                <p className="text-[10px] tracking-[0.2em] uppercase font-semibold text-[#9A7A46] mb-1">
                   {addr.label}
                 </p>
               )}
@@ -130,7 +130,7 @@ const AddressesTab = () => {
                     setEditingAddress(addr);
                     setModalOpen(true);
                   }}
-                  className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-[#C6A46C] transition-colors tracking-wide"
+                  className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-[#9A7A46] transition-colors tracking-wide"
                 >
                   <Pencil size={12} /> Edit
                 </button>

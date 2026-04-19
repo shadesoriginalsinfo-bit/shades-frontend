@@ -33,18 +33,20 @@ const ProductsSection = ({
   showCategoryFilter = true,
   fixedCategoryId,
 }: ProductsSectionProps) => {
-  const [selectedCategory, setSelectedCategory] = useState(fixedCategoryId ?? "");
-
-
-  const { products, isLoading: productsLoading,
-    isError: productsError, } = useProducts(
-    {
-      categoryId: selectedCategory || undefined,
-      isPublished: true,
-      limit,
-      page: 1,
-    }
+  const [selectedCategory, setSelectedCategory] = useState(
+    fixedCategoryId ?? "",
   );
+
+  const {
+    products,
+    isLoading: productsLoading,
+    isError: productsError,
+  } = useProducts({
+    categoryId: selectedCategory || undefined,
+    isPublished: true,
+    limit,
+    page: 1,
+  });
   const { categories } = useCategories();
 
   return (
@@ -97,7 +99,7 @@ const ProductsSection = ({
           <div className="text-center mt-12">
             <Link
               to={`/shop${selectedCategory ? `?category=${selectedCategory}` : ""}`}
-              className="inline-flex items-center gap-2.5 px-10 py-3.5 border border-[#C6A46C] text-[#C6A46C] text-xs tracking-[0.25em] uppercase font-medium hover:bg-[#C6A46C] hover:text-white transition-all duration-200 rounded-sm group"
+              className="inline-flex items-center gap-2.5 px-10 py-3.5 border border-[#9A7A46] text-[#9A7A46] text-xs tracking-[0.25em] uppercase font-medium hover:bg-[#9A7A46] hover:text-white transition-all duration-200 rounded-sm group"
             >
               View All Products
               <ArrowRight

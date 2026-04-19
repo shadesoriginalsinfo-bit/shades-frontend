@@ -1,7 +1,7 @@
 import type { OrderStatus } from "@/types/order";
 
 const STATUS_STYLES: Record<OrderStatus, string> = {
-  DRAFT: "bg-yellow-50 text-yellow-700 border-yellow-200",
+  // DRAFT: "bg-yellow-50 text-yellow-700 border-yellow-200",
   PENDING: "bg-yellow-50 text-yellow-700 border-yellow-200",
   CONFIRMED: "bg-blue-50 text-blue-700 border-blue-200",
   SHIPPED: "bg-purple-50 text-purple-700 border-purple-200",
@@ -12,7 +12,7 @@ const STATUS_STYLES: Record<OrderStatus, string> = {
 
 const PAYMENT_STATUS_STYLES: Record<string, string> = {
   PAID: "bg-green-50 text-green-700",
-  SUCCESS : "bg-green-50 text-green-700",
+  SUCCESS: "bg-green-50 text-green-700",
   PENDING: "bg-yellow-50 text-yellow-700",
   FAILED: "bg-red-50 text-red-500",
   REFUNDED: "bg-gray-100 text-gray-500",

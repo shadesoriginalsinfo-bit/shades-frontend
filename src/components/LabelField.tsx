@@ -8,11 +8,11 @@ const LabelField = ({
   span2?: boolean;
 }) => (
   <div className={`space-y-1 ${span2 ? "md:col-span-2" : ""}`}>
-    <label className="text-[10px] tracking-[0.25em] uppercase text-[#C6A46C] font-medium">
+    <label className="text-[10px] tracking-[0.25em] uppercase text-[#9A7A46] font-semibold">
       {label}
     </label>
     {children}
   </div>
 );
 
-export default LabelField
+export default LabelField;

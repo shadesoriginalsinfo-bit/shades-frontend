@@ -15,7 +15,6 @@ import logo from "@/assets/transparentLogo.png";
 import LabelField from "@/components/LabelField";
 import { CornerOrnament, GoldDivider, GoldPattern } from "@/components/comps";
 
-
 export default function SignupPage() {
   const [form, setForm] = useState<IRegisterForm>(initialFormValue);
   const [tncOpen, setTncOpen] = useState(false);
@@ -49,14 +48,20 @@ export default function SignupPage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!INDIAN_MOBILE_REGEX.test(form.mobileNumber.trim())) return toast.error("Invalid mobile number");
-    if (form.password.length < 8) return toast.error("Password must be at least 8 characters");
-    if (!PASSWORD_REGEX.test(form.password)) return toast.error('Password must contain uppercase, lowercase, number and at least one @ _ ! # $ % * special characters');
-    if (form.password !== form.confirmPassword) return toast.error("Password & Confirm Password mismatch");
-    if (!tncAccepted) return toast.error("Please accept the Terms and Conditions to continue");
+    if (!INDIAN_MOBILE_REGEX.test(form.mobileNumber.trim()))
+      return toast.error("Invalid mobile number");
+    if (form.password.length < 8)
+      return toast.error("Password must be at least 8 characters");
+    if (!PASSWORD_REGEX.test(form.password))
+      return toast.error(
+        "Password must contain uppercase, lowercase, number and at least one @ _ ! # $ % * special characters",
+      );
+    if (form.password !== form.confirmPassword)
+      return toast.error("Password & Confirm Password mismatch");
+    if (!tncAccepted)
+      return toast.error("Please accept the Terms and Conditions to continue");
 
     try {
-
       const payload = {
         name: form.name.trim(),
         email: form.email.trim(),
@@ -82,14 +87,12 @@ export default function SignupPage() {
   /* ---------------- UI ---------------- */
   return (
     <div className="w-full min-h-screen bg-white flex items-start justify-center relative overflow-hidden py-4 md:py-10 px-6">
-
       {/* Background pattern + glow */}
       <GoldPattern />
       <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_70%_60%_at_50%_30%,rgba(212,175,122,0.07)_0%,transparent_70%)]" />
 
       {/* ── Card wrapper ─────────────────────────────────────────────────── */}
       <div className="relative z-10 w-full max-w-3xl animate-[fadeUp_0.6s_ease_both]">
-
         {/* Corner ornaments */}
         <CornerOrnament className="absolute -top-3 -left-3 w-14 h-14 z-20" />
         <CornerOrnament className="absolute -top-3 -right-3 w-14 h-14 z-20 scale-x-[-1]" />
@@ -98,7 +101,6 @@ export default function SignupPage() {
 
         {/* Main card */}
         <div className="bg-white md:border border-[#E8DDD0] px-0 sm:px-10 py-6 md:py-6 md:shadow-[0_8px_60px_rgba(198,164,108,0.12),0_2px_12px_rgba(0,0,0,0.04)]">
-
           {/* Logo */}
           <div className="flex justify-center mb-5">
             <img src={logo} alt="Logo" className="h-24 object-contain" />
@@ -116,7 +118,6 @@ export default function SignupPage() {
           {/* Form */}
           <form onSubmit={handleSubmit}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
-
               <LabelField label="Full Name">
                 <Input
                   name="name"
@@ -149,7 +150,6 @@ export default function SignupPage() {
                   restrictSpecialChars={false}
                 />
               </LabelField>
-
 
               <LabelField label="Password">
                 <PasswordInput
@@ -269,9 +269,24 @@ export default function SignupPage() {
               >
                 {registerMutation.isPending ? (
                   <span className="flex items-center gap-2">
-                    <svg className="animate-spin size-4" viewBox="0 0 24 24" fill="none">
-                      <circle className="opacity-30" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" />
-                      <path className="opacity-80" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+                    <svg
+                      className="animate-spin size-4"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                    >
+                      <circle
+                        className="opacity-30"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="3"
+                      />
+                      <path
+                        className="opacity-80"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                      />
                     </svg>
                     Creating account…
                   </span>
@@ -284,7 +299,7 @@ export default function SignupPage() {
                 Already a member?{" "}
                 <Link
                   to="/login"
-                  className="text-[#C6A46C] font-semibold hover:text-[#B8936A] transition-colors"
+                  className="text-[#9A7A46] font-semibold hover:text-[#B8936A] transition-colors"
                 >
                   Sign In
                 </Link>
@@ -294,7 +309,7 @@ export default function SignupPage() {
         </div>
 
         {/* Bottom tagline */}
-        <p className="text-center text-[10px] tracking-[0.3em] uppercase text-[#C6A46C]/50 md:mt-5">
+        <p className="text-center text-[10px] tracking-[0.3em] uppercase text-[#9A7A46] md:mt-5">
           Secure &nbsp;·&nbsp; Trusted &nbsp;·&nbsp; Exclusive
         </p>
       </div>

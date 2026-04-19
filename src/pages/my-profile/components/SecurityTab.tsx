@@ -57,7 +57,7 @@ const SecurityTab = () => {
       {/* Change Password */}
       <section className="bg-white border border-[#E8DDD0] rounded-sm p-6">
         <div className="mb-5">
-          <p className="text-[10px] tracking-[0.2em] uppercase text-[#C6A46C] font-medium">
+          <p className="text-[10px] tracking-[0.2em] uppercase text-[#9A7A46] font-medium">
             Security
           </p>
           <h3 className="font-serif font-bold text-[#2A1810] text-lg mt-0.5">
@@ -80,7 +80,7 @@ const SecurityTab = () => {
                 }
                 required
                 placeholder="Enter current password"
-                className="w-full border border-[#E8DDD0] rounded-sm px-3 py-2 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:border-[#C6A46C] transition-colors pr-10"
+                className="w-full border border-[#E8DDD0] rounded-sm px-3 py-2 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:border-[#9A7A46] transition-colors pr-10"
               />
               <button
                 type="button"
@@ -106,7 +106,7 @@ const SecurityTab = () => {
                 }
                 required
                 placeholder="Enter new password"
-                className="w-full border border-[#E8DDD0] rounded-sm px-3 py-2 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:border-[#C6A46C] transition-colors pr-10"
+                className="w-full border border-[#E8DDD0] rounded-sm px-3 py-2 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:border-[#9A7A46] transition-colors pr-10"
               />
               <button
                 type="button"
@@ -131,14 +131,14 @@ const SecurityTab = () => {
               }
               required
               placeholder="Repeat new password"
-              className="w-full border border-[#E8DDD0] rounded-sm px-3 py-2 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:border-[#C6A46C] transition-colors"
+              className="w-full border border-[#E8DDD0] rounded-sm px-3 py-2 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:border-[#9A7A46] transition-colors"
             />
           </div>
 
           <button
             type="submit"
             disabled={changePwMutation.isPending}
-            className="flex items-center gap-2 px-5 py-2.5 bg-[#2A1810] text-white text-xs tracking-[0.2em] uppercase font-medium hover:bg-[#C6A46C] transition-all rounded-sm disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center gap-2 px-5 py-2.5 bg-[#2A1810] text-white text-xs tracking-[0.2em] uppercase font-medium hover:bg-[#9A7A46] transition-all rounded-sm disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {changePwMutation.isPending ? (
               <>

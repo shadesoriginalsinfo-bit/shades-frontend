@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useDashboard } from "@/hooks/useDashboard";
 import {
   Users,
@@ -6,6 +7,10 @@ import {
   Tag,
   IndianRupee,
   TrendingUp,
+  TrendingDown,
+  CalendarDays,
+  X,
+  Info,
 } from "lucide-react";
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
@@ -29,7 +34,9 @@ const STATUS_TEXT: Record<string, string> = {
 function StatusBadge({ status }: { status: string }) {
   const cls = STATUS_TEXT[status] ?? "text-gray-600 bg-gray-50 border-gray-200";
   return (
-    <span className={`inline-block px-2 py-0.5 text-[10px] tracking-widest uppercase font-medium border ${cls}`}>
+    <span
+      className={`inline-block px-2 py-0.5 text-[10px] tracking-widest uppercase font-medium border ${cls}`}
+    >
       {status}
     </span>
   );
@@ -39,10 +46,21 @@ function StatusBadge({ status }: { status: string }) {
 
 function Spinner() {
   return (
-    <div className="flex items-center justify-center py-16 text-[#C6A46C]">
+    <div className="flex items-center justify-center py-16 text-[#9A7A46]">
       <svg className="animate-spin size-5" viewBox="0 0 24 24" fill="none">
-        <circle className="opacity-30" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" />
-        <path className="opacity-80" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+        <circle
+          className="opacity-30"
+          cx="12"
+          cy="12"
+          r="10"
+          stroke="currentColor"
+          strokeWidth="3"
+        />
+        <path
+          className="opacity-80"
+          fill="currentColor"
+          d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+        />
       </svg>
       <span className="ml-2 text-sm">Loading…</span>
     </div>
@@ -56,17 +74,48 @@ interface StatCardProps {
   value: string | number;
   icon: React.ReactNode;
   sub?: string;
+  info?: string;
+  accent?: "default" | "danger";
 }
 
-function StatCard({ label, value, icon, sub }: StatCardProps) {
+function StatCard({
+  label,
+  value,
+  icon,
+  sub,
+  info,
+  accent = "default",
+}: StatCardProps) {
+  const labelColor = accent === "danger" ? "text-red-400" : "text-[#9A7A46]";
+  const iconColor =
+    accent === "danger" ? "text-red-300/60" : "text-[#9A7A46]/50";
   return (
     <div className="bg-white border border-[#E8DDD0] p-5 flex items-start justify-between rounded-sm">
-      <div>
-        <p className="text-[11px] tracking-[0.2em] uppercase text-[#C6A46C] font-semibold">{label}</p>
+      <div className="min-w-0">
+        <div className="flex items-center gap-1.5">
+          <p
+            className={`text-[11px] tracking-[0.2em] uppercase font-semibold ${labelColor}`}
+          >
+            {label}
+          </p>
+          {info && (
+            <div className="relative group">
+              <Info
+                className={`size-3 cursor-default ${labelColor} opacity-60`}
+              />
+              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block z-10 w-52 pointer-events-none">
+                <div className="bg-gray-800 text-white text-[11px] leading-relaxed rounded px-2.5 py-2 shadow-lg">
+                  {info}
+                </div>
+                <div className="w-2 h-2 bg-gray-800 rotate-45 mx-auto -mt-1" />
+              </div>
+            </div>
+          )}
+        </div>
         <p className="text-2xl font-semibold text-gray-800 mt-1.5">{value}</p>
         {sub && <p className="text-xs text-gray-400 mt-1">{sub}</p>}
       </div>
-      <div className="text-[#C6A46C]/50 mt-0.5">{icon}</div>
+      <div className={`${iconColor} mt-0.5 shrink-0`}>{icon}</div>
     </div>
   );
 }
@@ -74,7 +123,20 @@ function StatCard({ label, value, icon, sub }: StatCardProps) {
 // ── Page ─────────────────────────────────────────────────────────────────────
 
 const DashboardPage = () => {
-  const { dashboard, isLoading, isError } = useDashboard();
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+
+  const { dashboard, isLoading, isError } = useDashboard({
+    startDate: startDate || undefined,
+    endDate: endDate || undefined,
+  });
+
+  const hasFilter = startDate || endDate;
+
+  const clearFilter = () => {
+    setStartDate("");
+    setEndDate("");
+  };
 
   if (isLoading) return <Spinner />;
 
@@ -89,46 +151,95 @@ const DashboardPage = () => {
 
   const { stats, ordersByStatus, recentOrders, recentUsers } = dashboard;
 
-  const totalOrdersForBar = ordersByStatus.reduce((sum, s) => sum + s.count, 0) || 1;
+  const totalOrdersForBar =
+    ordersByStatus.reduce((sum, s) => sum + s.count, 0) || 1;
 
   return (
     <div className="space-y-6 p-1 md:p-4">
-      <h1 className="text-2xl font-light tracking-tight text-gray-800 font-serif">Dashboard</h1>
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <h1 className="text-2xl font-light tracking-tight text-gray-800 font-serif">
+          Dashboard
+        </h1>
+
+        {/* Date Filter */}
+        <div className="flex items-center gap-2 flex-wrap">
+          <CalendarDays className="size-4 text-[#9A7A46]/60 shrink-0" />
+          <div className="flex items-center gap-1">
+            <input
+              type="date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+              className="text-xs border border-[#E8DDD0] rounded-sm px-2 py-1.5 text-gray-700 focus:outline-none focus:border-[#9A7A46] bg-white"
+            />
+            <span className="text-xs text-gray-400">to</span>
+            <input
+              type="date"
+              value={endDate}
+              min={startDate || undefined}
+              onChange={(e) => setEndDate(e.target.value)}
+              className="text-xs border border-[#E8DDD0] rounded-sm px-2 py-1.5 text-gray-700 focus:outline-none focus:border-[#9A7A46] bg-white"
+            />
+          </div>
+          {hasFilter && (
+            <button
+              onClick={clearFilter}
+              className="flex items-center gap-1 text-[10px] tracking-wider uppercase text-[#9A7A46] border border-[#9A7A46]/40 px-2 py-1.5 hover:bg-[#F8F4EE] transition-colors rounded-sm"
+            >
+              <X className="size-3" />
+              Clear
+            </button>
+          )}
+        </div>
+      </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3">
+      <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3">
         <StatCard
           label="Total Users"
           value={stats.totalUsers.toLocaleString("en-IN")}
           icon={<Users className="size-5" />}
+          info="Count of all active (non-deleted) registered users."
         />
         <StatCard
           label="Total Orders"
           value={stats.totalOrders.toLocaleString("en-IN")}
           icon={<ShoppingBag className="size-5" />}
+          info="Count of all placed orders."
         />
         <StatCard
           label="Products"
           value={stats.totalProducts.toLocaleString("en-IN")}
           icon={<Package className="size-5" />}
+          info="Count of all active products in the catalog."
         />
         <StatCard
           label="Categories"
           value={stats.totalCategories.toLocaleString("en-IN")}
           icon={<Tag className="size-5" />}
+          info="Count of all active product categories."
         />
         <StatCard
           label="Total Revenue"
           value={`₹${stats.totalRevenue.toLocaleString("en-IN")}`}
           icon={<IndianRupee className="size-5" />}
-          sub="All time"
+          sub="Completed orders"
+          info="Sum of order amounts for all orders except cancelled ones."
+        />
+        <StatCard
+          label="Lost Revenue"
+          value={`₹${stats.lostRevenue.toLocaleString("en-IN")}`}
+          icon={<TrendingDown className="size-5" />}
+          sub="Cancelled orders"
+          accent="danger"
+          info="Sum of order amounts for all cancelled orders."
         />
       </div>
 
       {/* Orders by Status */}
       {ordersByStatus.length > 0 && (
         <div className="bg-white border border-[#E8DDD0] p-5 rounded-sm">
-          <h2 className="text-[10px] tracking-[0.2em] uppercase text-[#C6A46C] font-semibold mb-4">
+          <h2 className="text-[10px] tracking-[0.2em] uppercase text-[#9A7A46] font-semibold mb-4">
             Orders by Status
           </h2>
           {/* Bar */}
@@ -146,9 +257,13 @@ const DashboardPage = () => {
           <div className="flex flex-wrap gap-x-5 gap-y-2">
             {ordersByStatus.map((s) => (
               <div key={s.status} className="flex items-center gap-2">
-                <span className={`size-2.5 rounded-full inline-block ${STATUS_COLORS[s.status] ?? "bg-gray-300"}`} />
+                <span
+                  className={`size-2.5 rounded-full inline-block ${STATUS_COLORS[s.status] ?? "bg-gray-300"}`}
+                />
                 <span className="text-xs text-gray-500">{s.status}</span>
-                <span className="text-xs font-medium text-gray-700">{s.count}</span>
+                <span className="text-xs font-medium text-gray-700">
+                  {s.count}
+                </span>
                 <span className="text-[10px] text-gray-400">
                   ({Math.round((s.count / totalOrdersForBar) * 100)}%)
                 </span>
@@ -162,7 +277,7 @@ const DashboardPage = () => {
         {/* Recent Orders */}
         <div className="bg-white border border-[#E8DDD0] rounded-sm">
           <div className="px-5 py-4 border-b border-[#E8DDD0]">
-            <h2 className="text-[10px] tracking-[0.2em] uppercase text-[#C6A46C] font-semibold">
+            <h2 className="text-[10px] tracking-[0.2em] uppercase text-[#9A7A46] font-semibold">
               Recent Orders
             </h2>
           </div>
@@ -174,10 +289,17 @@ const DashboardPage = () => {
           ) : (
             <div className="divide-y divide-[#E8DDD0]">
               {recentOrders.map((order) => (
-                <div key={order.id} className="px-5 py-3.5 flex items-center justify-between gap-3 hover:bg-[#FDFAF6] transition-colors">
+                <div
+                  key={order.id}
+                  className="px-5 py-3.5 flex items-center justify-between gap-3 hover:bg-[#FDFAF6] transition-colors"
+                >
                   <div className="min-w-0">
-                    <p className="font-medium text-sm text-gray-800 truncate">{order.user.name}</p>
-                    <p className="text-xs text-gray-400 font-mono">{order.id.slice(0, 10)}…</p>
+                    <p className="font-medium text-sm text-gray-800 truncate">
+                      {order.user.name}
+                    </p>
+                    <p className="text-xs text-gray-400 font-mono">
+                      {order.id.slice(0, 10)}…
+                    </p>
                   </div>
                   <div className="flex items-center gap-3 shrink-0">
                     <StatusBadge status={order.status} />
@@ -200,7 +322,7 @@ const DashboardPage = () => {
         {/* Recent Users */}
         <div className="bg-white border border-[#E8DDD0] rounded-sm">
           <div className="px-5 py-4 border-b border-[#E8DDD0]">
-            <h2 className="text-[10px] tracking-[0.2em] uppercase text-[#C6A46C] font-semibold">
+            <h2 className="text-[10px] tracking-[0.2em] uppercase text-[#9A7A46] font-semibold">
               Recent Users
             </h2>
           </div>
@@ -212,14 +334,21 @@ const DashboardPage = () => {
           ) : (
             <div className="divide-y divide-[#E8DDD0]">
               {recentUsers.map((user) => (
-                <div key={user.id} className="px-5 py-3.5 flex items-center justify-between gap-3 hover:bg-[#FDFAF6] transition-colors">
+                <div
+                  key={user.id}
+                  className="px-5 py-3.5 flex items-center justify-between gap-3 hover:bg-[#FDFAF6] transition-colors"
+                >
                   <div className="min-w-0">
-                    <p className="font-medium text-sm text-gray-800 truncate">{user.name}</p>
-                    <p className="text-xs text-gray-400 truncate">{user.email}</p>
+                    <p className="font-medium text-sm text-gray-800 truncate">
+                      {user.name}
+                    </p>
+                    <p className="text-xs text-gray-400 truncate">
+                      {user.email}
+                    </p>
                   </div>
                   <div className="flex items-center gap-3 shrink-0">
                     {user.role === "ADMIN" ? (
-                      <span className="inline-block px-2 py-0.5 text-[10px] tracking-widest uppercase font-medium bg-[#F8F4EE] text-[#9A7A50] border border-[#C6A46C]/40">
+                      <span className="inline-block px-2 py-0.5 text-[10px] tracking-widest uppercase font-medium bg-[#F8F4EE] text-[#9A7A50] border border-[#9A7A46]/40">
                         Admin
                       </span>
                     ) : (

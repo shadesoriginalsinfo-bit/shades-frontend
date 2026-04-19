@@ -18,7 +18,6 @@ export interface SidebarItem {
   path: string;
 }
 
-
 export const navLinks: SidebarItem[] = [
   {
     label: "Dashboard",
@@ -47,7 +46,6 @@ export const navLinks: SidebarItem[] = [
 ];
 
 const Sidebar: React.FC = () => {
-
   const { logout, logoutLoading } = useLogout();
 
   if (logoutLoading) return <LoadingModal />;
@@ -63,8 +61,8 @@ const Sidebar: React.FC = () => {
                 clsx(
                   "flex items-center gap-3 rounded-xl px-3 py-3 text-sm transition-colors duration-150",
                   isActive
-                    ? "bg-gray-100 text-[#C6A46C] font-bold"
-                    : "text-[#496c87] hover:bg-gray-100 font-medium"
+                    ? "bg-gray-100 text-[#9A7A46] font-bold"
+                    : "text-[#496c87] hover:bg-gray-100 font-medium",
                 )
               }
             >
@@ -82,8 +80,8 @@ const Sidebar: React.FC = () => {
             clsx(
               "w-[89%] flex items-center gap-3 rounded-xl px-3 py-3 text-sm transition-colors duration-150",
               isActive
-                ? "bg-gray-100 text-[#C6A46C] font-bold"
-                : "text-[#496c87] hover:bg-gray-100 font-medium"
+                ? "bg-gray-100 text-[#9A7A46] font-bold"
+                : "text-[#496c87] hover:bg-gray-100 font-medium",
             )
           }
         >
@@ -92,7 +90,7 @@ const Sidebar: React.FC = () => {
         </NavLink>
         <button
           onClick={logout}
-          className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm transition-colors duration-150 text-[#C6A46C] font-semibold hover:font-bold cursor-pointer"
+          className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm transition-colors duration-150 text-[#9A7A46] font-semibold hover:font-bold cursor-pointer"
         >
           <LogOut />
           <span>Logout</span>

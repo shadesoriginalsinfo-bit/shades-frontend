@@ -6,18 +6,21 @@ interface ProductListCardProps {
   product: IProduct;
 }
 
-const formatINR = (amount: number) =>
-  `₹${amount.toLocaleString("en-IN")}`;
+const formatINR = (amount: number) => `₹${amount.toLocaleString("en-IN")}`;
 
 const ProductListCard = ({ product }: ProductListCardProps) => {
-  const sortedImages = [...product.images].sort((a, b) => a.position - b.position);
+  const sortedImages = [...product.images].sort(
+    (a, b) => a.position - b.position,
+  );
   const primaryImage = sortedImages[0];
 
   const finalPrice = product.discountPrice ?? product.marketPrice;
   const discount =
     product.discountPrice && product.marketPrice > product.discountPrice
       ? Math.round(
-          ((product.marketPrice - product.discountPrice) / product.marketPrice) * 100
+          ((product.marketPrice - product.discountPrice) /
+            product.marketPrice) *
+            100,
         )
       : null;
 
@@ -25,7 +28,10 @@ const ProductListCard = ({ product }: ProductListCardProps) => {
   const category = product.productCategories[0]?.category;
 
   return (
-    <Link to={`/product/${product.id}`} className="group flex gap-4 md:gap-6 bg-white border border-[#E8DDD0] hover:border-[#C6A46C]/60 hover:shadow-[0_6px_28px_rgba(198,164,108,0.12)] transition-all duration-300 rounded-sm overflow-hidden p-3 md:p-4">
+    <Link
+      to={`/product/${product.id}`}
+      className="group flex gap-4 md:gap-6 bg-white border border-[#E8DDD0] hover:border-[#9A7A46]/60 hover:shadow-[0_6px_28px_rgba(198,164,108,0.12)] transition-all duration-300 rounded-sm overflow-hidden p-3 md:p-4"
+    >
       {/* Image */}
       <div className="relative w-28 md:w-36 aspect-[3/4] rounded-sm overflow-hidden bg-[#F5EFE7] shrink-0">
         {primaryImage ? (
@@ -36,12 +42,12 @@ const ProductListCard = ({ product }: ProductListCardProps) => {
           />
         ) : (
           <div className="absolute inset-0 flex items-center justify-center">
-            <ShoppingBag size={28} className="text-[#C6A46C]/25" />
+            <ShoppingBag size={28} className="text-[#9A7A46]/25" />
           </div>
         )}
 
         {discount && (
-          <span className="absolute top-2 left-2 bg-[#C6A46C] text-white text-[9px] font-bold tracking-wider px-1.5 py-0.5 rounded-sm">
+          <span className="absolute top-2 left-2 bg-[#9A7A46] text-white text-[9px] font-bold tracking-wider px-1.5 py-0.5 rounded-sm">
             -{discount}%
           </span>
         )}
@@ -53,7 +59,7 @@ const ProductListCard = ({ product }: ProductListCardProps) => {
         {category && (
           <Link
             to={`/shop?category=${category.slug}`}
-            className="text-[10px] tracking-[0.2em] uppercase text-[#C6A46C] font-medium mb-1 hover:text-[#B8936A] transition-colors"
+            className="text-[10px] tracking-[0.2em] uppercase text-[#9A7A46] font-medium mb-1 hover:text-[#B8936A] transition-colors"
           >
             {category.name}
           </Link>
@@ -61,7 +67,7 @@ const ProductListCard = ({ product }: ProductListCardProps) => {
 
         {/* Title */}
         <Link to={`/product/${product.id}`}>
-          <h3 className="text-sm md:text-base font-serif font-medium text-gray-800 leading-snug hover:text-[#C6A46C] transition-colors line-clamp-2">
+          <h3 className="text-sm md:text-base font-serif font-medium text-gray-800 leading-snug hover:text-[#9A7A46] transition-colors line-clamp-2">
             {product.title}
           </h3>
         </Link>
@@ -101,20 +107,20 @@ const ProductListCard = ({ product }: ProductListCardProps) => {
         <div className="flex items-center gap-2 mt-auto pt-3">
           <button
             disabled={isOutOfStock}
-            className="px-5 py-2 bg-[#1a1a1a] text-white text-[10px] tracking-[0.2em] uppercase font-medium hover:bg-[#C6A46C] transition-colors rounded-sm disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-5 py-2 bg-[#1a1a1a] text-white text-[10px] tracking-[0.2em] uppercase font-medium hover:bg-[#9A7A46] transition-colors rounded-sm disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isOutOfStock ? "Out of Stock" : "Add to Cart"}
           </button>
           <button
             aria-label="Add to wishlist"
-            className="w-8 h-8 flex items-center justify-center border border-[#E8DDD0] text-gray-400 hover:border-[#C6A46C] hover:text-[#C6A46C] transition-all rounded-sm"
+            className="w-8 h-8 flex items-center justify-center border border-[#E8DDD0] text-gray-400 hover:border-[#9A7A46] hover:text-[#9A7A46] transition-all rounded-sm"
           >
             <Heart size={14} />
           </button>
           <Link
             to={`/product/${product.id}`}
             aria-label="View product"
-            className="w-8 h-8 flex items-center justify-center border border-[#E8DDD0] text-gray-400 hover:border-[#C6A46C] hover:text-[#C6A46C] transition-all rounded-sm"
+            className="w-8 h-8 flex items-center justify-center border border-[#E8DDD0] text-gray-400 hover:border-[#9A7A46] hover:text-[#9A7A46] transition-all rounded-sm"
           >
             <Eye size={14} />
           </Link>

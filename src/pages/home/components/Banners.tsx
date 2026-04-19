@@ -13,9 +13,10 @@ const PROMO_ITEMS = [
 ];
 
 export const PromoStrip = () => (
-  <div className="bg-[#1a1a1a] text-white py-2.5 overflow-hidden">
-    <div className="flex items-center gap-10 whitespace-nowrap animate-[marquee_30s_linear_infinite]">
-      {[...PROMO_ITEMS, ...PROMO_ITEMS].map((item, i) => (
+  <div className="bg-[#1a1a1a] text-white py-2.5 overflow-x-scroll">
+    <div className="flex items-center justify-around gap-10 whitespace-nowrap animate-[marquee_30s_linear_infinite] px-4">
+      {[...PROMO_ITEMS].map((item, i) => (
+        // {[...PROMO_ITEMS, ...PROMO_ITEMS].map((item, i) => (
         <span
           key={i}
           className="text-[11px] tracking-[0.18em] text-[#C6A46C] shrink-0"
@@ -24,12 +25,12 @@ export const PromoStrip = () => (
         </span>
       ))}
     </div>
-    <style>{`
+    {/* <style>{`
       @keyframes marquee {
         from { transform: translateX(0); }
         to   { transform: translateX(-50%); }
       }
-    `}</style>
+    `}</style> */}
   </div>
 );
 
@@ -43,10 +44,10 @@ interface TrustItem {
 }
 
 const TRUST_ITEMS: TrustItem[] = [
-  { icon: Truck,    label: "Free Delivery",    sub: "On orders above ₹999" },
-  { icon: RefreshCw, label: "Easy Exchange",   sub: "Hassle-free exchange" },
-  { icon: Shield,   label: "Secure Payment",  sub: "100% safe checkout" },
-  { icon: Star,     label: "Premium Quality", sub: "Handcrafted with care" },
+  { icon: Truck, label: "Free Delivery", sub: "On orders above ₹999" },
+  { icon: RefreshCw, label: "Easy Exchange", sub: "Hassle-free exchange" },
+  { icon: Shield, label: "Secure Payment", sub: "100% safe checkout" },
+  { icon: Star, label: "Premium Quality", sub: "Handcrafted with care" },
 ];
 
 export const TrustBar = () => (
@@ -62,8 +63,12 @@ export const TrustBar = () => (
               <Icon size={18} className="text-[#C6A46C]" />
             </div>
             <div>
-              <p className="text-sm font-medium text-gray-800 leading-tight">{label}</p>
-              <p className="text-xs text-gray-400 mt-0.5 tracking-wide">{sub}</p>
+              <p className="text-sm font-medium text-gray-800 leading-tight">
+                {label}
+              </p>
+              <p className="text-xs text-gray-400 mt-0.5 tracking-wide">
+                {sub}
+              </p>
             </div>
           </div>
         ))}
@@ -83,7 +88,13 @@ interface BannerCardProps {
   dark?: boolean;
 }
 
-const BannerCard = ({ eyebrow, title, cta, href, dark = false }: BannerCardProps) => (
+const BannerCard = ({
+  eyebrow,
+  title,
+  cta,
+  href,
+  dark = false,
+}: BannerCardProps) => (
   <Link
     to={href}
     className={`relative group h-64 md:h-72 overflow-hidden rounded-sm flex items-center ${
@@ -134,7 +145,10 @@ const BannerCard = ({ eyebrow, title, cta, href, dark = false }: BannerCardProps
         }`}
       >
         {cta}
-        <ArrowRight size={13} className="group-hover:translate-x-1 transition-transform duration-200" />
+        <ArrowRight
+          size={13}
+          className="group-hover:translate-x-1 transition-transform duration-200"
+        />
       </span>
     </div>
   </Link>
@@ -210,10 +224,14 @@ export const ThreeBanners = () => (
           >
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_90%_10%,rgba(255,255,255,0.08)_0%,transparent_60%)]" />
             <div className="relative z-10">
-              <p className={`text-[10px] tracking-[0.2em] uppercase ${textColor} opacity-60 mb-1`}>
+              <p
+                className={`text-[10px] tracking-[0.2em] uppercase ${textColor} opacity-60 mb-1`}
+              >
                 {sub}
               </p>
-              <h4 className={`text-xl font-bold font-serif ${textColor} leading-tight`}>
+              <h4
+                className={`text-xl font-bold font-serif ${textColor} leading-tight`}
+              >
                 {label}
               </h4>
             </div>

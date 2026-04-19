@@ -44,7 +44,7 @@ const ProductGrid = ({
     return (
       <div className="flex flex-col items-center justify-center py-24 text-center">
         <div className="w-14 h-14 rounded-full bg-[#F5EFE7] border border-[#E8DDD0] flex items-center justify-center mb-5">
-          <PackageSearch size={22} className="text-[#C6A46C]" />
+          <PackageSearch size={22} className="text-[#9A7A46]" />
         </div>
         <p className="text-base font-serif font-medium text-gray-700 tracking-wide mb-1">
           No products found
@@ -54,7 +54,7 @@ const ProductGrid = ({
         </p>
         <Link
           to="/shop"
-          className="px-7 py-2.5 border border-[#C6A46C] text-[#C6A46C] text-xs tracking-[0.2em] uppercase font-medium hover:bg-[#C6A46C] hover:text-white transition-all rounded-sm"
+          className="px-7 py-2.5 border border-[#9A7A46] text-[#9A7A46] text-xs tracking-[0.2em] uppercase font-medium hover:bg-[#9A7A46] hover:text-white transition-all rounded-sm"
         >
           Clear All Filters
         </Link>

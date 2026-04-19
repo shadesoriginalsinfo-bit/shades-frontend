@@ -1,16 +1,11 @@
 import type { IAddress } from "./address";
 
 export type OrderStatus =
-  "DRAFT"
-  | "PENDING"
-  | "CONFIRMED"
-  | "SHIPPED"
-  | "DELIVERED"
-  | "CANCELLED"
-  | "REFUNDED";
+  // | "DRAFT"
+  "PENDING" | "CONFIRMED" | "SHIPPED" | "DELIVERED" | "CANCELLED" | "REFUNDED";
 
 export const ORDER_STATUSES: OrderStatus[] = [
-  "DRAFT",
+  // "DRAFT",
   "PENDING",
   "CONFIRMED",
   "SHIPPED",
@@ -20,7 +15,7 @@ export const ORDER_STATUSES: OrderStatus[] = [
 ];
 
 export const STATUS_PROGRESSION: Record<OrderStatus, OrderStatus[]> = {
-  DRAFT: ["CANCELLED"],
+  // DRAFT: ["CANCELLED"],
   PENDING: ["CONFIRMED", "CANCELLED"],
   CONFIRMED: ["SHIPPED", "CANCELLED"],
   SHIPPED: ["DELIVERED"],

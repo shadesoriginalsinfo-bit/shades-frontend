@@ -77,8 +77,8 @@ function AccordionItem({
 }) {
   return (
     <div
-      className={`border-b border-[#C6A46C]/20 transition-colors duration-200 ${
-        isOpen ? "bg-[#C6A46C]/5" : "hover:bg-[#C6A46C]/[0.03]"
+      className={`border-b border-[#9A7A46]/20 transition-colors duration-200 ${
+        isOpen ? "bg-[#9A7A46]/5" : "hover:bg-[#9A7A46]/[0.03]"
       }`}
     >
       <button
@@ -87,7 +87,9 @@ function AccordionItem({
       >
         <span
           className={`text-sm font-medium tracking-wide transition-colors duration-200 ${
-            isOpen ? "text-[#C6A46C]" : "text-zinc-800 group-hover:text-[#C6A46C]"
+            isOpen
+              ? "text-[#9A7A46]"
+              : "text-zinc-800 group-hover:text-[#9A7A46]"
           }`}
         >
           {q}
@@ -95,11 +97,15 @@ function AccordionItem({
         <span
           className={`flex-shrink-0 w-5 h-5 rounded-full border flex items-center justify-center transition-all duration-200 ${
             isOpen
-              ? "border-[#C6A46C] bg-[#C6A46C] text-white"
-              : "border-zinc-300 text-zinc-400 group-hover:border-[#C6A46C] group-hover:text-[#C6A46C]"
+              ? "border-[#9A7A46] bg-[#9A7A46] text-white"
+              : "border-zinc-300 text-zinc-400 group-hover:border-[#9A7A46] group-hover:text-[#9A7A46]"
           }`}
         >
-          {isOpen ? <Minus size={10} strokeWidth={2.5} /> : <Plus size={10} strokeWidth={2.5} />}
+          {isOpen ? (
+            <Minus size={10} strokeWidth={2.5} />
+          ) : (
+            <Plus size={10} strokeWidth={2.5} />
+          )}
         </span>
       </button>
 
@@ -108,7 +114,9 @@ function AccordionItem({
           isOpen ? "max-h-40 opacity-100" : "max-h-0 opacity-0"
         }`}
       >
-        <p className="px-5 pb-4 text-sm text-zinc-500 leading-relaxed pr-12">{a}</p>
+        <p className="px-5 pb-4 text-sm text-zinc-500 leading-relaxed pr-12">
+          {a}
+        </p>
       </div>
     </div>
   );
@@ -124,13 +132,12 @@ export default function FAQSection() {
   return (
     <div className="min-h-screen bg-[#FAFAF8] flex items-center justify-center py-4 md:py-8">
       <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-16">
-
         {/* Header */}
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-2 mb-4">
-            <div className="h-px w-8 bg-[#C6A46C]/40" />
-            <ShoppingBag size={14} className="text-[#C6A46C]" />
-            <div className="h-px w-8 bg-[#C6A46C]/40" />
+            <div className="h-px w-8 bg-[#9A7A46]/40" />
+            <ShoppingBag size={14} className="text-[#9A7A46]" />
+            <div className="h-px w-8 bg-[#9A7A46]/40" />
           </div>
           <h2
             className="text-3xl font-light tracking-[0.12em] text-zinc-800 uppercase mb-3"
@@ -149,10 +156,10 @@ export default function FAQSection() {
             <div key={group.category}>
               {/* Category Label */}
               <div className="flex items-center gap-3 mb-2 px-1">
-                <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-[#C6A46C]">
+                <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-[#9A7A46]">
                   {group.category}
                 </span>
-                <div className="flex-1 h-px bg-[#C6A46C]/15" />
+                <div className="flex-1 h-px bg-[#9A7A46]/15" />
               </div>
 
               {/* Items */}

@@ -10,7 +10,10 @@ interface RelatedProductsProps {
   currentProductId: string;
 }
 
-const RelatedProducts = ({ categoryId, currentProductId }: RelatedProductsProps) => {
+const RelatedProducts = ({
+  categoryId,
+  currentProductId,
+}: RelatedProductsProps) => {
   const { products, isLoading } = useProducts({
     categoryId: categoryId || undefined,
     isPublished: true,
@@ -19,7 +22,9 @@ const RelatedProducts = ({ categoryId, currentProductId }: RelatedProductsProps)
   });
 
   // exclude the current product and cap at 4
-  const filtered = products.filter((p) => p.id !== currentProductId).slice(0, 4);
+  const filtered = products
+    .filter((p) => p.id !== currentProductId)
+    .slice(0, 4);
 
   // Don't render the section if no related products (after loading)
   if (!isLoading && filtered.length === 0) return null;
@@ -48,7 +53,7 @@ const RelatedProducts = ({ categoryId, currentProductId }: RelatedProductsProps)
           <div className="text-center mt-10">
             <Link
               to={`/shop?category=${categoryId}`}
-              className="inline-flex items-center gap-2.5 px-10 py-3.5 border border-[#C6A46C] text-[#C6A46C] text-xs tracking-[0.25em] uppercase font-medium hover:bg-[#C6A46C] hover:text-white transition-all duration-200 rounded-sm group"
+              className="inline-flex items-center gap-2.5 px-10 py-3.5 border border-[#9A7A46] text-[#9A7A46] text-xs tracking-[0.25em] uppercase font-medium hover:bg-[#9A7A46] hover:text-white transition-all duration-200 rounded-sm group"
             >
               View Full Collection
               <ArrowRight
