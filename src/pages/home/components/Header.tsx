@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import logo from "@/assets/transparentLogo.png";
+import logo from "@/assets/logo2.png";
 import { useAuthUser } from "@/hooks/useAuth";
 import { useLogout } from "@/hooks/useLogout";
 import dummyAvatar from "@/assets/profile.webp";

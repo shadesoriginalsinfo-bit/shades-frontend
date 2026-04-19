@@ -8,7 +8,7 @@ import { PASSWORD_REGEX } from "@/utils/validation";
 import { PasswordInput } from "@/components/PasswordInput";
 import toast from "react-hot-toast";
 import img from "@/assets/forgotPasswordImg.svg";
-import logo from "@/assets/transparentLogo.png";
+import logo from "@/assets/logo2.png";
 import { handleApiError } from "@/utils/handleApiError";
 
 const ResetPasswordPage: React.FC = () => {
@@ -28,8 +28,9 @@ const ResetPasswordPage: React.FC = () => {
     },
     onError: (err: any) => {
       handleApiError(err);
-      console.log(err)
-      const message = err?.response?.data?.message || "Failed to reset password";
+      console.log(err);
+      const message =
+        err?.response?.data?.message || "Failed to reset password";
       setClientError(message);
     },
   });
@@ -108,8 +109,10 @@ const ResetPasswordPage: React.FC = () => {
             Reset Password
           </h1>
           {clientError ? (
-                <div className="text-sm text-red-600 text-center">{clientError}</div>
-              ) : null}
+            <div className="text-sm text-red-600 text-center">
+              {clientError}
+            </div>
+          ) : null}
 
           {!token ? (
             <div className="text-center text-red-600">
@@ -128,7 +131,8 @@ const ResetPasswordPage: React.FC = () => {
                 />
 
                 <p className="text-xs text-gray-500 mt-1">
-                  Password must contain uppercase, lowercase, number and atleast one @ _ ! # $ % * & character
+                  Password must contain uppercase, lowercase, number and atleast
+                  one @ _ ! # $ % * & character
                 </p>
               </div>
 

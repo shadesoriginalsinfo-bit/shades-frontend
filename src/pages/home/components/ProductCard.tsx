@@ -72,7 +72,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
               -{discount}%
             </span>
           )}
-          {!isOutOfStock && product.stock <= 5 && (
+          {!isOutOfStock && product.stock <= 10 && (
             <span className="bg-red-50 text-red-600 border border-red-200 text-[10px] font-medium tracking-wider px-2 py-1 rounded-sm">
               Only {product.stock} left
             </span>
