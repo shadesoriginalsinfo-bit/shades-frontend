@@ -102,9 +102,9 @@ const SECTIONS = [
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
-const GOLD = "#9A7A46";
-const GOLD_LIGHT = "#9A7A4618";
-const GOLD_MID = "#9A7A4635";
+const GOLD = "#C6A46C";
+const GOLD_LIGHT = "#C6A46C18";
+const GOLD_MID = "#C6A46C35";
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
@@ -340,10 +340,7 @@ export default function HelpPage() {
                 <Phone size={11} style={{ color: GOLD }} />
                 +91 85489 95696
               </a>
-              <div
-                className="flex items-center gap-2 text-xs"
-                style={{ color: "#999" }}
-              >
+              <div className="flex items-center gap-2 text-xs text-gray-500">
                 <Clock size={11} style={{ color: GOLD }} />
                 10 AM – 6:30 PM
               </div>
@@ -379,10 +376,7 @@ export default function HelpPage() {
               >
                 Still need help?
               </p>
-              <p
-                className="text-xs"
-                style={{ color: "rgba(255,255,255,0.5)", fontWeight: 300 }}
-              >
+              <p className="text-xs text-gray-300">
                 Our team is available 10 AM – 6:30 PM, Mon–Sat.
               </p>
             </div>

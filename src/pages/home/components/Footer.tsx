@@ -7,7 +7,7 @@ const base = window.location.origin;
 
 const HELP_LINKS = [
   { label: "Shipping Policy", href: `${base}/help#shipping` },
-  { label: "Return Policy", href: `${base}/help#exchange` },
+  { label: "Exchange Policy", href: `${base}/help#exchange` },
   { label: "Track My Order", href: `${base}/help#track` },
   { label: "Terms of Service", href: `${base}/help#terms` },
   { label: "Privacy Policy", href: `${base}/help#privacy` },

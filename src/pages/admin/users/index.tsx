@@ -284,7 +284,7 @@ const UsersPage = () => {
 
   // Filters
   const [searchInput, setSearchInput] = useState("");
-  const [roleFilter, setRoleFilter] = useState<RoleFilter>("");
+  // const [roleFilter, setRoleFilter] = useState<RoleFilter>("");
   const [deletedFilter, setDeletedFilter] = useState<DeletedFilter>("");
   const [page, setPage] = useState(1);
 
@@ -296,7 +296,7 @@ const UsersPage = () => {
 
   const { users, meta, isLoading } = useUsers({
     search: search.trim() || undefined,
-    role: roleFilter || undefined,
+    // role: roleFilter || undefined,
     isDeleted: deletedFilter || undefined,
     page,
     limit: LIMIT,
@@ -304,12 +304,12 @@ const UsersPage = () => {
 
   const resetFilters = () => {
     setSearchInput("");
-    setRoleFilter("");
+    // setRoleFilter("");
     setDeletedFilter("");
     setPage(1);
   };
 
-  const hasActiveFilters = searchInput || roleFilter || deletedFilter;
+  const hasActiveFilters = searchInput || deletedFilter;
 
   // ── Mutations ─────────────────────────────────────────────────────────────
 
@@ -387,7 +387,7 @@ const UsersPage = () => {
           </div>
 
           {/* Role */}
-          <div className="flex flex-col gap-1 min-w-32">
+          {/* <div className="flex flex-col gap-1 min-w-32">
             <label className="text-[10px] tracking-[0.15em] uppercase text-[#9A7A46]/80 font-medium">
               Role
             </label>
@@ -406,7 +406,7 @@ const UsersPage = () => {
               </select>
               <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 size-3.5 text-gray-400" />
             </div>
-          </div>
+          </div> */}
 
           {/* Status */}
           <div className="flex flex-col gap-1 min-w-32">

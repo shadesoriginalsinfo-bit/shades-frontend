@@ -9,7 +9,7 @@ import {
   CheckCircle2,
   Loader2,
   CreditCard,
-  Truck,
+  // Truck,
 } from "lucide-react";
 import {
   getAddresses,
@@ -62,9 +62,8 @@ const CheckoutPage = () => {
   const [showAddressForm, setShowAddressForm] = useState(false);
   const [addressForm, setAddressForm] =
     useState<ICreateAddress>(emptyAddressForm);
-  const [paymentMethod, setPaymentMethod] = useState<"ONLINE" | "COD">(
-    "ONLINE",
-  );
+  // const [paymentMethod, setPaymentMethod] = useState<"ONLINE" | "COD">( "ONLINE");
+  const [paymentMethod, setPaymentMethod] = useState<"ONLINE">("ONLINE");
 
   // Redirect if no checkout state (direct navigation)
   if (!state?.product) {
@@ -153,11 +152,11 @@ const CheckoutPage = () => {
       return;
     }
 
-    if (paymentMethod === "COD") {
-      toast.success("Order placed successfully!");
-      navigate("/order-success", { state: { order } });
-      return;
-    }
+    // if (paymentMethod === "COD") {
+    //   toast.success("Order placed successfully!");
+    //   navigate("/order-success", { state: { order } });
+    //   return;
+    // }
 
     let paymentData;
     try {
@@ -558,7 +557,7 @@ const CheckoutPage = () => {
                     </p>
                   </div>
                 </label>
-                <label
+                {/* <label
                   className={`flex items-center gap-3 p-3.5 border rounded-sm cursor-pointer transition-all ${paymentMethod === "COD" ? "border-[#9A7A46] bg-[#F5EFE7]" : "border-[#E8DDD0] hover:border-[#9A7A46]/50"}`}
                 >
                   <input
@@ -578,7 +577,7 @@ const CheckoutPage = () => {
                       Pay when your order arrives
                     </p>
                   </div>
-                </label>
+                </label> */}
               </div>
             </section>
           </div>
@@ -671,9 +670,10 @@ const CheckoutPage = () => {
                 ) : (
                   <>
                     <CheckCircle2 size={14} />{" "}
-                    {paymentMethod === "COD"
-                      ? "Place Order"
-                      : "Proceed to Payment"}
+                    {
+                      // paymentMethod === "COD" ? "Place Order" :
+                      "Proceed to Payment"
+                    }
                   </>
                 )}
               </button>
