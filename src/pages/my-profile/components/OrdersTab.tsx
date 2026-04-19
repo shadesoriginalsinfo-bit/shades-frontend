@@ -7,7 +7,7 @@ import type { IOrder, OrderStatus } from "@/types/order";
 import { handleApiError } from "@/utils/handleApiError";
 
 const ORDER_STATUS_COLORS: Record<OrderStatus, string> = {
-  DRAFT: "bg-amber-50 text-amber-700 border-amber-200",
+  // DRAFT: "bg-amber-50 text-amber-700 border-amber-200",
   PENDING: "bg-amber-50 text-amber-700 border-amber-200",
   CONFIRMED: "bg-blue-50 text-blue-700 border-blue-200",
   SHIPPED: "bg-purple-50 text-purple-700 border-purple-200",
