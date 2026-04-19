@@ -15,7 +15,6 @@ function Input({
   restrictSpecialChars = true,
   ...props
 }: InputProps) {
-  
   return (
     <input
       type={type}
@@ -36,16 +35,16 @@ function Input({
         "border-0 border-b border-[#D4B896] rounded-none",
         "pb-1 pt-1.5",
         // Placeholder
-        "placeholder:text-[#C6A46C]/70 placeholder:text-xs placeholder:tracking-wider",
+        "placeholder:text-[#9A7A46]/70 placeholder:text-xs placeholder:tracking-wider",
         // Focus: gold underline glow
-        "focus:border-[#C6A46C] focus:shadow-[0_1px_0_0_#C6A46C]",
+        "focus:border-[#9A7A46] focus:shadow-[0_1px_0_0_#9A7A46]",
         // Disabled
         "disabled:opacity-40 disabled:cursor-not-allowed",
         // Selection
-        "selection:bg-[#C6A46C]/30 selection:text-[#6B4E2A]",
+        "selection:bg-[#9A7A46]/30 selection:text-[#6B4E2A]",
         // Invalid
         "aria-invalid:border-red-400",
-        className
+        className,
       )}
       {...props}
     />

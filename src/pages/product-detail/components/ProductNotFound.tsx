@@ -10,15 +10,15 @@ const ProductNotFound = ({ isError = false }: ProductNotFoundProps) => (
     {/* Icon */}
     <div className="relative mb-8">
       <div className="w-20 h-20 rounded-full bg-[#F5EFE7] border border-[#E8DDD0] flex items-center justify-center">
-        <PackageSearch size={32} className="text-[#C6A46C]" />
+        <PackageSearch size={32} className="text-[#9A7A46]" />
       </div>
       {/* Ornament ring */}
-      <div className="absolute -inset-2 rounded-full border border-[#C6A46C]/20" />
-      <div className="absolute -inset-4 rounded-full border border-[#C6A46C]/10" />
+      <div className="absolute -inset-2 rounded-full border border-[#9A7A46]/20" />
+      <div className="absolute -inset-4 rounded-full border border-[#9A7A46]/10" />
     </div>
 
     {/* Text */}
-    <p className="text-[10px] tracking-[0.35em] uppercase text-[#C6A46C] font-medium mb-3">
+    <p className="text-[10px] tracking-[0.35em] uppercase text-[#9A7A46] font-medium mb-3">
       {isError ? "Something went wrong" : "404 · Not Found"}
     </p>
     <h2 className="text-3xl font-bold font-serif text-[#2A1810] mb-2">
@@ -27,9 +27,9 @@ const ProductNotFound = ({ isError = false }: ProductNotFoundProps) => (
 
     {/* Ornamental divider */}
     <div className="flex items-center gap-2 justify-center my-4">
-      <div className="h-px w-10 bg-[#C6A46C]" />
-      <div className="h-1.5 w-1.5 rounded-full bg-[#C6A46C]" />
-      <div className="h-px w-10 bg-[#C6A46C]" />
+      <div className="h-px w-10 bg-[#9A7A46]" />
+      <div className="h-1.5 w-1.5 rounded-full bg-[#9A7A46]" />
+      <div className="h-px w-10 bg-[#9A7A46]" />
     </div>
 
     <p className="text-sm text-gray-500 tracking-wide max-w-sm mb-8 leading-relaxed">
@@ -41,13 +41,13 @@ const ProductNotFound = ({ isError = false }: ProductNotFoundProps) => (
     <div className="flex flex-wrap items-center gap-4 justify-center">
       <Link
         to="/shop"
-        className="inline-flex items-center gap-2 px-8 py-3 bg-[#C6A46C] text-white text-xs tracking-[0.2em] uppercase font-medium hover:bg-[#B8936A] transition-colors rounded-sm"
+        className="inline-flex items-center gap-2 px-8 py-3 bg-[#9A7A46] text-white text-xs tracking-[0.2em] uppercase font-medium hover:bg-[#B8936A] transition-colors rounded-sm"
       >
         Browse Shop
       </Link>
       <Link
         to="/"
-        className="inline-flex items-center gap-2 px-8 py-3 border border-[#E8DDD0] text-gray-600 text-xs tracking-[0.2em] uppercase font-medium hover:border-[#C6A46C] hover:text-[#C6A46C] transition-colors rounded-sm"
+        className="inline-flex items-center gap-2 px-8 py-3 border border-[#E8DDD0] text-gray-600 text-xs tracking-[0.2em] uppercase font-medium hover:border-[#9A7A46] hover:text-[#9A7A46] transition-colors rounded-sm"
       >
         <ArrowLeft size={13} />
         Back to Home

@@ -7,13 +7,19 @@ import { Pagination } from "@/components/Pagination";
 import { handleApiError } from "@/utils/handleApiError";
 import { adminUpdateOrderStatus } from "@/lib/api";
 import { ORDERS_QUERY_KEY, useOrders } from "@/hooks/useOrders";
-import { ORDER_STATUSES, type IAdminOrder, type OrderStatus } from "@/types/order";
+import {
+  ORDER_STATUSES,
+  type IAdminOrder,
+  type OrderStatus,
+} from "@/types/order";
 import { OrderDetailModal } from "./components/OrderModal";
-import { PaymentBadge, PaymentMethodBadge, StatusBadge } from "./components/Badges";
+import {
+  PaymentBadge,
+  PaymentMethodBadge,
+  StatusBadge,
+} from "./components/Badges";
 
 const LIMIT = 20;
-
-
 
 const OrdersPage = () => {
   const queryClient = useQueryClient();
@@ -38,13 +44,22 @@ const OrdersPage = () => {
   });
 
   const updateStatusMutation = useMutation({
-    mutationFn: ({ id, status, trackingNumber }: { id: string; status: OrderStatus; trackingNumber?: string }) =>
-      adminUpdateOrderStatus(id, status, trackingNumber),
+    mutationFn: ({
+      id,
+      status,
+      trackingNumber,
+    }: {
+      id: string;
+      status: OrderStatus;
+      trackingNumber?: string;
+    }) => adminUpdateOrderStatus(id, status, trackingNumber),
     onSuccess: (updated) => {
       toast.success("Order status updated");
       queryClient.invalidateQueries({ queryKey: [ORDERS_QUERY_KEY] });
       setSelectedOrder((prev) =>
-        prev ? { ...prev, status: (updated as IAdminOrder).status ?? prev.status } : prev
+        prev
+          ? { ...prev, status: (updated as IAdminOrder).status ?? prev.status }
+          : prev,
       );
     },
     onError: handleApiError,
@@ -58,18 +73,21 @@ const OrdersPage = () => {
     setPage(1);
   };
 
-  const hasActiveFilters = statusFilter || userIdFilter || fromFilter || toFilter;
+  const hasActiveFilters =
+    statusFilter || userIdFilter || fromFilter || toFilter;
 
   return (
     <div className="space-y-4 p-1 md:p-4">
-      <h1 className="text-2xl font-light tracking-tight text-gray-800 font-serif">Orders</h1>
+      <h1 className="text-2xl font-light tracking-tight text-gray-800 font-serif">
+        Orders
+      </h1>
 
       {/* Filters */}
       <div className="bg-white border border-[#E8DDD0] p-4">
         <div className="flex flex-wrap gap-3 items-end">
           {/* Status */}
           <div className="flex flex-col gap-1 min-w-35">
-            <label className="text-[10px] tracking-[0.15em] uppercase text-[#C6A46C]/80 font-medium">
+            <label className="text-[10px] tracking-[0.15em] uppercase text-[#9A7A46]/80 font-medium">
               Status
             </label>
             <div className="relative">
@@ -79,7 +97,7 @@ const OrdersPage = () => {
                   setStatusFilter(e.target.value as OrderStatus | "");
                   setPage(1);
                 }}
-                className="w-full cursor-pointer appearance-none border border-[#E8DDD0] bg-white px-3 py-2 pr-9 text-sm text-gray-700 transition-colors hover:border-[#C6A46C]/60 focus:outline-none focus:border-[#C6A46C] focus:ring-1 focus:ring-[#C6A46C]/20"
+                className="w-full cursor-pointer appearance-none border border-[#E8DDD0] bg-white px-3 py-2 pr-9 text-sm text-gray-700 transition-colors hover:border-[#9A7A46]/60 focus:outline-none focus:border-[#9A7A46] focus:ring-1 focus:ring-[#9A7A46]/20"
               >
                 <option value="">All statuses</option>
                 {ORDER_STATUSES.map((s) => (
@@ -94,7 +112,7 @@ const OrdersPage = () => {
 
           {/* User ID */}
           <div className="flex flex-col gap-1 min-w-50">
-            <label className="text-[10px] tracking-[0.15em] uppercase text-[#C6A46C]/80 font-medium">
+            <label className="text-[10px] tracking-[0.15em] uppercase text-[#9A7A46]/80 font-medium">
               User ID
             </label>
             <input
@@ -105,13 +123,13 @@ const OrdersPage = () => {
                 setUserIdFilter(e.target.value);
                 setPage(1);
               }}
-              className="border border-[#E8DDD0] px-3 py-2 text-sm text-gray-700 placeholder:text-gray-300 focus:outline-none focus:border-[#C6A46C]"
+              className="border border-[#E8DDD0] px-3 py-2 text-sm text-gray-700 placeholder:text-gray-300 focus:outline-none focus:border-[#9A7A46]"
             />
           </div>
 
           {/* From date */}
           <div className="flex flex-col gap-1">
-            <label className="text-[10px] tracking-[0.15em] uppercase text-[#C6A46C]/80 font-medium">
+            <label className="text-[10px] tracking-[0.15em] uppercase text-[#9A7A46]/80 font-medium">
               From
             </label>
             <input
@@ -121,13 +139,13 @@ const OrdersPage = () => {
                 setFromFilter(e.target.value);
                 setPage(1);
               }}
-              className="border border-[#E8DDD0] px-3 py-2 text-sm text-gray-700 focus:outline-none focus:border-[#C6A46C]"
+              className="border border-[#E8DDD0] px-3 py-2 text-sm text-gray-700 focus:outline-none focus:border-[#9A7A46]"
             />
           </div>
 
           {/* To date */}
           <div className="flex flex-col gap-1">
-            <label className="text-[10px] tracking-[0.15em] uppercase text-[#C6A46C]/80 font-medium">
+            <label className="text-[10px] tracking-[0.15em] uppercase text-[#9A7A46]/80 font-medium">
               To
             </label>
             <input
@@ -137,7 +155,7 @@ const OrdersPage = () => {
                 setToFilter(e.target.value);
                 setPage(1);
               }}
-              className="border border-[#E8DDD0] px-3 py-2 text-sm text-gray-700 focus:outline-none focus:border-[#C6A46C]"
+              className="border border-[#E8DDD0] px-3 py-2 text-sm text-gray-700 focus:outline-none focus:border-[#9A7A46]"
             />
           </div>
 
@@ -158,8 +176,12 @@ const OrdersPage = () => {
       {/* Table */}
       <div className="bg-white border border-[#E8DDD0] overflow-x-auto">
         {isLoading ? (
-          <div className="flex items-center justify-center py-16 text-[#C6A46C]">
-            <svg className="animate-spin size-4" viewBox="0 0 24 24" fill="none">
+          <div className="flex items-center justify-center py-16 text-[#9A7A46]">
+            <svg
+              className="animate-spin size-4"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
               <circle
                 className="opacity-30"
                 cx="12"
@@ -185,34 +207,34 @@ const OrdersPage = () => {
           <table className="w-full text-sm">
             <thead>
               <tr className="bg-[#F8F4EE] border-b border-[#E8DDD0]">
-                <th className="text-left px-4 py-3 text-[10px] tracking-[0.2em] uppercase text-[#C6A46C]/80 font-medium">
+                <th className="text-left px-4 py-3 text-[10px] tracking-[0.2em] uppercase text-[#9A7A46]/80 font-medium">
                   Order ID
                 </th>
-                <th className="text-left px-4 py-3 text-[10px] tracking-[0.2em] uppercase text-[#C6A46C]/80 font-medium">
+                <th className="text-left px-4 py-3 text-[10px] tracking-[0.2em] uppercase text-[#9A7A46]/80 font-medium">
                   Customer
                 </th>
-                <th className="min-w-38 text-left px-4 py-3 text-[10px] tracking-[0.2em] uppercase text-[#C6A46C]/80 font-medium">
+                <th className="min-w-38 text-left px-4 py-3 text-[10px] tracking-[0.2em] uppercase text-[#9A7A46]/80 font-medium">
                   Payment Method
                 </th>
-                <th className="min-w-40 text-left px-4 py-3 text-[10px] tracking-[0.2em] uppercase text-[#C6A46C]/80 font-medium">
+                <th className="min-w-40 text-left px-4 py-3 text-[10px] tracking-[0.2em] uppercase text-[#9A7A46]/80 font-medium">
                   Order Status
                 </th>
-                <th className="min-w-40 text-left px-4 py-3 text-[10px] tracking-[0.2em] uppercase text-[#C6A46C]/80 font-medium ">
+                <th className="min-w-40 text-left px-4 py-3 text-[10px] tracking-[0.2em] uppercase text-[#9A7A46]/80 font-medium ">
                   Payment Status
                 </th>
-                <th className="text-left px-4 py-3 text-[10px] tracking-[0.2em] uppercase text-[#C6A46C]/80 font-medium">
+                <th className="text-left px-4 py-3 text-[10px] tracking-[0.2em] uppercase text-[#9A7A46]/80 font-medium">
                   Tracking Id
                 </th>
-                <th className="text-left px-4 py-3 text-[10px] tracking-[0.2em] uppercase text-[#C6A46C]/80 font-medium">
+                <th className="text-left px-4 py-3 text-[10px] tracking-[0.2em] uppercase text-[#9A7A46]/80 font-medium">
                   Total
                 </th>
-                <th className="min-w-40 text-center px-4 py-3 text-[10px] tracking-[0.2em] uppercase text-[#C6A46C]/80 font-medium">
+                <th className="min-w-40 text-center px-4 py-3 text-[10px] tracking-[0.2em] uppercase text-[#9A7A46]/80 font-medium">
                   Placed At
                 </th>
-                <th className="text-left px-4 py-3 text-[10px] tracking-[0.2em] uppercase text-[#C6A46C]/80 font-medium">
+                <th className="text-left px-4 py-3 text-[10px] tracking-[0.2em] uppercase text-[#9A7A46]/80 font-medium">
                   Updated At
                 </th>
-                <th className="text-right px-4 py-3 text-[10px] tracking-[0.2em] uppercase text-[#C6A46C]/80 font-medium">
+                <th className="text-right px-4 py-3 text-[10px] tracking-[0.2em] uppercase text-[#9A7A46]/80 font-medium">
                   Actions
                 </th>
               </tr>
@@ -232,7 +254,9 @@ const OrdersPage = () => {
 
                   {/* Customer */}
                   <td className="px-4 py-3 ">
-                    <p className="font-medium text-gray-800 leading-tight">{order.user.name}</p>
+                    <p className="font-medium text-gray-800 leading-tight">
+                      {order.user.name}
+                    </p>
                     <p className="text-xs text-gray-400">{order.user.email}</p>
                   </td>
 
@@ -275,12 +299,14 @@ const OrdersPage = () => {
                   {/* Date */}
                   <td className="px-4 py-3 min-w-28 ">
                     <span className="text-xs text-gray-400">
-                      {new Date(order.placedAt ?? order.createdAt).toLocaleDateString("en-IN", {
+                      {new Date(
+                        order.placedAt ?? order.createdAt,
+                      ).toLocaleDateString("en-IN", {
                         day: "numeric",
                         month: "short",
                         year: "numeric",
                         hour: "2-digit",
-                        minute: "2-digit"
+                        minute: "2-digit",
                       })}
                     </span>
                   </td>
@@ -301,7 +327,7 @@ const OrdersPage = () => {
                       size="sm"
                       variant="outline"
                       onClick={() => setSelectedOrder(order)}
-                      className="border-[#E8DDD0] text-[#9A7A50] hover:bg-[#F8F4EE] hover:border-[#C6A46C] text-xs"
+                      className="border-[#E8DDD0] text-[#9A7A50] hover:bg-[#F8F4EE] hover:border-[#9A7A46] text-xs"
                     >
                       View
                     </Button>

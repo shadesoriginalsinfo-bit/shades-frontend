@@ -20,12 +20,12 @@ import Footer from "../home/components/Footer";
 // ─── Data ────────────────────────────────────────────────────────────────────
 
 const NAV_ITEMS = [
-  { id: "shipping",    label: "Shipping Policy",      icon: Truck },
-  { id: "exchange",    label: "Exchange Policy",       icon: RefreshCcw },
-  { id: "track",       label: "Track My Order",        icon: MapPin },
-  { id: "terms",       label: "Terms & Conditions",    icon: FileText },
-  { id: "privacy",     label: "Privacy Policy",        icon: Shield },
-  { id: "cancellation",label: "Cancellation Policy",   icon: XCircle },
+  { id: "shipping", label: "Shipping Policy", icon: Truck },
+  { id: "exchange", label: "Exchange Policy", icon: RefreshCcw },
+  { id: "track", label: "Track My Order", icon: MapPin },
+  { id: "terms", label: "Terms & Conditions", icon: FileText },
+  { id: "privacy", label: "Privacy Policy", icon: Shield },
+  { id: "cancellation", label: "Cancellation Policy", icon: XCircle },
 ];
 
 const SECTIONS = [
@@ -102,9 +102,9 @@ const SECTIONS = [
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
-const GOLD = "#C6A46C";
-const GOLD_LIGHT = "#C6A46C18";
-const GOLD_MID = "#C6A46C35";
+const GOLD = "#9A7A46";
+const GOLD_LIGHT = "#9A7A4618";
+const GOLD_MID = "#9A7A4635";
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
@@ -160,10 +160,7 @@ function SectionCard({
               className="mt-[6px] w-1.5 h-1.5 rounded-full flex-shrink-0"
               style={{ background: GOLD }}
             />
-            <p
-              className="text-sm leading-relaxed"
-              style={{ color: "#4a4a4a" }}
-            >
+            <p className="text-sm leading-relaxed" style={{ color: "#4a4a4a" }}>
               {point}
             </p>
           </div>
@@ -200,7 +197,7 @@ export default function HelpPage() {
           if (entry.isIntersecting) setActiveSection(entry.target.id);
         });
       },
-      { rootMargin: "-30% 0px -60% 0px", threshold: 0 }
+      { rootMargin: "-30% 0px -60% 0px", threshold: 0 },
     );
 
     SECTIONS.forEach((s) => {
@@ -260,7 +257,6 @@ export default function HelpPage() {
 
       {/* ── Body: Sidebar + Content ── */}
       <div className="max-w-5xl mx-auto px-5 py-10 flex gap-8 items-start">
-
         {/* Sticky Sidebar */}
         <aside className="hidden lg:flex flex-col gap-1 sticky top-24 w-56 flex-shrink-0">
           <p
@@ -278,13 +274,18 @@ export default function HelpPage() {
                 className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-left transition-all duration-200 group"
                 style={{
                   background: active ? GOLD_LIGHT : "transparent",
-                  borderLeft: active ? `2px solid ${GOLD}` : "2px solid transparent",
+                  borderLeft: active
+                    ? `2px solid ${GOLD}`
+                    : "2px solid transparent",
                 }}
               >
                 <Icon
                   size={13}
                   strokeWidth={active ? 2 : 1.5}
-                  style={{ color: active ? GOLD : "#aaa", transition: "color 0.2s" }}
+                  style={{
+                    color: active ? GOLD : "#aaa",
+                    transition: "color 0.2s",
+                  }}
                 />
                 <span
                   className="text-xs tracking-wide transition-colors duration-200"
@@ -339,7 +340,10 @@ export default function HelpPage() {
                 <Phone size={11} style={{ color: GOLD }} />
                 +91 85489 95696
               </a>
-              <div className="flex items-center gap-2 text-xs" style={{ color: "#999" }}>
+              <div
+                className="flex items-center gap-2 text-xs"
+                style={{ color: "#999" }}
+              >
                 <Clock size={11} style={{ color: GOLD }} />
                 10 AM – 6:30 PM
               </div>
@@ -375,7 +379,10 @@ export default function HelpPage() {
               >
                 Still need help?
               </p>
-              <p className="text-xs" style={{ color: "rgba(255,255,255,0.5)", fontWeight: 300 }}>
+              <p
+                className="text-xs"
+                style={{ color: "rgba(255,255,255,0.5)", fontWeight: 300 }}
+              >
                 Our team is available 10 AM – 6:30 PM, Mon–Sat.
               </p>
             </div>
@@ -410,7 +417,7 @@ export default function HelpPage() {
         </main>
       </div>
 
-        <Footer />
+      <Footer />
     </div>
   );
 }

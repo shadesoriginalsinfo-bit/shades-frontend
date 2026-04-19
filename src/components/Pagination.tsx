@@ -29,7 +29,6 @@ export const Pagination: React.FC<PaginationProps> = ({
   const isFirst = currentPage === 1;
   const isLast = currentPage === totalPages;
 
-
   const startItem = (currentPage - 1) * pageSize + 1;
   const endItem = Math.min(totalItems, currentPage * pageSize);
 
@@ -43,7 +42,6 @@ export const Pagination: React.FC<PaginationProps> = ({
     const newLimit = Number(e.target.value);
     if (onLimitChange) onLimitChange(newLimit);
   };
-
 
   const buildPages = (): (number | string)[] => {
     const pages: (number | string)[] = [];
@@ -92,28 +90,31 @@ export const Pagination: React.FC<PaginationProps> = ({
       {/* Left: Showing X to Y and page size selector */}
       <div className="hidden md:flex items-center space-x-3 text-sm text-gray-600">
         <div>
-          Showing <span className="font-medium text-gray-800">{startItem}</span> to{" "}
-          <span className="font-medium text-gray-800">{endItem}</span> of <span className="font-medium text-gray-800">{totalItems}</span>
+          Showing <span className="font-medium text-gray-800">{startItem}</span>{" "}
+          to <span className="font-medium text-gray-800">{endItem}</span> of{" "}
+          <span className="font-medium text-gray-800">{totalItems}</span>
         </div>
 
-        {onLimitChange && <div className="flex items-center space-x-2">
-          <label htmlFor="pageSize" className="text-xs text-gray-500">
-            per page
-          </label>
-          <select
-            id="pageSize"
-            value={pageSize}
-            onChange={handleLimitChange}
-            className="px-2 py-1 border rounded-md text-sm bg-white cursor-pointer"
-            aria-label="Items per page"
-          >
-            {pageSizeOptions.map((opt) => (
-              <option key={opt} value={opt}>
-                {opt}
-              </option>
-            ))}
-          </select>
-        </div>}
+        {onLimitChange && (
+          <div className="flex items-center space-x-2">
+            <label htmlFor="pageSize" className="text-xs text-gray-500">
+              per page
+            </label>
+            <select
+              id="pageSize"
+              value={pageSize}
+              onChange={handleLimitChange}
+              className="px-2 py-1 border rounded-md text-sm bg-white cursor-pointer"
+              aria-label="Items per page"
+            >
+              {pageSizeOptions.map((opt) => (
+                <option key={opt} value={opt}>
+                  {opt}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
       </div>
 
       {/* Right: Pagination controls */}
@@ -142,7 +143,10 @@ export const Pagination: React.FC<PaginationProps> = ({
         <div className="flex items-center space-x-1">
           {pages.map((p, idx) =>
             p === "..." ? (
-              <span key={`dots-${idx}`} className="px-3 py-1 text-sm text-gray-400 select-none">
+              <span
+                key={`dots-${idx}`}
+                className="px-3 py-1 text-sm text-gray-400 select-none"
+              >
                 …
               </span>
             ) : (
@@ -152,13 +156,13 @@ export const Pagination: React.FC<PaginationProps> = ({
                 aria-current={p === currentPage ? "page" : undefined}
                 className={`px-3 py-1 rounded-md text-sm font-medium border cursor-pointer ${
                   p === currentPage
-                    ? "bg-[#C6A46C] text-white border-[#C6A46C]"
+                    ? "bg-[#9A7A46] text-white border-[#9A7A46]"
                     : "bg-white text-gray-700 hover:bg-gray-100 border-gray-200"
                 }`}
               >
                 {p}
               </button>
-            )
+            ),
           )}
         </div>
 
@@ -183,30 +187,33 @@ export const Pagination: React.FC<PaginationProps> = ({
         )}
       </div>
 
-       <div className="flex md:hidden items-center space-x-3 text-sm text-gray-600">
+      <div className="flex md:hidden items-center space-x-3 text-sm text-gray-600">
         <div>
-          Showing <span className="font-medium text-gray-800">{startItem}</span> to{" "}
-          <span className="font-medium text-gray-800">{endItem}</span> of <span className="font-medium text-gray-800">{totalItems}</span>
+          Showing <span className="font-medium text-gray-800">{startItem}</span>{" "}
+          to <span className="font-medium text-gray-800">{endItem}</span> of{" "}
+          <span className="font-medium text-gray-800">{totalItems}</span>
         </div>
 
-        { onLimitChange && <div className="flex items-center space-x-2">
-          <label htmlFor="pageSize" className="text-xs text-gray-500">
-            per page
-          </label>
-          <select
-            id="pageSize"
-            value={pageSize}
-            onChange={handleLimitChange}
-            className="px-2 py-1 border rounded-md text-sm bg-white cursor-pointer"
-            aria-label="Items per page"
-          >
-            {pageSizeOptions.map((opt) => (
-              <option key={opt} value={opt}>
-                {opt}
-              </option>
-            ))}
-          </select>
-        </div> }
+        {onLimitChange && (
+          <div className="flex items-center space-x-2">
+            <label htmlFor="pageSize" className="text-xs text-gray-500">
+              per page
+            </label>
+            <select
+              id="pageSize"
+              value={pageSize}
+              onChange={handleLimitChange}
+              className="px-2 py-1 border rounded-md text-sm bg-white cursor-pointer"
+              aria-label="Items per page"
+            >
+              {pageSizeOptions.map((opt) => (
+                <option key={opt} value={opt}>
+                  {opt}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -6,12 +6,16 @@ interface CategoryBarProps {
   onSelect: (id: string) => void;
 }
 
-const CategoryBar = ({ categories, selectedId, onSelect }: CategoryBarProps) => {
+const CategoryBar = ({
+  categories,
+  selectedId,
+  onSelect,
+}: CategoryBarProps) => {
   const btnBase =
     "shrink-0 px-5 py-2 text-[11px] tracking-[0.18em] uppercase font-medium border transition-all duration-200 rounded-sm whitespace-nowrap";
-  const activeClass = "bg-[#C6A46C] text-white border-[#C6A46C]";
+  const activeClass = "bg-[#9A7A46] text-white border-[#9A7A46]";
   const inactiveClass =
-    "border-[#E8DDD0] text-gray-600 hover:border-[#C6A46C] hover:text-[#C6A46C] bg-white";
+    "border-[#E8DDD0] text-gray-600 hover:border-[#9A7A46] hover:text-[#9A7A46] bg-white";
 
   return (
     <div className="relative">

@@ -42,7 +42,10 @@ const AddressFormModal = ({ address, onClose, onSave, isSaving }: Props) => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
-    setForm((prev) => ({ ...prev, [name]: type === "checkbox" ? checked : value }));
+    setForm((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -58,13 +61,16 @@ const AddressFormModal = ({ address, onClose, onSave, isSaving }: Props) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" onClick={onClose} />
+      <div
+        className="absolute inset-0 bg-black/30 backdrop-blur-sm"
+        onClick={onClose}
+      />
 
       <div className="relative bg-white border border-[#E8DDD0] rounded-sm shadow-[0_20px_60px_rgba(0,0,0,0.15)] w-full max-w-md max-h-[90vh] overflow-y-auto">
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-[#E8DDD0]">
           <div>
-            <p className="text-[10px] tracking-[0.2em] uppercase text-[#C6A46C] font-medium">
+            <p className="text-[10px] tracking-[0.2em] uppercase text-[#9A7A46] font-medium">
               {address ? "Edit" : "New"} Address
             </p>
             <h2 className="font-serif font-bold text-[#2A1810] text-lg leading-tight">
@@ -82,20 +88,23 @@ const AddressFormModal = ({ address, onClose, onSave, isSaving }: Props) => {
         {/* Form */}
         <form onSubmit={handleSubmit} className="px-6 py-5 space-y-4">
           <div>
-            <label className="text-[10px] tracking-[0.2em] uppercase text-[#C6A46C] font-medium block mb-1">
-              Label <span className="text-gray-400 normal-case tracking-normal">(optional)</span>
+            <label className="text-[10px] tracking-[0.2em] uppercase text-[#9A7A46] font-medium block mb-1">
+              Label{" "}
+              <span className="text-gray-400 normal-case tracking-normal">
+                (optional)
+              </span>
             </label>
             <input
               name="label"
               value={form.label}
               onChange={handleChange}
               placeholder="Home / Office"
-              className="w-full border border-[#E8DDD0] rounded-sm px-3 py-2 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:border-[#C6A46C] transition-colors"
+              className="w-full border border-[#E8DDD0] rounded-sm px-3 py-2 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:border-[#9A7A46] transition-colors"
             />
           </div>
 
           <div>
-            <label className="text-[10px] tracking-[0.2em] uppercase text-[#C6A46C] font-medium block mb-1">
+            <label className="text-[10px] tracking-[0.2em] uppercase text-[#9A7A46] font-medium block mb-1">
               Street Address <span className="text-red-400">*</span>
             </label>
             <input
@@ -104,26 +113,29 @@ const AddressFormModal = ({ address, onClose, onSave, isSaving }: Props) => {
               onChange={handleChange}
               placeholder="House / Flat / Street"
               required
-              className="w-full border border-[#E8DDD0] rounded-sm px-3 py-2 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:border-[#C6A46C] transition-colors"
+              className="w-full border border-[#E8DDD0] rounded-sm px-3 py-2 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:border-[#9A7A46] transition-colors"
             />
           </div>
 
           <div>
-            <label className="text-[10px] tracking-[0.2em] uppercase text-[#C6A46C] font-medium block mb-1">
-              Landmark <span className="text-gray-400 normal-case tracking-normal">(optional)</span>
+            <label className="text-[10px] tracking-[0.2em] uppercase text-[#9A7A46] font-medium block mb-1">
+              Landmark{" "}
+              <span className="text-gray-400 normal-case tracking-normal">
+                (optional)
+              </span>
             </label>
             <input
               name="line2"
               value={form.line2}
               onChange={handleChange}
               placeholder="Near, opposite…"
-              className="w-full border border-[#E8DDD0] rounded-sm px-3 py-2 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:border-[#C6A46C] transition-colors"
+              className="w-full border border-[#E8DDD0] rounded-sm px-3 py-2 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:border-[#9A7A46] transition-colors"
             />
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-[10px] tracking-[0.2em] uppercase text-[#C6A46C] font-medium block mb-1">
+              <label className="text-[10px] tracking-[0.2em] uppercase text-[#9A7A46] font-medium block mb-1">
                 City <span className="text-red-400">*</span>
               </label>
               <input
@@ -132,11 +144,11 @@ const AddressFormModal = ({ address, onClose, onSave, isSaving }: Props) => {
                 onChange={handleChange}
                 placeholder="City"
                 required
-                className="w-full border border-[#E8DDD0] rounded-sm px-3 py-2 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:border-[#C6A46C] transition-colors"
+                className="w-full border border-[#E8DDD0] rounded-sm px-3 py-2 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:border-[#9A7A46] transition-colors"
               />
             </div>
             <div>
-              <label className="text-[10px] tracking-[0.2em] uppercase text-[#C6A46C] font-medium block mb-1">
+              <label className="text-[10px] tracking-[0.2em] uppercase text-[#9A7A46] font-medium block mb-1">
                 State
               </label>
               <input
@@ -144,14 +156,14 @@ const AddressFormModal = ({ address, onClose, onSave, isSaving }: Props) => {
                 value={form.state}
                 onChange={handleChange}
                 placeholder="State"
-                className="w-full border border-[#E8DDD0] rounded-sm px-3 py-2 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:border-[#C6A46C] transition-colors"
+                className="w-full border border-[#E8DDD0] rounded-sm px-3 py-2 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:border-[#9A7A46] transition-colors"
               />
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-[10px] tracking-[0.2em] uppercase text-[#C6A46C] font-medium block mb-1">
+              <label className="text-[10px] tracking-[0.2em] uppercase text-[#9A7A46] font-medium block mb-1">
                 Country <span className="text-red-400">*</span>
               </label>
               <input
@@ -160,11 +172,11 @@ const AddressFormModal = ({ address, onClose, onSave, isSaving }: Props) => {
                 onChange={handleChange}
                 placeholder="Country"
                 required
-                className="w-full border border-[#E8DDD0] rounded-sm px-3 py-2 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:border-[#C6A46C] transition-colors"
+                className="w-full border border-[#E8DDD0] rounded-sm px-3 py-2 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:border-[#9A7A46] transition-colors"
               />
             </div>
             <div>
-              <label className="text-[10px] tracking-[0.2em] uppercase text-[#C6A46C] font-medium block mb-1">
+              <label className="text-[10px] tracking-[0.2em] uppercase text-[#9A7A46] font-medium block mb-1">
                 Postal Code <span className="text-red-400">*</span>
               </label>
               <input
@@ -173,7 +185,7 @@ const AddressFormModal = ({ address, onClose, onSave, isSaving }: Props) => {
                 onChange={handleChange}
                 placeholder="PIN Code"
                 required
-                className="w-full border border-[#E8DDD0] rounded-sm px-3 py-2 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:border-[#C6A46C] transition-colors"
+                className="w-full border border-[#E8DDD0] rounded-sm px-3 py-2 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:border-[#9A7A46] transition-colors"
               />
             </div>
           </div>
@@ -184,21 +196,27 @@ const AddressFormModal = ({ address, onClose, onSave, isSaving }: Props) => {
               name="isDefault"
               checked={form.isDefault}
               onChange={handleChange}
-              className="accent-[#C6A46C]"
+              className="accent-[#9A7A46]"
             />
-            <span className="text-xs text-gray-600 tracking-wide">Set as default address</span>
+            <span className="text-xs text-gray-600 tracking-wide">
+              Set as default address
+            </span>
           </label>
 
           <div className="flex gap-3 pt-2 border-t border-[#E8DDD0]">
             <button
               type="submit"
               disabled={isSaving}
-              className="flex items-center gap-2 px-5 py-2.5 bg-[#2A1810] text-white text-xs tracking-[0.2em] uppercase font-medium hover:bg-[#C6A46C] transition-all rounded-sm disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex items-center gap-2 px-5 py-2.5 bg-[#2A1810] text-white text-xs tracking-[0.2em] uppercase font-medium hover:bg-[#9A7A46] transition-all rounded-sm disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isSaving ? (
-                <><Loader2 size={12} className="animate-spin" /> Saving…</>
+                <>
+                  <Loader2 size={12} className="animate-spin" /> Saving…
+                </>
+              ) : address ? (
+                "Update"
               ) : (
-                address ? "Update" : "Save Address"
+                "Save Address"
               )}
             </button>
             <button

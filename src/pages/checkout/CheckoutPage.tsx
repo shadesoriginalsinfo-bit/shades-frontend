@@ -1,8 +1,23 @@
 import { useState } from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { MapPin, Plus, ChevronDown, ChevronUp, CheckCircle2, Loader2, CreditCard, Truck } from "lucide-react";
-import { getAddresses, createAddress, createOrder, initiatePayment, verifyPayment } from "@/lib/api";
+import {
+  MapPin,
+  Plus,
+  ChevronDown,
+  ChevronUp,
+  CheckCircle2,
+  Loader2,
+  CreditCard,
+  Truck,
+} from "lucide-react";
+import {
+  getAddresses,
+  createAddress,
+  createOrder,
+  initiatePayment,
+  verifyPayment,
+} from "@/lib/api";
 import { handleApiError } from "@/utils/handleApiError";
 import { useRazorpay } from "@/hooks/useRazorpay";
 import toast from "react-hot-toast";
@@ -41,19 +56,26 @@ const CheckoutPage = () => {
 
   const state = location.state as CheckoutState | null;
 
-  const [selectedAddressId, setSelectedAddressId] = useState<string | null>(null);
+  const [selectedAddressId, setSelectedAddressId] = useState<string | null>(
+    null,
+  );
   const [showAddressForm, setShowAddressForm] = useState(false);
-  const [addressForm, setAddressForm] = useState<ICreateAddress>(emptyAddressForm);
-  const [paymentMethod, setPaymentMethod] = useState<"ONLINE" | "COD">("ONLINE");
+  const [addressForm, setAddressForm] =
+    useState<ICreateAddress>(emptyAddressForm);
+  const [paymentMethod, setPaymentMethod] = useState<"ONLINE" | "COD">(
+    "ONLINE",
+  );
 
   // Redirect if no checkout state (direct navigation)
   if (!state?.product) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center gap-4 bg-white">
-        <p className="text-gray-500 text-sm tracking-wide">No product selected for checkout.</p>
+        <p className="text-gray-500 text-sm tracking-wide">
+          No product selected for checkout.
+        </p>
         <Link
           to="/shop"
-          className="text-xs tracking-[0.2em] uppercase text-[#C6A46C] border border-[#C6A46C] px-6 py-2.5 hover:bg-[#C6A46C] hover:text-white transition-all"
+          className="text-xs tracking-[0.2em] uppercase text-[#9A7A46] border border-[#9A7A46] px-6 py-2.5 hover:bg-[#9A7A46] hover:text-white transition-all"
         >
           Browse Shop
         </Link>
@@ -66,7 +88,8 @@ const CheckoutPage = () => {
   const subtotal = unitPrice * quantity;
   const gstRate = (product.gstPercent ?? 0) / 100;
   const tax = parseFloat((subtotal * gstRate).toFixed(2));
-  const shipping = subtotal >= 1 && subtotal < SHIPPING_FREE_THRESHOLD ? SHIPPING_FLAT : 0;
+  const shipping =
+    subtotal >= 1 && subtotal < SHIPPING_FREE_THRESHOLD ? SHIPPING_FLAT : 0;
   const total = parseFloat((subtotal + tax + shipping).toFixed(2));
 
   const { data: addresses = [], isLoading: addressesLoading } = useQuery({
@@ -89,11 +112,17 @@ const CheckoutPage = () => {
   const { openRazorpay } = useRazorpay();
   const [isPaymentProcessing, setIsPaymentProcessing] = useState(false);
 
-  const orderMutation = useMutation({ mutationFn: createOrder, onError: handleApiError });
+  const orderMutation = useMutation({
+    mutationFn: createOrder,
+    onError: handleApiError,
+  });
 
   const handleAddressFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
-    setAddressForm((prev) => ({ ...prev, [name]: type === "checkbox" ? checked : value }));
+    setAddressForm((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
   };
 
   const handleSaveAddress = (e: React.FormEvent) => {
@@ -148,7 +177,7 @@ const CheckoutPage = () => {
       name: "Shades",
       description: product.title,
       image: product.images[0]?.url,
-      theme: { color: "#C6A46C" },
+      theme: { color: "#9A7A46" },
       handler: async (response) => {
         try {
           await verifyPayment({
@@ -170,7 +199,9 @@ const CheckoutPage = () => {
     });
   };
 
-  const activeAddress = addresses.find((a) => a.id === selectedAddressId) ?? addresses.find((a) => a.isDefault);
+  const activeAddress =
+    addresses.find((a) => a.id === selectedAddressId) ??
+    addresses.find((a) => a.isDefault);
 
   // Auto-select default address on first load
   if (!selectedAddressId && addresses.length > 0) {
@@ -186,24 +217,37 @@ const CheckoutPage = () => {
         {/* Page heading */}
         <div className="mb-8">
           <div className="flex items-center gap-2 mb-2">
-            <Link to="/shop" className="text-[10px] tracking-[0.2em] uppercase text-gray-400 hover:text-[#C6A46C] transition-colors">Shop</Link>
+            <Link
+              to="/shop"
+              className="text-[10px] tracking-[0.2em] uppercase text-gray-400 hover:text-[#9A7A46] transition-colors"
+            >
+              Shop
+            </Link>
             <span className="text-gray-300 text-xs">·</span>
-            <Link to={`/product/${product.id}`} className="text-[10px] tracking-[0.2em] uppercase text-gray-400 hover:text-[#C6A46C] transition-colors">Product</Link>
+            <Link
+              to={`/product/${product.id}`}
+              className="text-[10px] tracking-[0.2em] uppercase text-gray-400 hover:text-[#9A7A46] transition-colors"
+            >
+              Product
+            </Link>
             <span className="text-gray-300 text-xs">·</span>
-            <span className="text-[10px] tracking-[0.2em] uppercase text-[#C6A46C] font-medium">Checkout</span>
+            <span className="text-[10px] tracking-[0.2em] uppercase text-[#9A7A46] font-medium">
+              Checkout
+            </span>
           </div>
-          <h1 className="text-2xl font-serif font-bold text-[#2A1810] tracking-tight">Checkout</h1>
+          <h1 className="text-2xl font-serif font-bold text-[#2A1810] tracking-tight">
+            Checkout
+          </h1>
           <div className="flex items-center gap-2 mt-2">
-            <div className="h-px w-10 bg-[#C6A46C]" />
-            <div className="h-1.5 w-1.5 rounded-full bg-[#C6A46C]" />
-            <div className="h-px w-6 bg-[#C6A46C]/50" />
+            <div className="h-px w-10 bg-[#9A7A46]" />
+            <div className="h-1.5 w-1.5 rounded-full bg-[#9A7A46]" />
+            <div className="h-px w-6 bg-[#9A7A46]/50" />
           </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-8">
           {/* ── Left column ── */}
           <div className="space-y-6">
-
             {/* Product summary */}
             <section className="bg-white border border-[#E8DDD0] rounded-sm p-5">
               <h2 className="text-[11px] tracking-[0.25em] uppercase font-semibold text-gray-700 mb-4">
@@ -222,18 +266,32 @@ const CheckoutPage = () => {
                     {product.title}
                   </p>
                   <div className="flex items-center gap-3 text-sm">
-                    <span className="text-gray-500">Qty: <span className="text-gray-800 font-medium">{quantity}</span></span>
+                    <span className="text-gray-500">
+                      Qty:{" "}
+                      <span className="text-gray-800 font-medium">
+                        {quantity}
+                      </span>
+                    </span>
                     <span className="text-gray-300">|</span>
-                    <span className="text-gray-500">Unit: <span className="text-gray-800 font-medium">{formatINR(unitPrice)}</span></span>
+                    <span className="text-gray-500">
+                      Unit:{" "}
+                      <span className="text-gray-800 font-medium">
+                        {formatINR(unitPrice)}
+                      </span>
+                    </span>
                   </div>
                   {product.discountPrice && (
                     <p className="text-[11px] text-emerald-600 mt-1 tracking-wide">
-                      You save {formatINR((product.marketPrice - unitPrice) * quantity)} on this order
+                      You save{" "}
+                      {formatINR((product.marketPrice - unitPrice) * quantity)}{" "}
+                      on this order
                     </p>
                   )}
                 </div>
                 <div className="text-right shrink-0">
-                  <p className="font-bold text-[#2A1810] text-lg">{formatINR(subtotal)}</p>
+                  <p className="font-bold text-[#2A1810] text-lg">
+                    {formatINR(subtotal)}
+                  </p>
                 </div>
               </div>
             </section>
@@ -250,7 +308,9 @@ const CheckoutPage = () => {
                   Loading addresses…
                 </div>
               ) : addresses.length === 0 ? (
-                <p className="text-sm text-gray-500 mb-4">No saved addresses. Add one below.</p>
+                <p className="text-sm text-gray-500 mb-4">
+                  No saved addresses. Add one below.
+                </p>
               ) : (
                 <div className="space-y-2 mb-4">
                   {addresses.map((addr) => (
@@ -258,8 +318,8 @@ const CheckoutPage = () => {
                       key={addr.id}
                       className={`flex items-start gap-3 p-3.5 border rounded-sm cursor-pointer transition-all ${
                         selectedAddressId === addr.id
-                          ? "border-[#C6A46C] bg-[#F5EFE7]"
-                          : "border-[#E8DDD0] hover:border-[#C6A46C]/50"
+                          ? "border-[#9A7A46] bg-[#F5EFE7]"
+                          : "border-[#E8DDD0] hover:border-[#9A7A46]/50"
                       }`}
                     >
                       <input
@@ -268,29 +328,35 @@ const CheckoutPage = () => {
                         value={addr.id}
                         checked={selectedAddressId === addr.id}
                         onChange={() => setSelectedAddressId(addr.id)}
-                        className="mt-0.5 accent-[#C6A46C]"
+                        className="mt-0.5 accent-[#9A7A46]"
                       />
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 flex-wrap">
                           {addr.label && (
-                            <span className="text-[10px] tracking-[0.15em] uppercase font-semibold text-[#C6A46C]">
+                            <span className="text-[10px] tracking-[0.15em] uppercase font-semibold text-[#9A7A46]">
                               {addr.label}
                             </span>
                           )}
                           {addr.isDefault && (
-                            <span className="text-[9px] tracking-wider uppercase px-1.5 py-0.5 bg-[#C6A46C]/10 text-[#C6A46C] border border-[#C6A46C]/30 rounded-sm">
+                            <span className="text-[9px] tracking-wider uppercase px-1.5 py-0.5 bg-[#9A7A46]/10 text-[#9A7A46] border border-[#9A7A46]/30 rounded-sm">
                               Default
                             </span>
                           )}
                         </div>
                         <p className="text-sm text-gray-700 mt-0.5">
-                          {addr.line1}{addr.line2 ? `, ${addr.line2}` : ""}
+                          {addr.line1}
+                          {addr.line2 ? `, ${addr.line2}` : ""}
                         </p>
                         <p className="text-xs text-gray-500">
-                          {addr.city}{addr.state ? `, ${addr.state}` : ""} — {addr.postalCode}, {addr.country}
+                          {addr.city}
+                          {addr.state ? `, ${addr.state}` : ""} —{" "}
+                          {addr.postalCode}, {addr.country}
                         </p>
                       </div>
-                      <MapPin size={14} className="text-[#C6A46C] shrink-0 mt-1" />
+                      <MapPin
+                        size={14}
+                        className="text-[#9A7A46] shrink-0 mt-1"
+                      />
                     </label>
                   ))}
                 </div>
@@ -299,34 +365,42 @@ const CheckoutPage = () => {
               {/* Add new address toggle */}
               <button
                 onClick={() => setShowAddressForm((v) => !v)}
-                className="flex items-center gap-2 text-xs tracking-[0.15em] uppercase text-[#C6A46C] font-medium hover:text-[#B8936A] transition-colors"
+                className="flex items-center gap-2 text-xs tracking-[0.15em] uppercase text-[#9A7A46] font-medium hover:text-[#B8936A] transition-colors"
               >
                 <Plus size={13} />
                 Add New Address
-                {showAddressForm
-                  ? <ChevronUp size={12} />
-                  : <ChevronDown size={12} />}
+                {showAddressForm ? (
+                  <ChevronUp size={12} />
+                ) : (
+                  <ChevronDown size={12} />
+                )}
               </button>
 
               {showAddressForm && (
-                <form onSubmit={handleSaveAddress} className="mt-4 space-y-3 border-t border-[#E8DDD0] pt-4">
+                <form
+                  onSubmit={handleSaveAddress}
+                  className="mt-4 space-y-3 border-t border-[#E8DDD0] pt-4"
+                >
                   {/* Label */}
                   <div>
-                    <label className="text-[10px] tracking-[0.2em] uppercase text-[#C6A46C] font-medium">
-                      Label <span className="text-gray-400 normal-case tracking-normal">(optional)</span>
+                    <label className="text-[10px] tracking-[0.2em] uppercase text-[#9A7A46] font-medium">
+                      Label{" "}
+                      <span className="text-gray-400 normal-case tracking-normal">
+                        (optional)
+                      </span>
                     </label>
                     <input
                       name="label"
                       value={addressForm.label}
                       onChange={handleAddressFormChange}
                       placeholder="Home / Office"
-                      className="mt-1 w-full border border-[#E8DDD0] rounded-sm px-3 py-2 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:border-[#C6A46C] transition-colors"
+                      className="mt-1 w-full border border-[#E8DDD0] rounded-sm px-3 py-2 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:border-[#9A7A46] transition-colors"
                     />
                   </div>
 
                   {/* Line 1 */}
                   <div>
-                    <label className="text-[10px] tracking-[0.2em] uppercase text-[#C6A46C] font-medium">
+                    <label className="text-[10px] tracking-[0.2em] uppercase text-[#9A7A46] font-medium">
                       Street Address <span className="text-red-400">*</span>
                     </label>
                     <input
@@ -335,28 +409,31 @@ const CheckoutPage = () => {
                       onChange={handleAddressFormChange}
                       placeholder="House / Flat / Street"
                       required
-                      className="mt-1 w-full border border-[#E8DDD0] rounded-sm px-3 py-2 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:border-[#C6A46C] transition-colors"
+                      className="mt-1 w-full border border-[#E8DDD0] rounded-sm px-3 py-2 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:border-[#9A7A46] transition-colors"
                     />
                   </div>
 
                   {/* Line 2 */}
                   <div>
-                    <label className="text-[10px] tracking-[0.2em] uppercase text-[#C6A46C] font-medium">
-                      Landmark <span className="text-gray-400 normal-case tracking-normal">(optional)</span>
+                    <label className="text-[10px] tracking-[0.2em] uppercase text-[#9A7A46] font-medium">
+                      Landmark{" "}
+                      <span className="text-gray-400 normal-case tracking-normal">
+                        (optional)
+                      </span>
                     </label>
                     <input
                       name="line2"
                       value={addressForm.line2}
                       onChange={handleAddressFormChange}
                       placeholder="Near, opposite…"
-                      className="mt-1 w-full border border-[#E8DDD0] rounded-sm px-3 py-2 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:border-[#C6A46C] transition-colors"
+                      className="mt-1 w-full border border-[#E8DDD0] rounded-sm px-3 py-2 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:border-[#9A7A46] transition-colors"
                     />
                   </div>
 
                   {/* City + State */}
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="text-[10px] tracking-[0.2em] uppercase text-[#C6A46C] font-medium">
+                      <label className="text-[10px] tracking-[0.2em] uppercase text-[#9A7A46] font-medium">
                         City <span className="text-red-400">*</span>
                       </label>
                       <input
@@ -365,11 +442,11 @@ const CheckoutPage = () => {
                         onChange={handleAddressFormChange}
                         placeholder="City"
                         required
-                        className="mt-1 w-full border border-[#E8DDD0] rounded-sm px-3 py-2 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:border-[#C6A46C] transition-colors"
+                        className="mt-1 w-full border border-[#E8DDD0] rounded-sm px-3 py-2 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:border-[#9A7A46] transition-colors"
                       />
                     </div>
                     <div>
-                      <label className="text-[10px] tracking-[0.2em] uppercase text-[#C6A46C] font-medium">
+                      <label className="text-[10px] tracking-[0.2em] uppercase text-[#9A7A46] font-medium">
                         State
                       </label>
                       <input
@@ -377,7 +454,7 @@ const CheckoutPage = () => {
                         value={addressForm.state}
                         onChange={handleAddressFormChange}
                         placeholder="State"
-                        className="mt-1 w-full border border-[#E8DDD0] rounded-sm px-3 py-2 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:border-[#C6A46C] transition-colors"
+                        className="mt-1 w-full border border-[#E8DDD0] rounded-sm px-3 py-2 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:border-[#9A7A46] transition-colors"
                       />
                     </div>
                   </div>
@@ -385,7 +462,7 @@ const CheckoutPage = () => {
                   {/* Country + Postal */}
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="text-[10px] tracking-[0.2em] uppercase text-[#C6A46C] font-medium">
+                      <label className="text-[10px] tracking-[0.2em] uppercase text-[#9A7A46] font-medium">
                         Country <span className="text-red-400">*</span>
                       </label>
                       <input
@@ -394,11 +471,11 @@ const CheckoutPage = () => {
                         onChange={handleAddressFormChange}
                         placeholder="Country"
                         required
-                        className="mt-1 w-full border border-[#E8DDD0] rounded-sm px-3 py-2 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:border-[#C6A46C] transition-colors"
+                        className="mt-1 w-full border border-[#E8DDD0] rounded-sm px-3 py-2 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:border-[#9A7A46] transition-colors"
                       />
                     </div>
                     <div>
-                      <label className="text-[10px] tracking-[0.2em] uppercase text-[#C6A46C] font-medium">
+                      <label className="text-[10px] tracking-[0.2em] uppercase text-[#9A7A46] font-medium">
                         Postal Code <span className="text-red-400">*</span>
                       </label>
                       <input
@@ -407,7 +484,7 @@ const CheckoutPage = () => {
                         onChange={handleAddressFormChange}
                         placeholder="PIN Code"
                         required
-                        className="mt-1 w-full border border-[#E8DDD0] rounded-sm px-3 py-2 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:border-[#C6A46C] transition-colors"
+                        className="mt-1 w-full border border-[#E8DDD0] rounded-sm px-3 py-2 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:border-[#9A7A46] transition-colors"
                       />
                     </div>
                   </div>
@@ -419,24 +496,33 @@ const CheckoutPage = () => {
                       name="isDefault"
                       checked={addressForm.isDefault}
                       onChange={handleAddressFormChange}
-                      className="accent-[#C6A46C]"
+                      className="accent-[#9A7A46]"
                     />
-                    <span className="text-xs text-gray-600 tracking-wide">Set as default address</span>
+                    <span className="text-xs text-gray-600 tracking-wide">
+                      Set as default address
+                    </span>
                   </label>
 
                   <div className="flex gap-3 pt-1">
                     <button
                       type="submit"
                       disabled={addAddressMutation.isPending}
-                      className="flex items-center gap-2 px-5 py-2.5 bg-[#2A1810] text-white text-xs tracking-[0.2em] uppercase font-medium hover:bg-[#C6A46C] transition-all rounded-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="flex items-center gap-2 px-5 py-2.5 bg-[#2A1810] text-white text-xs tracking-[0.2em] uppercase font-medium hover:bg-[#9A7A46] transition-all rounded-sm disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       {addAddressMutation.isPending ? (
-                        <><Loader2 size={12} className="animate-spin" /> Saving…</>
-                      ) : "Save Address"}
+                        <>
+                          <Loader2 size={12} className="animate-spin" /> Saving…
+                        </>
+                      ) : (
+                        "Save Address"
+                      )}
                     </button>
                     <button
                       type="button"
-                      onClick={() => { setShowAddressForm(false); setAddressForm(emptyAddressForm); }}
+                      onClick={() => {
+                        setShowAddressForm(false);
+                        setAddressForm(emptyAddressForm);
+                      }}
                       className="px-4 py-2.5 border border-[#E8DDD0] text-gray-500 text-xs tracking-[0.2em] uppercase font-medium hover:border-gray-400 transition-all rounded-sm"
                     >
                       Cancel
@@ -451,34 +537,46 @@ const CheckoutPage = () => {
                 Payment Method
               </h2>
               <div className="space-y-2">
-                <label className={`flex items-center gap-3 p-3.5 border rounded-sm cursor-pointer transition-all ${paymentMethod === "ONLINE" ? "border-[#C6A46C] bg-[#F5EFE7]" : "border-[#E8DDD0] hover:border-[#C6A46C]/50"}`}>
+                <label
+                  className={`flex items-center gap-3 p-3.5 border rounded-sm cursor-pointer transition-all ${paymentMethod === "ONLINE" ? "border-[#9A7A46] bg-[#F5EFE7]" : "border-[#E8DDD0] hover:border-[#9A7A46]/50"}`}
+                >
                   <input
                     type="radio"
                     name="paymentMethod"
                     value="ONLINE"
                     checked={paymentMethod === "ONLINE"}
                     onChange={() => setPaymentMethod("ONLINE")}
-                    className="accent-[#C6A46C]"
+                    className="accent-[#9A7A46]"
                   />
-                  <CreditCard size={15} className="text-[#C6A46C] shrink-0" />
+                  <CreditCard size={15} className="text-[#9A7A46] shrink-0" />
                   <div>
-                    <p className="text-sm font-medium text-gray-800">Online Payment</p>
-                    <p className="text-[11px] text-gray-400 mt-0.5">Credit / Debit card, UPI, Net banking</p>
+                    <p className="text-sm font-medium text-gray-800">
+                      Online Payment
+                    </p>
+                    <p className="text-[11px] text-gray-400 mt-0.5">
+                      Credit / Debit card, UPI, Net banking
+                    </p>
                   </div>
                 </label>
-                <label className={`flex items-center gap-3 p-3.5 border rounded-sm cursor-pointer transition-all ${paymentMethod === "COD" ? "border-[#C6A46C] bg-[#F5EFE7]" : "border-[#E8DDD0] hover:border-[#C6A46C]/50"}`}>
+                <label
+                  className={`flex items-center gap-3 p-3.5 border rounded-sm cursor-pointer transition-all ${paymentMethod === "COD" ? "border-[#9A7A46] bg-[#F5EFE7]" : "border-[#E8DDD0] hover:border-[#9A7A46]/50"}`}
+                >
                   <input
                     type="radio"
                     name="paymentMethod"
                     value="COD"
                     checked={paymentMethod === "COD"}
                     onChange={() => setPaymentMethod("COD")}
-                    className="accent-[#C6A46C]"
+                    className="accent-[#9A7A46]"
                   />
-                  <Truck size={15} className="text-[#C6A46C] shrink-0" />
+                  <Truck size={15} className="text-[#9A7A46] shrink-0" />
                   <div>
-                    <p className="text-sm font-medium text-gray-800">Cash on Delivery</p>
-                    <p className="text-[11px] text-gray-400 mt-0.5">Pay when your order arrives</p>
+                    <p className="text-sm font-medium text-gray-800">
+                      Cash on Delivery
+                    </p>
+                    <p className="text-[11px] text-gray-400 mt-0.5">
+                      Pay when your order arrives
+                    </p>
                   </div>
                 </label>
               </div>
@@ -494,27 +592,38 @@ const CheckoutPage = () => {
 
               <div className="space-y-2.5 text-sm">
                 <div className="flex justify-between text-gray-600">
-                  <span>Subtotal ({quantity} item{quantity > 1 ? "s" : ""})</span>
-                  <span className="font-medium text-gray-800">{formatINR(subtotal)}</span>
+                  <span>
+                    Subtotal ({quantity} item{quantity > 1 ? "s" : ""})
+                  </span>
+                  <span className="font-medium text-gray-800">
+                    {formatINR(subtotal)}
+                  </span>
                 </div>
                 <div className="flex justify-between text-gray-600">
                   <span>Tax ({product.gstPercent ?? 0}% GST)</span>
-                  <span className="font-medium text-gray-800">{formatINR(tax)}</span>
+                  <span className="font-medium text-gray-800">
+                    {formatINR(tax)}
+                  </span>
                 </div>
                 <div className="flex justify-between text-gray-600">
                   <span>Shipping</span>
-                  <span className={`font-medium ${shipping === 0 ? "text-emerald-600" : "text-gray-800"}`}>
+                  <span
+                    className={`font-medium ${shipping === 0 ? "text-emerald-600" : "text-gray-800"}`}
+                  >
                     {shipping === 0 ? "Free" : formatINR(shipping)}
                   </span>
                 </div>
                 {shipping > 0 && (
                   <p className="text-[10px] text-gray-400 -mt-1">
-                    Add {formatINR(SHIPPING_FREE_THRESHOLD - subtotal)} more for free shipping
+                    Add {formatINR(SHIPPING_FREE_THRESHOLD - subtotal)} more for
+                    free shipping
                   </p>
                 )}
                 <div className="border-t border-[#E8DDD0] pt-2.5 flex justify-between">
                   <span className="font-semibold text-[#2A1810]">Total</span>
-                  <span className="font-bold text-[#2A1810] text-lg">{formatINR(total)}</span>
+                  <span className="font-bold text-[#2A1810] text-lg">
+                    {formatINR(total)}
+                  </span>
                 </div>
               </div>
 
@@ -522,31 +631,50 @@ const CheckoutPage = () => {
               {activeAddress && (
                 <div className="mt-4 p-3 bg-[#F5EFE7] border border-[#E8DDD0] rounded-sm">
                   <div className="flex items-center gap-1.5 mb-1">
-                    <MapPin size={11} className="text-[#C6A46C]" />
-                    <span className="text-[10px] tracking-[0.15em] uppercase text-[#C6A46C] font-medium">
+                    <MapPin size={11} className="text-[#9A7A46]" />
+                    <span className="text-[10px] tracking-[0.15em] uppercase text-[#9A7A46] font-medium">
                       Delivering to
                     </span>
                   </div>
                   <p className="text-xs text-gray-700">
-                    {activeAddress.line1}{activeAddress.line2 ? `, ${activeAddress.line2}` : ""}
+                    {activeAddress.line1}
+                    {activeAddress.line2 ? `, ${activeAddress.line2}` : ""}
                   </p>
                   <p className="text-xs text-gray-500">
-                    {activeAddress.city}{activeAddress.state ? `, ${activeAddress.state}` : ""} — {activeAddress.postalCode}
+                    {activeAddress.city}
+                    {activeAddress.state
+                      ? `, ${activeAddress.state}`
+                      : ""} — {activeAddress.postalCode}
                   </p>
                 </div>
               )}
 
               <button
                 onClick={handlePlaceOrder}
-                disabled={orderMutation.isPending || isPaymentProcessing || !selectedAddressId}
-                className="mt-5 w-full flex items-center justify-center gap-2.5 py-3.5 bg-[#2A1810] text-white text-xs tracking-[0.2em] uppercase font-medium hover:bg-[#C6A46C] transition-all duration-200 rounded-sm disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_4px_20px_rgba(0,0,0,0.12)]"
+                disabled={
+                  orderMutation.isPending ||
+                  isPaymentProcessing ||
+                  !selectedAddressId
+                }
+                className="mt-5 w-full flex items-center justify-center gap-2.5 py-3.5 bg-[#2A1810] text-white text-xs tracking-[0.2em] uppercase font-medium hover:bg-[#9A7A46] transition-all duration-200 rounded-sm disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_4px_20px_rgba(0,0,0,0.12)]"
               >
                 {orderMutation.isPending ? (
-                  <><Loader2 size={14} className="animate-spin" /> Creating Order…</>
+                  <>
+                    <Loader2 size={14} className="animate-spin" /> Creating
+                    Order…
+                  </>
                 ) : isPaymentProcessing ? (
-                  <><Loader2 size={14} className="animate-spin" /> Processing Payment…</>
+                  <>
+                    <Loader2 size={14} className="animate-spin" /> Processing
+                    Payment…
+                  </>
                 ) : (
-                  <><CheckCircle2 size={14} /> {paymentMethod === "COD" ? "Place Order" : "Proceed to Payment"}</>
+                  <>
+                    <CheckCircle2 size={14} />{" "}
+                    {paymentMethod === "COD"
+                      ? "Place Order"
+                      : "Proceed to Payment"}
+                  </>
                 )}
               </button>
 

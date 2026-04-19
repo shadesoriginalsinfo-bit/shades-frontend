@@ -13,10 +13,12 @@ const OrderSuccessPage = () => {
   if (!order) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center gap-4 bg-white">
-        <p className="text-gray-500 text-sm tracking-wide">No order information found.</p>
+        <p className="text-gray-500 text-sm tracking-wide">
+          No order information found.
+        </p>
         <Link
           to="/shop"
-          className="text-xs tracking-[0.2em] uppercase text-[#C6A46C] border border-[#C6A46C] px-6 py-2.5 hover:bg-[#C6A46C] hover:text-white transition-all"
+          className="text-xs tracking-[0.2em] uppercase text-[#9A7A46] border border-[#9A7A46] px-6 py-2.5 hover:bg-[#9A7A46] hover:text-white transition-all"
         >
           Browse Shop
         </Link>
@@ -40,9 +42,9 @@ const OrderSuccessPage = () => {
             Order Placed Successfully
           </h1>
           <div className="flex items-center justify-center gap-2 my-2">
-            <div className="h-px w-10 bg-[#C6A46C]" />
-            <div className="h-1.5 w-1.5 rounded-full bg-[#C6A46C]" />
-            <div className="h-px w-6 bg-[#C6A46C]/50" />
+            <div className="h-px w-10 bg-[#9A7A46]" />
+            <div className="h-1.5 w-1.5 rounded-full bg-[#9A7A46]" />
+            <div className="h-px w-6 bg-[#9A7A46]/50" />
           </div>
           <p className="text-sm text-gray-500 tracking-wide">
             Thank you for shopping with us. Your order is confirmed.
@@ -56,18 +58,24 @@ const OrderSuccessPage = () => {
           {/* Items */}
           <section className="bg-white border border-[#E8DDD0] rounded-sm p-5">
             <div className="flex items-center gap-2 mb-4">
-              <Package size={14} className="text-[#C6A46C]" />
+              <Package size={14} className="text-[#9A7A46]" />
               <h2 className="text-[11px] tracking-[0.25em] uppercase font-semibold text-gray-700">
                 Items Ordered
               </h2>
             </div>
             <div className="divide-y divide-[#E8DDD0]">
               {order.items.map((item, i) => (
-                <div key={i} className="flex justify-between items-center py-3 text-sm first:pt-0 last:pb-0">
+                <div
+                  key={i}
+                  className="flex justify-between items-center py-3 text-sm first:pt-0 last:pb-0"
+                >
                   <div>
-                    <p className="font-medium text-[#2A1810]">{item.product.title}</p>
+                    <p className="font-medium text-[#2A1810]">
+                      {item.product.title}
+                    </p>
                     <p className="text-xs text-gray-500 mt-0.5">
-                      Qty: {item.quantity} &times; {formatINR(Number(item.unitPrice))}
+                      Qty: {item.quantity} &times;{" "}
+                      {formatINR(Number(item.unitPrice))}
                     </p>
                   </div>
                   <span className="font-semibold text-[#2A1810]">
@@ -86,21 +94,31 @@ const OrderSuccessPage = () => {
             <div className="space-y-2 text-sm">
               <div className="flex justify-between text-gray-600">
                 <span>Subtotal</span>
-                <span className="font-medium text-gray-800">{formatINR(Number(order.subtotal))}</span>
+                <span className="font-medium text-gray-800">
+                  {formatINR(Number(order.subtotal))}
+                </span>
               </div>
               <div className="flex justify-between text-gray-600">
                 <span>Tax (18% GST)</span>
-                <span className="font-medium text-gray-800">{formatINR(Number(order.taxAmount))}</span>
+                <span className="font-medium text-gray-800">
+                  {formatINR(Number(order.taxAmount))}
+                </span>
               </div>
               <div className="flex justify-between text-gray-600">
                 <span>Shipping</span>
-                <span className={`font-medium ${Number(order.shippingAmount) === 0 ? "text-emerald-600" : "text-gray-800"}`}>
-                  {Number(order.shippingAmount) === 0 ? "Free" : formatINR(Number(order.shippingAmount))}
+                <span
+                  className={`font-medium ${Number(order.shippingAmount) === 0 ? "text-emerald-600" : "text-gray-800"}`}
+                >
+                  {Number(order.shippingAmount) === 0
+                    ? "Free"
+                    : formatINR(Number(order.shippingAmount))}
                 </span>
               </div>
               <div className="border-t border-[#E8DDD0] pt-2.5 flex justify-between">
                 <span className="font-semibold text-[#2A1810]">Total Paid</span>
-                <span className="font-bold text-[#2A1810] text-lg">{formatINR(Number(order.totalAmount))}</span>
+                <span className="font-bold text-[#2A1810] text-lg">
+                  {formatINR(Number(order.totalAmount))}
+                </span>
               </div>
             </div>
           </section>
@@ -108,22 +126,25 @@ const OrderSuccessPage = () => {
           {/* Shipping address */}
           <section className="bg-white border border-[#E8DDD0] rounded-sm p-5">
             <div className="flex items-center gap-2 mb-3">
-              <MapPin size={14} className="text-[#C6A46C]" />
+              <MapPin size={14} className="text-[#9A7A46]" />
               <h2 className="text-[11px] tracking-[0.25em] uppercase font-semibold text-gray-700">
                 Delivering To
               </h2>
             </div>
             <div className="bg-[#F5EFE7] border border-[#E8DDD0] rounded-sm p-3 text-sm">
               {addr.label && (
-                <p className="text-[10px] tracking-[0.15em] uppercase text-[#C6A46C] font-semibold mb-1">
+                <p className="text-[10px] tracking-[0.15em] uppercase text-[#9A7A46] font-semibold mb-1">
                   {addr.label}
                 </p>
               )}
               <p className="text-gray-700">
-                {addr.line1}{addr.line2 ? `, ${addr.line2}` : ""}
+                {addr.line1}
+                {addr.line2 ? `, ${addr.line2}` : ""}
               </p>
               <p className="text-gray-500 text-xs mt-0.5">
-                {addr.city}{addr.state ? `, ${addr.state}` : ""} — {addr.postalCode}, {addr.country}
+                {addr.city}
+                {addr.state ? `, ${addr.state}` : ""} — {addr.postalCode},{" "}
+                {addr.country}
               </p>
             </div>
           </section>
@@ -132,13 +153,13 @@ const OrderSuccessPage = () => {
           <div className="flex gap-3 pt-2">
             <Link
               to="/shop"
-              className="flex-1 py-3.5 text-center bg-[#2A1810] text-white text-xs tracking-[0.2em] uppercase font-medium hover:bg-[#C6A46C] transition-all duration-200 rounded-sm shadow-[0_4px_20px_rgba(0,0,0,0.12)]"
+              className="flex-1 py-3.5 text-center bg-[#2A1810] text-white text-xs tracking-[0.2em] uppercase font-medium hover:bg-[#9A7A46] transition-all duration-200 rounded-sm shadow-[0_4px_20px_rgba(0,0,0,0.12)]"
             >
               Continue Shopping
             </Link>
             <Link
               to="/"
-              className="px-6 py-3.5 text-center border border-[#E8DDD0] text-gray-600 text-xs tracking-[0.2em] uppercase font-medium hover:border-[#C6A46C] hover:text-[#C6A46C] transition-all duration-200 rounded-sm"
+              className="px-6 py-3.5 text-center border border-[#E8DDD0] text-gray-600 text-xs tracking-[0.2em] uppercase font-medium hover:border-[#9A7A46] hover:text-[#9A7A46] transition-all duration-200 rounded-sm"
             >
               Home
             </Link>

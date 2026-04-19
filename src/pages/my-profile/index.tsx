@@ -30,12 +30,12 @@ const MyProfile = () => {
           <div className="flex items-center gap-2 mb-2">
             <Link
               to="/"
-              className="text-[10px] tracking-[0.2em] uppercase text-gray-400 hover:text-[#C6A46C] transition-colors"
+              className="text-[10px] tracking-[0.2em] uppercase text-gray-400 hover:text-[#9A7A46] transition-colors"
             >
               Home
             </Link>
             <span className="text-gray-300 text-xs">·</span>
-            <span className="text-[10px] tracking-[0.2em] uppercase text-[#C6A46C] font-medium">
+            <span className="text-[10px] tracking-[0.2em] uppercase text-[#9A7A46] font-medium">
               My Profile
             </span>
           </div>
@@ -43,9 +43,9 @@ const MyProfile = () => {
             My Profile
           </h1>
           <div className="flex items-center gap-2 mt-2">
-            <div className="h-px w-10 bg-[#C6A46C]" />
-            <div className="h-1.5 w-1.5 rounded-full bg-[#C6A46C]" />
-            <div className="h-px w-6 bg-[#C6A46C]/50" />
+            <div className="h-px w-10 bg-[#9A7A46]" />
+            <div className="h-1.5 w-1.5 rounded-full bg-[#9A7A46]" />
+            <div className="h-px w-6 bg-[#9A7A46]/50" />
           </div>
         </div>
 
@@ -57,8 +57,8 @@ const MyProfile = () => {
               onClick={() => setActiveTab(key)}
               className={`flex items-center gap-2 px-5 py-3 text-xs tracking-[0.15em] uppercase font-medium whitespace-nowrap transition-all border-b-2 -mb-px ${
                 activeTab === key
-                  ? "border-[#C6A46C] text-[#C6A46C]"
-                  : "border-transparent text-gray-500 hover:text-[#C6A46C]"
+                  ? "border-[#9A7A46] text-[#9A7A46]"
+                  : "border-transparent text-gray-500 hover:text-[#9A7A46]"
               }`}
             >
               {icon}

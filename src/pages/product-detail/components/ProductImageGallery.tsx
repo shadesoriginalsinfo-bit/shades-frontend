@@ -33,11 +33,11 @@ const ProductImageGallery = ({ images, title }: ProductImageGalleryProps) => {
 
   const prev = useCallback(
     () => setActiveIdx((i) => (i - 1 + sorted.length) % sorted.length),
-    [sorted.length]
+    [sorted.length],
   );
   const next = useCallback(
     () => setActiveIdx((i) => (i + 1) % sorted.length),
-    [sorted.length]
+    [sorted.length],
   );
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -52,7 +52,7 @@ const ProductImageGallery = ({ images, title }: ProductImageGalleryProps) => {
   if (!sorted.length) {
     return (
       <div className="aspect-[4/5] rounded-sm bg-[#F5EFE7] flex items-center justify-center border border-[#E8DDD0]">
-        <ShoppingBag size={48} className="text-[#C6A46C]/30" />
+        <ShoppingBag size={48} className="text-[#9A7A46]/30" />
       </div>
     );
   }
@@ -68,8 +68,8 @@ const ProductImageGallery = ({ images, title }: ProductImageGalleryProps) => {
             aria-label={`View image ${i + 1}`}
             className={`relative shrink-0 w-14 h-14 sm:w-[72px] sm:h-[72px] rounded-sm overflow-hidden border-2 transition-all duration-200 ${
               i === activeIdx
-                ? "border-[#C6A46C] shadow-[0_0_0_2px_rgba(198,164,108,0.25)]"
-                : "border-[#E8DDD0] hover:border-[#C6A46C]/60"
+                ? "border-[#9A7A46] shadow-[0_0_0_2px_rgba(198,164,108,0.25)]"
+                : "border-[#E8DDD0] hover:border-[#9A7A46]/60"
             }`}
           >
             <img
@@ -78,7 +78,7 @@ const ProductImageGallery = ({ images, title }: ProductImageGalleryProps) => {
               className="w-full h-full object-cover"
             />
             {i === activeIdx && (
-              <div className="absolute inset-0 bg-[#C6A46C]/08 pointer-events-none" />
+              <div className="absolute inset-0 bg-[#9A7A46]/08 pointer-events-none" />
             )}
           </button>
         ))}
@@ -110,8 +110,10 @@ const ProductImageGallery = ({ images, title }: ProductImageGalleryProps) => {
           {/* Zoom hint */}
           {!zoomed && (
             <div className="absolute bottom-3 right-3 flex items-center gap-1.5 bg-white/80 backdrop-blur-sm border border-[#E8DDD0] px-2.5 py-1.5 rounded-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
-              <ZoomIn size={12} className="text-[#C6A46C]" />
-              <span className="text-[10px] tracking-[0.15em] text-gray-500">Hover to zoom</span>
+              <ZoomIn size={12} className="text-[#9A7A46]" />
+              <span className="text-[10px] tracking-[0.15em] text-gray-500">
+                Hover to zoom
+              </span>
             </div>
           )}
 
@@ -127,14 +129,14 @@ const ProductImageGallery = ({ images, title }: ProductImageGalleryProps) => {
             <button
               onClick={prev}
               aria-label="Previous image"
-              className="absolute left-2 top-1/2 -translate-y-1/2 w-9 h-9 flex items-center justify-center bg-white/90 hover:bg-[#C6A46C] hover:text-white text-[#C6A46C] border border-[#E8DDD0] hover:border-[#C6A46C] rounded-full shadow-md transition-all duration-200 backdrop-blur-sm z-10"
+              className="absolute left-2 top-1/2 -translate-y-1/2 w-9 h-9 flex items-center justify-center bg-white/90 hover:bg-[#9A7A46] hover:text-white text-[#9A7A46] border border-[#E8DDD0] hover:border-[#9A7A46] rounded-full shadow-md transition-all duration-200 backdrop-blur-sm z-10"
             >
               <ChevronLeft size={16} />
             </button>
             <button
               onClick={next}
               aria-label="Next image"
-              className="absolute right-2 top-1/2 -translate-y-1/2 w-9 h-9 flex items-center justify-center bg-white/90 hover:bg-[#C6A46C] hover:text-white text-[#C6A46C] border border-[#E8DDD0] hover:border-[#C6A46C] rounded-full shadow-md transition-all duration-200 backdrop-blur-sm z-10"
+              className="absolute right-2 top-1/2 -translate-y-1/2 w-9 h-9 flex items-center justify-center bg-white/90 hover:bg-[#9A7A46] hover:text-white text-[#9A7A46] border border-[#E8DDD0] hover:border-[#9A7A46] rounded-full shadow-md transition-all duration-200 backdrop-blur-sm z-10"
             >
               <ChevronRight size={16} />
             </button>

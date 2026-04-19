@@ -20,7 +20,10 @@ interface ILoginForm {
 const LoginPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [form, setForm] = useState<ILoginForm>({ mobileNumber: "", password: "" });
+  const [form, setForm] = useState<ILoginForm>({
+    mobileNumber: "",
+    password: "",
+  });
 
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -31,7 +34,10 @@ const LoginPage = () => {
     mutationFn: login,
     onSuccess: (data) => {
       toast.success("Login Successful");
-      const state = location.state as { from?: string; checkoutState?: unknown } | null;
+      const state = location.state as {
+        from?: string;
+        checkoutState?: unknown;
+      } | null;
       if (state?.from) {
         navigate(state.from, { state: state.checkoutState, replace: true });
         return;
@@ -49,15 +55,17 @@ const LoginPage = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if(!INDIAN_MOBILE_REGEX.test(form.mobileNumber)){
-      return toast.error("Please Enter valid 10 Digit Mobile Number.")
+    if (!INDIAN_MOBILE_REGEX.test(form.mobileNumber)) {
+      return toast.error("Please Enter valid 10 Digit Mobile Number.");
     }
-    LoginMutation.mutate({ mobileNumber: form.mobileNumber, password: form.password });
+    LoginMutation.mutate({
+      mobileNumber: form.mobileNumber,
+      password: form.password,
+    });
   };
 
   return (
     <div className="w-full min-h-screen bg-white flex items-center justify-center relative overflow-hidden">
-
       {/* Dot + grid pattern */}
       <GoldPattern />
 
@@ -66,7 +74,6 @@ const LoginPage = () => {
 
       {/* ── Card wrapper ──────────────────────────────────────────────────── */}
       <div className="relative z-10 w-full max-w-md mx-6 animate-[fadeUp_0.6s_ease_both]">
-
         {/* Corner ornaments — transforms via Tailwind scale utilities */}
         <CornerOrnament className="absolute -top-3 -left-3 w-14 h-14 z-20" />
         <CornerOrnament className="absolute -top-3 -right-3 w-14 h-14 z-20 scale-x-[-1]" />
@@ -74,8 +81,7 @@ const LoginPage = () => {
         <CornerOrnament className="absolute -bottom-3 -right-3 w-14 h-14 z-20 scale-x-[-1] scale-y-[-1]" />
 
         {/* Main card */}
-        <div className="bg-white md:border border-[#E8DDD0] px-0 md:px-10 py-2 md:py-6 md:shadow-[0_8px_60px_rgba(198,164,108,0.12),0_2px_12px_rgba(0,0,0,0.04)]">
-
+        <div className="bg-white md:border border-[#E8DDD0] px-0 md:px-10 py-16 md:py-6 md:shadow-[0_8px_60px_rgba(198,164,108,0.12),0_2px_12px_rgba(0,0,0,0.04)]">
           {/* Logo */}
           <div className="flex justify-center mb-4">
             <img src={logo} alt="Logo" className="h-24 object-contain" />
@@ -93,10 +99,9 @@ const LoginPage = () => {
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-7">
-
             {/* mobileNumber */}
             <div className="space-y-1">
-              <label className="text-[10px] tracking-[0.25em] uppercase text-[#C6A46C] font-medium">
+              <label className="text-[10px] tracking-[0.25em] uppercase text-[#9A7A46] font-semibold">
                 Mobile Number
               </label>
               <Input
@@ -113,7 +118,7 @@ const LoginPage = () => {
 
             {/* Password */}
             <div className="space-y-1">
-              <label className="text-[10px] tracking-[0.25em] uppercase text-[#C6A46C] font-medium">
+              <label className="text-[10px] tracking-[0.25em] uppercase text-[#9A7A46] font-semibold">
                 Password
               </label>
               <PasswordInput
@@ -130,7 +135,7 @@ const LoginPage = () => {
             <div className="text-right -mt-5">
               <Link
                 to="/"
-                className="text-[11px] tracking-wider text-[#B8936A] hover:text-[#C6A46C] transition-colors underline underline-offset-2"
+                className="text-[11px] tracking-wider text-[#9A7A46] hover:text-[#9A7A46] transition-colors underline underline-offset-2"
               >
                 Go Back Home?
               </Link>
@@ -138,7 +143,7 @@ const LoginPage = () => {
             {/* <div className="text-right -mt-5">
               <Link
                 to="/forgot-password"
-                className="text-[11px] tracking-wider text-[#B8936A] hover:text-[#C6A46C] transition-colors underline underline-offset-2"
+                className="text-[11px] tracking-wider text-[#B8936A] hover:text-[#9A7A46] transition-colors underline underline-offset-2"
               >
                 Forgot password?
               </Link>
@@ -153,7 +158,11 @@ const LoginPage = () => {
             >
               {LoginMutation.isPending ? (
                 <span className="flex items-center gap-2">
-                  <svg className="animate-spin size-4" viewBox="0 0 24 24" fill="none">
+                  <svg
+                    className="animate-spin size-4"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                  >
                     <circle
                       className="opacity-30"
                       cx="12"
@@ -181,7 +190,7 @@ const LoginPage = () => {
             New here?{" "}
             <Link
               to="/signup"
-              className="text-[#C6A46C] font-semibold hover:text-[#B8936A] transition-colors"
+              className="text-[#9A7A46] font-semibold hover:text-[#B8936A] transition-colors"
             >
               Create an account
             </Link>
@@ -189,7 +198,7 @@ const LoginPage = () => {
         </div>
 
         {/* Bottom tagline */}
-        <p className="text-center text-[10px] tracking-[0.3em] uppercase text-[#C6A46C]/50 md:mt-5">
+        <p className="text-center text-[10px] tracking-[0.3em] uppercase text-[#9A7A46] md:mt-5">
           Secure &nbsp;·&nbsp; Trusted &nbsp;·&nbsp; Exclusive
         </p>
       </div>

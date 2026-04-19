@@ -5,11 +5,23 @@ import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { handleApiError } from "@/utils/handleApiError";
-import type { ICategory, ICreateCategory, IUpdateCategory } from "@/types/category";
-import { getCategories, createCategory, updateCategory, deleteCategory } from "@/lib/api";
+import type {
+  ICategory,
+  ICreateCategory,
+  IUpdateCategory,
+} from "@/types/category";
+import {
+  getCategories,
+  createCategory,
+  updateCategory,
+  deleteCategory,
+} from "@/lib/api";
 import { useDebounce } from "@/hooks/useDebounce";
 import CategoryItem from "./components/CategoryItem";
-import CategoryFormModal, { emptyForm, type CatForm } from "./components/CategoryFormModal";
+import CategoryFormModal, {
+  emptyForm,
+  type CatForm,
+} from "./components/CategoryFormModal";
 import ConfirmDeleteModal from "./components/ConfirmDeleteModal";
 import { CATEGORIES_QUERY_KEY } from "@/hooks/useCategories";
 
@@ -34,7 +46,8 @@ const CategoriesTab = () => {
   // Tree for display
   const treeQuery = useQuery({
     queryKey: ["admin-categories-tree", debouncedSearch],
-    queryFn: () => getCategories({ search: debouncedSearch || undefined, flat: true }),
+    queryFn: () =>
+      getCategories({ search: debouncedSearch || undefined, flat: true }),
   });
 
   const categories = treeQuery.data ?? [];
@@ -87,11 +100,17 @@ const CategoriesTab = () => {
 
   const openEdit = (cat: ICategory) => {
     setEditingCat(cat);
-    setForm({ name: cat.name, slug: cat.slug, description: cat.description ?? "", sortOrder: cat.sortOrder });
+    setForm({
+      name: cat.name,
+      slug: cat.slug,
+      description: cat.description ?? "",
+      sortOrder: cat.sortOrder,
+    });
   };
 
   const handleSubmit = (isEdit: boolean) => {
-    if (!form.name || !form.slug) return toast.error("Name and slug are required");
+    if (!form.name || !form.slug)
+      return toast.error("Name and slug are required");
     const payload = {
       name: form.name,
       slug: form.slug,
@@ -133,25 +152,40 @@ const CategoriesTab = () => {
       {/* Category tree */}
       <div className="bg-white border border-[#E8DDD0]">
         <div className="flex items-center gap-4 px-4 py-3 bg-[#F8F4EE] border-b border-[#E8DDD0]">
-          <span className="text-[10px] tracking-[0.2em] uppercase text-[#C6A46C]/80 font-medium flex-1">
+          <span className="text-[10px] tracking-[0.2em] uppercase text-[#9A7A46]/80 font-medium flex-1">
             Name / Slug
           </span>
-          <span className="text-[10px] tracking-[0.2em] uppercase text-[#C6A46C]/80 font-medium hidden md:block">
+          <span className="text-[10px] tracking-[0.2em] uppercase text-[#9A7A46]/80 font-medium hidden md:block">
             Description
           </span>
-          <span className="text-[10px] tracking-[0.2em] uppercase text-[#C6A46C]/80 font-medium hidden md:block">
+          <span className="text-[10px] tracking-[0.2em] uppercase text-[#9A7A46]/80 font-medium hidden md:block">
             Sort Order
           </span>
-          <span className="text-[10px] tracking-[0.2em] uppercase text-[#C6A46C]/80 font-medium">
+          <span className="text-[10px] tracking-[0.2em] uppercase text-[#9A7A46]/80 font-medium">
             Actions
           </span>
         </div>
 
         {treeQuery.isLoading ? (
-          <div className="flex items-center justify-center py-16 text-[#C6A46C]">
-            <svg className="animate-spin size-4" viewBox="0 0 24 24" fill="none">
-              <circle className="opacity-30" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" />
-              <path className="opacity-80" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+          <div className="flex items-center justify-center py-16 text-[#9A7A46]">
+            <svg
+              className="animate-spin size-4"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <circle
+                className="opacity-30"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="3"
+              />
+              <path
+                className="opacity-80"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+              />
             </svg>
             <span className="ml-2 text-sm">Loading categories…</span>
           </div>
@@ -201,7 +235,10 @@ const CategoriesTab = () => {
       >
         <p className="text-sm text-gray-600">
           Delete{" "}
-          <span className="font-medium text-gray-800">"{deletingCat?.name}"</span>?
+          <span className="font-medium text-gray-800">
+            "{deletingCat?.name}"
+          </span>
+          ?
           {!!deletingCat?.children?.length && (
             <span className="block mt-1 text-orange-500 text-xs">
               This will also delete all subcategories.

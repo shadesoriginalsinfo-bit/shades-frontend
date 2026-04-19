@@ -1,10 +1,18 @@
-import { ShoppingBag, User, Search, Menu, X, ChevronDown, LogOut } from "lucide-react";
+import {
+  ShoppingBag,
+  User,
+  Search,
+  Menu,
+  X,
+  ChevronDown,
+  LogOut,
+} from "lucide-react";
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import logo from "@/assets/transparentLogo.png";
 import { useAuthUser } from "@/hooks/useAuth";
 import { useLogout } from "@/hooks/useLogout";
-import dummyAvatar from "@/assets/profile.webp"
+import dummyAvatar from "@/assets/profile.webp";
 import { useCategories } from "@/hooks/useCategories";
 
 interface NavItem {
@@ -30,9 +38,7 @@ const NavLink = ({ item, isActive }: NavLinkProps) => {
       <Link
         to={item.href}
         className={`z-40 flex items-center gap-1 text-sm font-medium tracking-wide transition-colors duration-200 ${
-          isActive
-            ? "text-[#C6A46C]"
-            : "text-gray-700 hover:text-[#C6A46C]"
+          isActive ? "text-[#9A7A46]" : "text-gray-700 hover:text-[#9A7A46]"
         }`}
       >
         {item.label}
@@ -46,7 +52,7 @@ const NavLink = ({ item, isActive }: NavLinkProps) => {
 
       {/* Active underline */}
       {isActive && (
-        <span className="absolute left-0 right-0 h-0.5 bg-[#C6A46C]" />
+        <span className="absolute left-0 right-0 h-0.5 bg-[#9A7A46]" />
       )}
 
       {/* Dropdown */}
@@ -56,7 +62,7 @@ const NavLink = ({ item, isActive }: NavLinkProps) => {
             <Link
               key={child.href}
               to={child.href}
-              className="block px-5 py-3 text-xs tracking-wider text-gray-600 hover:text-[#C6A46C] hover:bg-[#F5EFE7] transition-colors border-b border-[#E8DDD0]/50 last:border-0"
+              className="block px-5 py-3 text-xs tracking-wider text-gray-600 hover:text-[#9A7A46] hover:bg-[#F5EFE7] transition-colors border-b border-[#E8DDD0]/50 last:border-0"
             >
               {child.label}
             </Link>
@@ -68,7 +74,7 @@ const NavLink = ({ item, isActive }: NavLinkProps) => {
 };
 
 const Header = () => {
-  const {data: user, isLoading} = useAuthUser()
+  const { data: user, isLoading } = useAuthUser();
   const { logout } = useLogout();
   const { categories } = useCategories();
 
@@ -93,7 +99,7 @@ const Header = () => {
 
   const location = useLocation();
   const navigate = useNavigate();
-  
+
   // const cartCount = 2;
   const avatar = user?.avatar ? user.avatar : dummyAvatar;
 
@@ -123,26 +129,34 @@ const Header = () => {
             <div className="flex items-center gap-2 shrink-0">
               {/* Search */}
 
-              {location.pathname !== "/shop" && <div className="flex items-center gap-1 border border-[#c4b9a5] rounded-md">
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search products..."
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      navigate(`/shop?search=${encodeURIComponent(searchQuery)}`);
+              {location.pathname !== "/shop" && (
+                <div className="flex items-center gap-1 border border-[#c4b9a5] rounded-md">
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search products..."
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        navigate(
+                          `/shop?search=${encodeURIComponent(searchQuery)}`,
+                        );
+                      }
+                    }}
+                    className="hidden md:block w-48 bg-white/5 px-4 py-2.5 text-xs text-gray-500 placeholder:text-gray-400 outline-none rounded-sm tracking-wide focus:none"
+                  />
+                  <button
+                    onClick={() =>
+                      navigate(
+                        `/shop?search=${encodeURIComponent(searchQuery)}`,
+                      )
                     }
-                  }}
-                  className="hidden md:block w-48 bg-white/5 px-4 py-2.5 text-xs text-gray-500 placeholder:text-gray-400 outline-none rounded-sm tracking-wide focus:none"
-                />
-                <button
-                  onClick={() => navigate(`/shop?search=${encodeURIComponent(searchQuery)}`)}
-                  className="hidden md:flex w-9 h-9 items-center justify-center text-gray-500 hover:text-[#C6A46C] transition-colors hover:bg-[#F5EFE7] rounded-md cursor-pointer"
-                >
-                  <Search size={17} />
-                </button>
-              </div>}
+                    className="hidden md:flex w-9 h-9 items-center justify-center text-gray-500 hover:text-[#9A7A46] transition-colors hover:bg-[#F5EFE7] rounded-md cursor-pointer"
+                  >
+                    <Search size={17} />
+                  </button>
+                </div>
+              )}
 
               {!isLoading && user ? (
                 <div
@@ -150,15 +164,19 @@ const Header = () => {
                   onMouseEnter={() => setProfileOpen(true)}
                   onMouseLeave={() => setProfileOpen(false)}
                 >
-                  <button className="flex items-center border-2 border-[#C6A46C] w-8 h-8 rounded-full overflow-hidden">
-                    <img src={avatar} alt={user.name} className="w-full object-cover rounded-full" />
+                  <button className="flex items-center border-2 border-[#9A7A46] w-8 h-8 rounded-full overflow-hidden">
+                    <img
+                      src={avatar}
+                      alt={user.name}
+                      className="w-full object-cover rounded-full"
+                    />
                   </button>
                   {profileOpen && (
                     <div className="absolute top-full right-0 pt-2 w-44 z-50">
                       <div className="bg-white border border-[#E8DDD0] shadow-[0_8px_30px_rgba(0,0,0,0.08)]">
                         <Link
                           to="/my-profile"
-                          className="flex items-center gap-2 px-4 py-3 text-xs tracking-wider text-gray-600 hover:text-[#C6A46C] hover:bg-[#F5EFE7] transition-colors border-b border-[#E8DDD0]/50"
+                          className="flex items-center gap-2 px-4 py-3 text-xs tracking-wider text-gray-600 hover:text-[#9A7A46] hover:bg-[#F5EFE7] transition-colors border-b border-[#E8DDD0]/50"
                           onClick={() => setProfileOpen(false)}
                         >
                           <User size={13} />
@@ -178,7 +196,7 @@ const Header = () => {
               ) : (
                 <Link
                   to="/login"
-                  className="hidden md:flex items-center gap-1.5 text-xs tracking-wider text-gray-600 hover:text-[#C6A46C] transition-colors border border-[#E8DDD0] hover:border-[#C6A46C] rounded-sm px-3 py-2"
+                  className="hidden md:flex items-center gap-1.5 text-xs tracking-wider text-gray-600 hover:text-[#9A7A46] transition-colors border border-[#E8DDD0] hover:border-[#9A7A46] rounded-sm px-3 py-2"
                 >
                   <User size={14} />
                   <span>Sign In</span>
@@ -188,12 +206,12 @@ const Header = () => {
               {/* Cart */}
               {/* <Link
                 to="/cart"
-                className="relative flex items-center gap-2 bg-[#1a1a1a] text-white text-xs px-4 py-2.5 hover:bg-[#C6A46C] transition-all duration-200 tracking-wider rounded-sm"
+                className="relative flex items-center gap-2 bg-[#1a1a1a] text-white text-xs px-4 py-2.5 hover:bg-[#9A7A46] transition-all duration-200 tracking-wider rounded-sm"
               >
                 <ShoppingBag size={14} />
                 <span className="hidden sm:inline">Basket</span>
                 {cartCount > 0 && (
-                  <span className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-[#C6A46C] text-white text-[9px] flex items-center justify-center font-bold">
+                  <span className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-[#9A7A46] text-white text-[9px] flex items-center justify-center font-bold">
                     {cartCount}
                   </span>
                 )}
@@ -201,7 +219,7 @@ const Header = () => {
 
               {/* Mobile menu toggle */}
               <button
-                className="md:hidden p-2 text-gray-700 hover:text-[#C6A46C] transition-colors"
+                className="md:hidden p-2 text-gray-700 hover:text-[#9A7A46] transition-colors"
                 onClick={() => setMobileOpen(!mobileOpen)}
               >
                 {mobileOpen ? <X size={20} /> : <Menu size={20} />}
@@ -219,7 +237,7 @@ const Header = () => {
                 to={item.href}
                 className={`block py-3 text-sm font-medium tracking-wide border-b border-[#E8DDD0]/50 last:border-0 ${
                   location.pathname === item.href
-                    ? "text-[#C6A46C]"
+                    ? "text-[#9A7A46]"
                     : "text-gray-700"
                 }`}
                 onClick={() => setMobileOpen(false)}
@@ -232,13 +250,20 @@ const Header = () => {
                 <>
                   <Link
                     to="/my-profile"
-                    className="flex items-center gap-1.5 text-xs tracking-wider text-gray-600 hover:text-[#c4b9a5] transition-colors border-2 border-[#C6A46C] w-8 h-8 rounded-full"
+                    className="flex items-center gap-1.5 text-xs tracking-wider text-gray-600 hover:text-[#c4b9a5] transition-colors border-2 border-[#9A7A46] w-8 h-8 rounded-full"
                     onClick={() => setMobileOpen(false)}
                   >
-                    <img src={avatar} alt={user.name} className="w-full object-cover rounded-full" />
+                    <img
+                      src={avatar}
+                      alt={user.name}
+                      className="w-full object-cover rounded-full"
+                    />
                   </Link>
                   <button
-                    onClick={() => { logout(); setMobileOpen(false); }}
+                    onClick={() => {
+                      logout();
+                      setMobileOpen(false);
+                    }}
                     className="flex items-center gap-1.5 text-xs tracking-wider text-gray-600 hover:text-red-500 transition-colors border border-[#E8DDD0] hover:border-red-300 rounded-sm px-3 py-2"
                   >
                     <LogOut size={14} />
@@ -248,7 +273,7 @@ const Header = () => {
               ) : (
                 <Link
                   to="/login"
-                  className="flex items-center gap-1.5 text-xs tracking-wider text-gray-600 hover:text-[#C6A46C] transition-colors border border-[#E8DDD0] hover:border-[#C6A46C] rounded-sm px-3 py-2"
+                  className="flex items-center gap-1.5 text-xs tracking-wider text-gray-600 hover:text-[#9A7A46] transition-colors border border-[#E8DDD0] hover:border-[#9A7A46] rounded-sm px-3 py-2"
                 >
                   <User size={14} />
                   <span>Sign In</span>

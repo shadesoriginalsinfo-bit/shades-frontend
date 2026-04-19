@@ -17,7 +17,10 @@ import {
 import { useDebounce } from "@/hooks/useDebounce";
 import { ProductsToolbar } from "./components/ProductToolbar";
 import { Pagination } from "@/components/Pagination";
-import ProductFormModal, { emptyProductForm, type ProductForm } from "./components/ProductFormModal";
+import ProductFormModal, {
+  emptyProductForm,
+  type ProductForm,
+} from "./components/ProductFormModal";
 import StockModal from "./components/StockModal";
 import ImagesModal from "./components/ImagesModal";
 import ConfirmDeleteModal from "./components/ConfirmDeleteModal";
@@ -47,16 +50,17 @@ const ProductsTab = () => {
   const [form, setForm] = useState<ProductForm>(emptyProductForm());
   const [stockValue, setStockValue] = useState("");
 
-
-  const { products, meta, isLoading: productsLoading } = useProducts(
-    {
-      search: debouncedSearch || undefined,
-      categoryId: categoryFilter || undefined,
-      isPublished: showUnpublished ? false : undefined,
-      page,
-      limit: LIMIT,
-    }
-  );
+  const {
+    products,
+    meta,
+    isLoading: productsLoading,
+  } = useProducts({
+    search: debouncedSearch || undefined,
+    categoryId: categoryFilter || undefined,
+    isPublished: showUnpublished ? false : undefined,
+    page,
+    limit: LIMIT,
+  });
   const { categories } = useCategories();
 
   // Mutations
@@ -93,7 +97,8 @@ const ProductsTab = () => {
   });
 
   const stockMutation = useMutation({
-    mutationFn: ({ id, stock }: { id: string; stock: number }) => updateProductStock(id, stock),
+    mutationFn: ({ id, stock }: { id: string; stock: number }) =>
+      updateProductStock(id, stock),
     onSuccess: () => {
       toast.success("Stock updated");
       queryClient.invalidateQueries({ queryKey: [PRODUCTS_QUERY_KEY] });
@@ -113,8 +118,13 @@ const ProductsTab = () => {
   });
 
   const removeImageMutation = useMutation({
-    mutationFn: ({ productId, imageId }: { productId: string; imageId: string }) =>
-      removeProductImage(productId, imageId),
+    mutationFn: ({
+      productId,
+      imageId,
+    }: {
+      productId: string;
+      imageId: string;
+    }) => removeProductImage(productId, imageId),
     onSuccess: () => {
       toast.success("Image removed");
       queryClient.invalidateQueries({ queryKey: [PRODUCTS_QUERY_KEY] });
@@ -138,7 +148,9 @@ const ProductsTab = () => {
   });
 
   // Helpers
-  const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleFormChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
@@ -184,13 +196,18 @@ const ProductsTab = () => {
     if (form.categoryIds.length === 0) {
       return toast.error("Select at least one category");
     }
-    if (form.discountPrice && Number(form.discountPrice) >= Number(form.marketPrice)) {
+    if (
+      form.discountPrice &&
+      Number(form.discountPrice) >= Number(form.marketPrice)
+    ) {
       return toast.error("Discount price must be less than market price");
     }
     const base = {
       title: form.title,
       marketPrice: Number(form.marketPrice),
-      discountPrice: form.discountPrice ? Number(form.discountPrice) : undefined,
+      discountPrice: form.discountPrice
+        ? Number(form.discountPrice)
+        : undefined,
       gstPercent: Number(form.gstPercent) || 0,
       shortDesc: form.shortDesc || undefined,
       description: form.description || undefined,
@@ -230,10 +247,25 @@ const ProductsTab = () => {
       {/* Table */}
       <div className="bg-white border border-[#E8DDD0] overflow-x-auto">
         {productsLoading ? (
-          <div className="flex items-center justify-center py-16 text-[#C6A46C]">
-            <svg className="animate-spin size-4" viewBox="0 0 24 24" fill="none">
-              <circle className="opacity-30" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" />
-              <path className="opacity-80" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+          <div className="flex items-center justify-center py-16 text-[#9A7A46]">
+            <svg
+              className="animate-spin size-4"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <circle
+                className="opacity-30"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="3"
+              />
+              <path
+                className="opacity-80"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+              />
             </svg>
             <span className="ml-2 text-sm">Loading products…</span>
           </div>
@@ -246,23 +278,23 @@ const ProductsTab = () => {
           <table className="w-full text-sm">
             <thead>
               <tr className="bg-[#F8F4EE] border-b border-[#E8DDD0]">
-                <th className="text-left px-4 py-3 text-[10px] tracking-[0.2em] uppercase text-[#C6A46C]/80 font-medium w-12" />
-                <th className="text-left px-4 py-3 text-[10px] tracking-[0.2em] uppercase text-[#C6A46C]/80 font-medium">
+                <th className="text-left px-4 py-3 text-[10px] tracking-[0.2em] uppercase text-[#9A7A46]/80 font-medium w-12" />
+                <th className="text-left px-4 py-3 text-[10px] tracking-[0.2em] uppercase text-[#9A7A46]/80 font-medium">
                   Title
                 </th>
-                <th className="text-left px-4 py-3 text-[10px] tracking-[0.2em] uppercase text-[#C6A46C]/80 font-medium">
+                <th className="text-left px-4 py-3 text-[10px] tracking-[0.2em] uppercase text-[#9A7A46]/80 font-medium">
                   Price
                 </th>
-                <th className="text-left px-4 py-3 text-[10px] tracking-[0.2em] uppercase text-[#C6A46C]/80 font-medium">
+                <th className="text-left px-4 py-3 text-[10px] tracking-[0.2em] uppercase text-[#9A7A46]/80 font-medium">
                   Stock
                 </th>
-                <th className="text-left px-4 py-3 text-[10px] tracking-[0.2em] uppercase text-[#C6A46C]/80 font-medium">
+                <th className="text-left px-4 py-3 text-[10px] tracking-[0.2em] uppercase text-[#9A7A46]/80 font-medium">
                   Status
                 </th>
-                <th className="text-left px-4 py-3 text-[10px] tracking-[0.2em] uppercase text-[#C6A46C]/80 font-medium hidden md:table-cell">
+                <th className="text-left px-4 py-3 text-[10px] tracking-[0.2em] uppercase text-[#9A7A46]/80 font-medium hidden md:table-cell">
                   Categories
                 </th>
-                <th className="text-right px-4 py-3 text-[10px] tracking-[0.2em] uppercase text-[#C6A46C]/80 font-medium">
+                <th className="text-right px-4 py-3 text-[10px] tracking-[0.2em] uppercase text-[#9A7A46]/80 font-medium">
                   Actions
                 </th>
               </tr>
@@ -283,16 +315,20 @@ const ProductsTab = () => {
                       />
                     ) : (
                       <div className="size-10 bg-[#F8F4EE] border border-[#E8DDD0] rounded-sm flex items-center justify-center">
-                        <Package className="size-4 text-[#C6A46C]/40" />
+                        <Package className="size-4 text-[#9A7A46]/40" />
                       </div>
                     )}
                   </td>
 
                   {/* Title */}
                   <td className="px-4 py-3">
-                    <p className="font-medium text-gray-800 leading-tight">{product.title}</p>
+                    <p className="font-medium text-gray-800 leading-tight">
+                      {product.title}
+                    </p>
                     {product.shortDesc && (
-                      <p className="text-xs text-gray-400 mt-0.5 line-clamp-1">{product.shortDesc}</p>
+                      <p className="text-xs text-gray-400 mt-0.5 line-clamp-1">
+                        {product.shortDesc}
+                      </p>
                     )}
                   </td>
 
@@ -300,7 +336,7 @@ const ProductsTab = () => {
                   <td className="px-4 py-3">
                     {product.discountPrice ? (
                       <div>
-                        <p className="text-[#C6A46C] font-medium">
+                        <p className="text-[#9A7A46] font-medium">
                           ₹{product.discountPrice.toLocaleString("en-IN")}
                         </p>
                         <p className="text-xs text-gray-400 line-through">
@@ -308,7 +344,9 @@ const ProductsTab = () => {
                         </p>
                       </div>
                     ) : (
-                      <p className="text-gray-800">₹{product.marketPrice.toLocaleString("en-IN")}</p>
+                      <p className="text-gray-800">
+                        ₹{product.marketPrice.toLocaleString("en-IN")}
+                      </p>
                     )}
                   </td>
 
@@ -323,7 +361,7 @@ const ProductsTab = () => {
                       >
                         {product.stock}
                       </span>
-                      <BarChart2 className="size-3 text-gray-300 group-hover:text-[#C6A46C] transition-colors" />
+                      <BarChart2 className="size-3 text-gray-300 group-hover:text-[#9A7A46] transition-colors" />
                     </button>
                   </td>
 
@@ -332,7 +370,7 @@ const ProductsTab = () => {
                     <span
                       className={`inline-flex items-center px-2 py-0.5 text-[10px] tracking-wider uppercase font-medium rounded-sm ${
                         product.isPublished
-                          ? "bg-[#C6A46C]/10 text-[#C6A46C]"
+                          ? "bg-[#9A7A46]/10 text-[#9A7A46]"
                           : "bg-gray-100 text-gray-400"
                       }`}
                     >
@@ -419,7 +457,9 @@ const ProductsTab = () => {
         editingProduct={editingProduct}
         form={form}
         onFormChange={handleFormChange}
-        onTogglePublished={() => setForm((prev) => ({ ...prev, isPublished: !prev.isPublished }))}
+        onTogglePublished={() =>
+          setForm((prev) => ({ ...prev, isPublished: !prev.isPublished }))
+        }
         onToggleCategory={toggleCategory}
         categories={categories}
         isPending={isPending}
@@ -429,14 +469,18 @@ const ProductsTab = () => {
       <ConfirmDeleteModal
         open={!!deletingProduct}
         onClose={() => setDeletingProduct(null)}
-        onConfirm={() => deletingProduct && deleteMutation.mutate(deletingProduct.id)}
+        onConfirm={() =>
+          deletingProduct && deleteMutation.mutate(deletingProduct.id)
+        }
         isPending={deleteMutation.isPending}
         title="Delete Product"
       >
         <p className="text-sm text-gray-600">
           Are you sure you want to delete{" "}
-          <span className="font-medium text-gray-800">"{deletingProduct?.title}"</span>? This action
-          cannot be undone.
+          <span className="font-medium text-gray-800">
+            "{deletingProduct?.title}"
+          </span>
+          ? This action cannot be undone.
         </p>
       </ConfirmDeleteModal>
 
@@ -448,7 +492,11 @@ const ProductsTab = () => {
         onStockValueChange={setStockValue}
         isPending={stockMutation.isPending}
         onSubmit={() =>
-          stockProduct && stockMutation.mutate({ id: stockProduct.id, stock: Number(stockValue) })
+          stockProduct &&
+          stockMutation.mutate({
+            id: stockProduct.id,
+            stock: Number(stockValue),
+          })
         }
       />
 
@@ -457,13 +505,16 @@ const ProductsTab = () => {
         onClose={() => setImagesProduct(null)}
         product={freshImagesProduct ?? null}
         onAddImages={(files) =>
-          imagesProduct && addImagesMutation.mutate({ productId: imagesProduct.id, files })
+          imagesProduct &&
+          addImagesMutation.mutate({ productId: imagesProduct.id, files })
         }
         onRemoveImage={(imageId) =>
-          imagesProduct && removeImageMutation.mutate({ productId: imagesProduct.id, imageId })
+          imagesProduct &&
+          removeImageMutation.mutate({ productId: imagesProduct.id, imageId })
         }
         onReorderImages={(images) =>
-          imagesProduct && reorderImagesMutation.mutate({ productId: imagesProduct.id, images })
+          imagesProduct &&
+          reorderImagesMutation.mutate({ productId: imagesProduct.id, images })
         }
         addImagesPending={addImagesMutation.isPending}
         removeImagePending={removeImageMutation.isPending}

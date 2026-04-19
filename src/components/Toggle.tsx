@@ -20,7 +20,7 @@ export const Toggle = ({
         disabled={disabled}
         onClick={() => !disabled && onChange(!checked)}
         className={`relative w-10 h-5 rounded-full transition-colors ${
-          checked ? "bg-[#C6A46C]" : "bg-gray-300"
+          checked ? "bg-[#9A7A46]" : "bg-gray-300"
         } ${disabled ? "opacity-50 cursor-not-allowed" : ""}`}
       >
         <span

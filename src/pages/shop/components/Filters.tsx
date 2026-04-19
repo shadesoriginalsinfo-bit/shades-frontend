@@ -26,7 +26,11 @@ interface FilterGroupProps {
   children: React.ReactNode;
 }
 
-const FilterGroup = ({ label, defaultOpen = true, children }: FilterGroupProps) => {
+const FilterGroup = ({
+  label,
+  defaultOpen = true,
+  children,
+}: FilterGroupProps) => {
   const [open, setOpen] = useState(defaultOpen);
   return (
     <div className="border-b border-[#E8DDD0] pb-5 mb-5 last:border-0 last:mb-0 last:pb-0">
@@ -35,13 +39,19 @@ const FilterGroup = ({ label, defaultOpen = true, children }: FilterGroupProps) 
         className="w-full flex items-center justify-between mb-4 group"
         aria-expanded={open}
       >
-        <span className="text-[10px] tracking-[0.3em] uppercase font-semibold text-[#C6A46C]">
+        <span className="text-[10px] tracking-[0.3em] uppercase font-semibold text-[#9A7A46]">
           {label}
         </span>
         {open ? (
-          <ChevronUp size={13} className="text-[#C6A46C]/60 group-hover:text-[#C6A46C] transition-colors" />
+          <ChevronUp
+            size={13}
+            className="text-[#9A7A46]/60 group-hover:text-[#9A7A46] transition-colors"
+          />
         ) : (
-          <ChevronDown size={13} className="text-[#C6A46C]/60 group-hover:text-[#C6A46C] transition-colors" />
+          <ChevronDown
+            size={13}
+            className="text-[#9A7A46]/60 group-hover:text-[#9A7A46] transition-colors"
+          />
         )}
       </button>
       {open && <div>{children}</div>}
@@ -57,7 +67,12 @@ interface FilterPanelProps {
   onReset: () => void;
 }
 
-const FilterPanel = ({ categories, filters, onChange, onReset }: FilterPanelProps) => {
+const FilterPanel = ({
+  categories,
+  filters,
+  onChange,
+  onReset,
+}: FilterPanelProps) => {
   const hasActive =
     !!filters.categoryId ||
     !!filters.minPrice ||
@@ -69,21 +84,27 @@ const FilterPanel = ({ categories, filters, onChange, onReset }: FilterPanelProp
       {/* Header row */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-2">
-          <SlidersHorizontal size={14} className="text-[#C6A46C]" />
+          <SlidersHorizontal size={14} className="text-[#9A7A46]" />
           <span className="text-xs font-semibold tracking-[0.18em] uppercase text-gray-700">
             Filters
           </span>
           {hasActive && (
-            <span className="w-4 h-4 rounded-full bg-[#C6A46C] text-white text-[9px] flex items-center justify-center font-bold">
-              {[filters.categoryId, filters.minPrice, filters.maxPrice, filters.inStock]
-                .filter(Boolean).length}
+            <span className="w-4 h-4 rounded-full bg-[#9A7A46] text-white text-[9px] flex items-center justify-center font-bold">
+              {
+                [
+                  filters.categoryId,
+                  filters.minPrice,
+                  filters.maxPrice,
+                  filters.inStock,
+                ].filter(Boolean).length
+              }
             </span>
           )}
         </div>
         {hasActive && (
           <button
             onClick={onReset}
-            className="text-[10px] tracking-[0.18em] uppercase text-[#B8936A] hover:text-[#C6A46C] underline underline-offset-2 transition-colors"
+            className="text-[10px] tracking-[0.18em] uppercase text-[#B8936A] hover:text-[#9A7A46] underline underline-offset-2 transition-colors"
           >
             Clear all
           </button>
@@ -98,8 +119,8 @@ const FilterPanel = ({ categories, filters, onChange, onReset }: FilterPanelProp
             onClick={() => onChange({ ...filters, categoryId: "" })}
             className={`w-full text-left flex items-center justify-between px-2.5 py-2 rounded-sm text-xs tracking-wide transition-all duration-150 ${
               !filters.categoryId
-                ? "bg-[#C6A46C] text-white font-medium"
-                : "text-gray-600 hover:text-[#C6A46C] hover:bg-[#F5EFE7]"
+                ? "bg-[#9A7A46] text-white font-medium"
+                : "text-gray-600 hover:text-[#9A7A46] hover:bg-[#F5EFE7]"
             }`}
           >
             <span>All Categories</span>
@@ -116,8 +137,8 @@ const FilterPanel = ({ categories, filters, onChange, onReset }: FilterPanelProp
               }
               className={`w-full text-left flex items-center justify-between px-2.5 py-2 rounded-sm text-xs tracking-wide transition-all duration-150 ${
                 filters.categoryId === cat.id
-                  ? "bg-[#C6A46C] text-white font-medium"
-                  : "text-gray-600 hover:text-[#C6A46C] hover:bg-[#F5EFE7]"
+                  ? "bg-[#9A7A46] text-white font-medium"
+                  : "text-gray-600 hover:text-[#9A7A46] hover:bg-[#F5EFE7]"
               }`}
             >
               <span>{cat.name}</span>
@@ -138,8 +159,10 @@ const FilterPanel = ({ categories, filters, onChange, onReset }: FilterPanelProp
               min={0}
               placeholder="0"
               value={filters.minPrice}
-              onChange={(e) => onChange({ ...filters, minPrice: e.target.value })}
-              className="w-full border border-[#E8DDD0] rounded-sm px-2.5 py-2 text-xs text-gray-700 placeholder:text-gray-300 focus:outline-none focus:border-[#C6A46C] transition-colors bg-white"
+              onChange={(e) =>
+                onChange({ ...filters, minPrice: e.target.value })
+              }
+              className="w-full border border-[#E8DDD0] rounded-sm px-2.5 py-2 text-xs text-gray-700 placeholder:text-gray-300 focus:outline-none focus:border-[#9A7A46] transition-colors bg-white"
             />
           </div>
           <div className="mt-4 h-px w-4 bg-[#E8DDD0] shrink-0" />
@@ -152,8 +175,10 @@ const FilterPanel = ({ categories, filters, onChange, onReset }: FilterPanelProp
               min={0}
               placeholder="∞"
               value={filters.maxPrice}
-              onChange={(e) => onChange({ ...filters, maxPrice: e.target.value })}
-              className="w-full border border-[#E8DDD0] rounded-sm px-2.5 py-2 text-xs text-gray-700 placeholder:text-gray-300 focus:outline-none focus:border-[#C6A46C] transition-colors bg-white"
+              onChange={(e) =>
+                onChange({ ...filters, maxPrice: e.target.value })
+              }
+              className="w-full border border-[#E8DDD0] rounded-sm px-2.5 py-2 text-xs text-gray-700 placeholder:text-gray-300 focus:outline-none focus:border-[#9A7A46] transition-colors bg-white"
             />
           </div>
         </div>
@@ -179,8 +204,8 @@ const FilterPanel = ({ categories, filters, onChange, onReset }: FilterPanelProp
                 }
                 className={`text-[10px] tracking-wide px-2.5 py-1 border rounded-sm transition-all duration-150 ${
                   active
-                    ? "bg-[#C6A46C] text-white border-[#C6A46C]"
-                    : "border-[#E8DDD0] text-gray-500 hover:border-[#C6A46C] hover:text-[#C6A46C]"
+                    ? "bg-[#9A7A46] text-white border-[#9A7A46]"
+                    : "border-[#E8DDD0] text-gray-500 hover:border-[#9A7A46] hover:text-[#9A7A46]"
                 }`}
               >
                 {label}
@@ -196,7 +221,7 @@ const FilterPanel = ({ categories, filters, onChange, onReset }: FilterPanelProp
           <div
             onClick={() => onChange({ ...filters, inStock: !filters.inStock })}
             className={`relative w-9 h-5 rounded-full transition-colors duration-200 shrink-0 ${
-              filters.inStock ? "bg-[#C6A46C]" : "bg-gray-200"
+              filters.inStock ? "bg-[#9A7A46]" : "bg-gray-200"
             }`}
           >
             <div
@@ -205,7 +230,7 @@ const FilterPanel = ({ categories, filters, onChange, onReset }: FilterPanelProp
               }`}
             />
           </div>
-          <span className="text-xs text-gray-600 tracking-wide group-hover:text-[#C6A46C] transition-colors">
+          <span className="text-xs text-gray-600 tracking-wide group-hover:text-[#9A7A46] transition-colors">
             In Stock Only
           </span>
         </label>
@@ -255,7 +280,7 @@ const ShopFilters = ({
               </span>
               <button
                 onClick={onMobileClose}
-                className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[#F5EFE7] text-gray-500 hover:text-[#C6A46C] transition-colors"
+                className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[#F5EFE7] text-gray-500 hover:text-[#9A7A46] transition-colors"
               >
                 <X size={16} />
               </button>
@@ -279,7 +304,7 @@ const ShopFilters = ({
             <div className="sticky bottom-0 px-5 py-4 border-t border-[#E8DDD0] bg-white">
               <button
                 onClick={onMobileClose}
-                className="w-full py-3 bg-[#C6A46C] text-white text-xs tracking-[0.2em] uppercase font-medium rounded-sm hover:bg-[#B8936A] transition-colors"
+                className="w-full py-3 bg-[#9A7A46] text-white text-xs tracking-[0.2em] uppercase font-medium rounded-sm hover:bg-[#B8936A] transition-colors"
               >
                 Apply Filters
               </button>

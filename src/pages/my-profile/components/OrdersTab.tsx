@@ -78,7 +78,7 @@ const OrdersTab = () => {
             className={`text-[10px] tracking-[0.15em] uppercase px-3 py-1.5 rounded-sm border transition-all ${
               statusFilter === s
                 ? "bg-[#2A1810] text-white border-[#2A1810]"
-                : "border-[#E8DDD0] text-gray-500 hover:border-[#C6A46C] hover:text-[#C6A46C] bg-white"
+                : "border-[#E8DDD0] text-gray-500 hover:border-[#9A7A46] hover:text-[#9A7A46] bg-white"
             }`}
           >
             {s || "All"}
@@ -88,11 +88,11 @@ const OrdersTab = () => {
 
       {isLoading ? (
         <div className="flex items-center justify-center py-16">
-          <Loader2 size={24} className="animate-spin text-[#C6A46C]" />
+          <Loader2 size={24} className="animate-spin text-[#9A7A46]" />
         </div>
       ) : orders.length === 0 ? (
         <div className="bg-white border border-[#E8DDD0] rounded-sm py-14 flex flex-col items-center gap-3">
-          <ShoppingBag size={32} className="text-[#C6A46C]/40" />
+          <ShoppingBag size={32} className="text-[#9A7A46]/40" />
           <p className="text-sm text-gray-400 tracking-wide">No orders found</p>
         </div>
       ) : (
@@ -226,7 +226,7 @@ const OrdersTab = () => {
                   </div>
 
                   {/* Tracking number */}
-                  
+
                   <div className="border-t border-[#E8DDD0] pt-3">
                     <p className="text-[10px] tracking-[0.2em] uppercase text-gray-400 font-medium mb-1">
                       Tracking Number
@@ -235,7 +235,6 @@ const OrdersTab = () => {
                       {order.trackingNumber ?? "N/A"}
                     </p>
                   </div>
-                  
 
                   {/* Shipping address */}
                   <div className="border-t border-[#E8DDD0] pt-3">
@@ -270,7 +269,7 @@ const OrdersTab = () => {
           <button
             onClick={() => setPage((p) => p - 1)}
             disabled={page === 1}
-            className="p-2 border border-[#E8DDD0] rounded-sm text-gray-500 hover:border-[#C6A46C] hover:text-[#C6A46C] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+            className="p-2 border border-[#E8DDD0] rounded-sm text-gray-500 hover:border-[#9A7A46] hover:text-[#9A7A46] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
           >
             <ChevronLeft size={15} />
           </button>
@@ -280,7 +279,7 @@ const OrdersTab = () => {
           <button
             onClick={() => setPage((p) => p + 1)}
             disabled={page === meta.totalPages}
-            className="p-2 border border-[#E8DDD0] rounded-sm text-gray-500 hover:border-[#C6A46C] hover:text-[#C6A46C] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+            className="p-2 border border-[#E8DDD0] rounded-sm text-gray-500 hover:border-[#9A7A46] hover:text-[#9A7A46] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
           >
             <ChevronRight size={15} />
           </button>

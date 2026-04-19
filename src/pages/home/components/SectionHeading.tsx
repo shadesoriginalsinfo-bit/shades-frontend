@@ -16,9 +16,11 @@ const SectionHeading = ({
   const isCenter = align === "center";
 
   return (
-    <div className={`mb-10 ${isCenter ? "text-center" : "text-left"} ${className}`}>
+    <div
+      className={`mb-10 ${isCenter ? "text-center" : "text-left"} ${className}`}
+    >
       {eyebrow && (
-        <p className="text-[10px] tracking-[0.35em] uppercase text-[#C6A46C] font-medium mb-3">
+        <p className="text-[10px] tracking-[0.35em] uppercase text-[#9A7A46] font-medium mb-3">
           {eyebrow}
         </p>
       )}
@@ -28,12 +30,14 @@ const SectionHeading = ({
       </h2>
 
       {/* Ornamental divider */}
-      <div className={`flex items-center gap-2 mt-4 ${isCenter ? "justify-center" : "justify-start"}`}>
-        <div className="h-px w-14 bg-gradient-to-r from-transparent to-[#C6A46C]" />
-        <div className="h-1.5 w-1.5 rounded-full bg-[#C6A46C]" />
-        <div className="h-1 w-1 rounded-full bg-[#C6A46C]/50" />
-        <div className="h-1.5 w-1.5 rounded-full bg-[#C6A46C]" />
-        <div className="h-px w-14 bg-gradient-to-l from-transparent to-[#C6A46C]" />
+      <div
+        className={`flex items-center gap-2 mt-4 ${isCenter ? "justify-center" : "justify-start"}`}
+      >
+        <div className="h-px w-14 bg-gradient-to-r from-transparent to-[#9A7A46]" />
+        <div className="h-1.5 w-1.5 rounded-full bg-[#9A7A46]" />
+        <div className="h-1 w-1 rounded-full bg-[#9A7A46]/50" />
+        <div className="h-1.5 w-1.5 rounded-full bg-[#9A7A46]" />
+        <div className="h-px w-14 bg-gradient-to-l from-transparent to-[#9A7A46]" />
       </div>
 
       {subtitle && (

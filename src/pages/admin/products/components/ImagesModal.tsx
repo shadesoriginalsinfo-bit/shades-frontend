@@ -1,5 +1,13 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { ChevronDown, ChevronUp, ImagePlus, Loader2, Trash2, Upload, X } from "lucide-react";
+import {
+  ChevronDown,
+  ChevronUp,
+  ImagePlus,
+  Loader2,
+  Trash2,
+  Upload,
+  X,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -56,7 +64,8 @@ const ImagesModal = ({
       fileType: f.type || "image/jpeg",
     });
     const ext = (f.name.split(".").pop() ?? "jpg").toLowerCase();
-    const finalName = f.name.replace(/\.[^.]+$/, "") + (ext === "png" ? ".png" : ".jpg");
+    const finalName =
+      f.name.replace(/\.[^.]+$/, "") + (ext === "png" ? ".png" : ".jpg");
     return new File([compressedBlob], finalName, {
       type: compressedBlob.type || f.type || "image/jpeg",
       lastModified: Date.now(),
@@ -66,7 +75,9 @@ const ImagesModal = ({
   // Sync local order whenever product data updates
   useEffect(() => {
     if (product?.images) {
-      setLocalImages([...product.images].sort((a, b) => a.position - b.position));
+      setLocalImages(
+        [...product.images].sort((a, b) => a.position - b.position),
+      );
     }
   }, [product]);
 
@@ -84,11 +95,16 @@ const ImagesModal = ({
   }, [open]);
 
   const sortedOriginal = useMemo(
-    () => (product?.images ? [...product.images].sort((a, b) => a.position - b.position) : []),
+    () =>
+      product?.images
+        ? [...product.images].sort((a, b) => a.position - b.position)
+        : [],
     [product],
   );
 
-  const hasReordered = localImages.some((img, i) => img.id !== sortedOriginal[i]?.id);
+  const hasReordered = localImages.some(
+    (img, i) => img.id !== sortedOriginal[i]?.id,
+  );
 
   const pendingPreviews = useMemo(
     () => pendingFiles.map((f) => URL.createObjectURL(f)),
@@ -149,7 +165,9 @@ const ImagesModal = ({
             `"${f.name}" is still ${formatFileSize(compressed.size)} after compression (limit ${MAX_OUTPUT_MB} MB) — skipped`,
           );
         } else {
-          toast.success(`"${f.name}" compressed to ${formatFileSize(compressed.size)}`);
+          toast.success(
+            `"${f.name}" compressed to ${formatFileSize(compressed.size)}`,
+          );
           accepted.push(compressed);
         }
       } catch {
@@ -166,7 +184,12 @@ const ImagesModal = ({
   };
 
   return (
-    <Dialog open={open} onOpenChange={(o) => { if (!o) onClose(); }}>
+    <Dialog
+      open={open}
+      onOpenChange={(o) => {
+        if (!o) onClose();
+      }}
+    >
       <DialogContent className="sm:max-w-xl max-h-[90vh] flex flex-col gap-0">
         <DialogHeader className="pb-1">
           <DialogTitle className="font-light tracking-wide text-gray-800 font-serif">
@@ -179,7 +202,7 @@ const ImagesModal = ({
           {/* ── Current images ── */}
           <div>
             <div className="flex items-center justify-between mb-2">
-              <p className="text-[10px] tracking-[0.2em] uppercase text-[#C6A46C]/80 font-medium">
+              <p className="text-[10px] tracking-[0.2em] uppercase text-[#9A7A46]/80 font-medium">
                 Current Images
                 <span className="ml-1.5 text-gray-400 normal-case tracking-normal">
                   ({localImages.length})
@@ -191,7 +214,7 @@ const ImagesModal = ({
                   variant="outline"
                   disabled={reorderPending}
                   onClick={handleSaveOrder}
-                  className="h-6 px-2.5 text-[10px] tracking-wide border-[#C6A46C]/40 text-[#C6A46C] hover:bg-[#C6A46C]/5"
+                  className="h-6 px-2.5 text-[10px] tracking-wide border-[#9A7A46]/40 text-[#9A7A46] hover:bg-[#9A7A46]/5"
                 >
                   {reorderPending && <Spinner />}
                   Save Order
@@ -219,7 +242,9 @@ const ImagesModal = ({
                       className="size-12 object-cover rounded-sm shrink-0 border border-[#E8DDD0]"
                     />
                     <div className="flex-1 min-w-0">
-                      <p className="text-xs text-gray-600 truncate">{img.altText || "—"}</p>
+                      <p className="text-xs text-gray-600 truncate">
+                        {img.altText || "—"}
+                      </p>
                       {/* <p className="text-[10px] text-gray-300 truncate">{img.url.split("/").pop()}</p> */}
                     </div>
 
@@ -234,7 +259,9 @@ const ImagesModal = ({
                       </button>
                       <button
                         onClick={() => moveDown(index)}
-                        disabled={index === localImages.length - 1 || reorderPending}
+                        disabled={
+                          index === localImages.length - 1 || reorderPending
+                        }
                         className="p-0.5 rounded hover:bg-[#F0EAE0] disabled:opacity-20 transition-colors"
                       >
                         <ChevronDown className="size-3.5 text-gray-500" />
@@ -258,7 +285,7 @@ const ImagesModal = ({
 
           {/* ── Add images ── */}
           <div className="border-t border-[#E8DDD0] pt-4">
-            <p className="text-[10px] tracking-[0.2em] uppercase text-[#C6A46C]/80 font-medium mb-3">
+            <p className="text-[10px] tracking-[0.2em] uppercase text-[#9A7A46]/80 font-medium mb-3">
               Add Images
             </p>
 
@@ -275,7 +302,7 @@ const ImagesModal = ({
               type="button"
               disabled={compressing}
               onClick={() => inputRef.current?.click()}
-              className="w-full border-2 border-dashed border-[#E8DDD0] rounded hover:border-[#C6A46C]/40 transition-colors py-5 flex flex-col items-center gap-1.5 text-gray-400 hover:text-[#C6A46C]/60 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:border-[#E8DDD0] disabled:hover:text-gray-400"
+              className="w-full border-2 border-dashed border-[#E8DDD0] rounded hover:border-[#9A7A46]/40 transition-colors py-5 flex flex-col items-center gap-1.5 text-gray-400 hover:text-[#9A7A46]/60 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:border-[#E8DDD0] disabled:hover:text-gray-400"
             >
               {compressing ? (
                 <>
@@ -287,7 +314,8 @@ const ImagesModal = ({
                   <ImagePlus className="size-5" />
                   <span className="text-xs">Click to select images</span>
                   <span className="text-[10px] text-gray-300">
-                    Max {MAX_INPUT_MB} MB per file · Multiple selection supported
+                    Max {MAX_INPUT_MB} MB per file · Multiple selection
+                    supported
                   </span>
                 </>
               )}
@@ -325,8 +353,13 @@ const ImagesModal = ({
                   onClick={() => onAddImages(pendingFiles)}
                   className="mt-3"
                 >
-                  {addImagesPending ? <Spinner /> : <Upload className="size-3.5" />}
-                  Upload {pendingFiles.length} {pendingFiles.length === 1 ? "Image" : "Images"}
+                  {addImagesPending ? (
+                    <Spinner />
+                  ) : (
+                    <Upload className="size-3.5" />
+                  )}
+                  Upload {pendingFiles.length}{" "}
+                  {pendingFiles.length === 1 ? "Image" : "Images"}
                 </Button>
               </>
             )}
