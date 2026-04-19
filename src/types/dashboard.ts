@@ -6,6 +6,7 @@ export interface IDashboardStats {
   totalProducts: number;
   totalCategories: number;
   totalRevenue: number;
+  lostRevenue: number;
 }
 
 export interface IDashboardOrderByStatus {

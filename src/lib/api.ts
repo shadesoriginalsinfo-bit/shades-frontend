@@ -312,7 +312,10 @@ export async function verifyPayment(payload: {
 
 // ── Admin Dashboard ───────────────────────────────────────────────────────────
 
-export async function adminGetDashboard(): Promise<IDashboardData> {
-  const { data } = await axios.get("/admin/dashboard");
+export async function adminGetDashboard(params?: {
+  startDate?: string;
+  endDate?: string;
+}): Promise<IDashboardData> {
+  const { data } = await axios.get("/admin/dashboard", { params });
   return data.data;
 }
