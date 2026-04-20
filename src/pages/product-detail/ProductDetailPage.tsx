@@ -82,7 +82,11 @@ const ProductDetailPage = () => {
                 <GallerySkeleton />
               ) : (
                 <ProductImageGallery
-                  images={product!.images}
+                  images={
+                    [...(product!.variants[0]?.images ?? [])].sort(
+                      (a, b) => a.position - b.position,
+                    )
+                  }
                   title={product!.title}
                 />
               )}

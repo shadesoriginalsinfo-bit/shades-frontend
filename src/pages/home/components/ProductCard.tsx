@@ -9,11 +9,11 @@ interface ProductCardProps {
 const formatINR = (amount: number) => `₹${amount.toLocaleString("en-IN")}`;
 
 const ProductCard = ({ product }: ProductCardProps) => {
-  const sortedImages = [...product.images].sort(
+  const firstVariantImages = [...(product.variants[0]?.images ?? [])].sort(
     (a, b) => a.position - b.position,
   );
-  const primaryImage = sortedImages[0];
-  const hoverImage = sortedImages[1];
+  const primaryImage = firstVariantImages[0];
+  const hoverImage = firstVariantImages[1];
 
   const finalPrice = product.discountPrice ?? product.marketPrice;
   const discount =
@@ -25,7 +25,11 @@ const ProductCard = ({ product }: ProductCardProps) => {
         )
       : null;
 
-  const isOutOfStock = product.stock === 0;
+  const totalStock = product.variants.reduce(
+    (sum, v) => sum + v.sizes.reduce((s, sz) => s + sz.stock, 0),
+    0,
+  );
+  const isOutOfStock = totalStock === 0;
   const category = product.productCategories[0]?.category;
 
   const navigate = useNavigate();
@@ -72,9 +76,9 @@ const ProductCard = ({ product }: ProductCardProps) => {
               -{discount}%
             </span>
           )}
-          {!isOutOfStock && product.stock <= 10 && (
+          {!isOutOfStock && totalStock <= 10 && (
             <span className="bg-red-50 text-red-600 border border-red-200 text-[10px] font-medium tracking-wider px-2 py-1 rounded-sm">
-              Only {product.stock} left
+              Only {totalStock} left
             </span>
           )}
         </div>

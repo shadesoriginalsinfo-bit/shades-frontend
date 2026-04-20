@@ -175,7 +175,7 @@ const CheckoutPage = () => {
       order_id: paymentData.razorpayOrderId,
       name: "Shades",
       description: product.title,
-      image: product.images[0]?.url,
+      image: product.variants[0]?.images[0]?.url,
       theme: { color: "#9A7A46" },
       handler: async (response) => {
         try {
@@ -253,10 +253,10 @@ const CheckoutPage = () => {
                 Order Item
               </h2>
               <div className="flex gap-4">
-                {product.images[0] && (
+                {product.variants[0]?.images[0] && (
                   <img
-                    src={product.images[0].url}
-                    alt={product.images[0].altText ?? product.title}
+                    src={product.variants[0].images[0].url}
+                    alt={product.variants[0].images[0].altText ?? product.title}
                     className="w-20 h-20 object-cover rounded-sm border border-[#E8DDD0] shrink-0"
                   />
                 )}

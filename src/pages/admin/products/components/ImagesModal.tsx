@@ -15,7 +15,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import type { IProduct, IProductImage } from "@/types/product";
+import type { IProductImage, IProductVariant } from "@/types/product";
 import Spinner from "./Spinner";
 import imageCompression from "browser-image-compression";
 import toast from "react-hot-toast";
@@ -30,7 +30,7 @@ const MAX_OUTPUT_BYTES = MAX_OUTPUT_MB * 1024 * 1024;
 interface Props {
   open: boolean;
   onClose: () => void;
-  product: IProduct | null;
+  variant: IProductVariant | null;
   onAddImages: (files: File[]) => void;
   onRemoveImage: (imageId: string) => void;
   onReorderImages: (images: { id: string; position: number }[]) => void;
@@ -42,7 +42,7 @@ interface Props {
 const ImagesModal = ({
   open,
   onClose,
-  product,
+  variant,
   onAddImages,
   onRemoveImage,
   onReorderImages,
@@ -72,14 +72,14 @@ const ImagesModal = ({
     });
   };
 
-  // Sync local order whenever product data updates
+  // Sync local order whenever variant data updates
   useEffect(() => {
-    if (product?.images) {
+    if (variant?.images) {
       setLocalImages(
-        [...product.images].sort((a, b) => a.position - b.position),
+        [...variant.images].sort((a, b) => a.position - b.position),
       );
     }
-  }, [product]);
+  }, [variant]);
 
   // Clear pending files after upload completes
   useEffect(() => {
@@ -96,10 +96,10 @@ const ImagesModal = ({
 
   const sortedOriginal = useMemo(
     () =>
-      product?.images
-        ? [...product.images].sort((a, b) => a.position - b.position)
+      variant?.images
+        ? [...variant.images].sort((a, b) => a.position - b.position)
         : [],
-    [product],
+    [variant],
   );
 
   const hasReordered = localImages.some(
@@ -196,7 +196,7 @@ const ImagesModal = ({
             Manage Images
           </DialogTitle>
         </DialogHeader>
-        <p className="text-xs text-gray-400 mb-4 truncate">{product?.title}</p>
+        <p className="text-xs text-gray-400 mb-4 truncate">{variant?.color}</p>
 
         <div className="flex-1 overflow-y-auto space-y-5 pr-0.5">
           {/* ── Current images ── */}
