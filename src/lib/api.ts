@@ -309,9 +309,9 @@ export async function getUserOrder(id: string): Promise<IOrder> {
   return data.data;
 }
 
-export async function cancelOrder(id: string): Promise<IOrder> {
+export async function cancelOrder(id: string): Promise<{ message: string }> {
   const { data } = await axios.post(`/orders/${id}/cancel`);
-  return data.data;
+  return data;
 }
 
 export async function adminGetOrders(
