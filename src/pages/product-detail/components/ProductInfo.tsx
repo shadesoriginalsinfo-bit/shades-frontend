@@ -18,6 +18,8 @@ import { useAuthUser } from "@/hooks/useAuth";
 
 interface ProductInfoProps {
   product: IProduct;
+  selectedVariantIdx: number;
+  onVariantChange: (idx: number) => void;
 }
 
 const formatINR = (amount: number) => `₹${amount.toLocaleString("en-IN")}`;
@@ -64,14 +66,31 @@ const Accordion = ({
 };
 
 /* ── Main component ─────────────────────────────────────────────────── */
-const ProductInfo = ({ product }: ProductInfoProps) => {
+const ProductInfo = ({ product, selectedVariantIdx, onVariantChange }: ProductInfoProps) => {
   const [qty, setQty] = useState(1);
-  // const [wishlisted, setWishlisted] = useState(false);
+  const [selectedSizeId, setSelectedSizeId] = useState<string | null>(null);
   const navigate = useNavigate();
   const { data: user, isLoading: authLoading } = useAuthUser();
 
+  const selectedVariant = product.variants[selectedVariantIdx];
+
+  const handleVariantChange = (idx: number) => {
+    onVariantChange(idx);
+    setSelectedSizeId(null);
+    setQty(1);
+  };
+
+  const handleSizeSelect = (sizeId: string) => {
+    setSelectedSizeId(sizeId);
+    setQty(1);
+  };
+
+  const selectedSize = selectedVariant?.sizes.find((s) => s.id === selectedSizeId) ?? null;
+  const variantStock = selectedVariant?.sizes.reduce((s, sz) => s + sz.stock, 0) ?? 0;
+  const maxQty = selectedSize ? selectedSize.stock : variantStock;
+
   const handleBuyNow = () => {
-    const checkoutState = { product, quantity: qty };
+    const checkoutState = { product, quantity: qty, variantId: selectedVariant?.id, sizeId: selectedSizeId };
     if (user) {
       navigate("/checkout", { state: checkoutState });
     } else {
@@ -89,13 +108,12 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
         )
       : null;
 
-  const totalStock = product.variants.reduce(
-    (sum, v) => sum + v.sizes.reduce((s, sz) => s + sz.stock, 0),
-    0,
-  );
+  const totalStock = variantStock;
   const isOutOfStock = totalStock === 0;
   const isLowStock = !isOutOfStock && totalStock <= 10;
   const category = product.productCategories[0]?.category;
+  const hasSizes = (selectedVariant?.sizes.length ?? 0) > 0;
+  const sizeRequired = hasSizes && !selectedSizeId;
 
   // const handleShare = async () => {
   //   try {
@@ -108,7 +126,7 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
   return (
     <div className="space-y-5">
       {/* ── Breadcrumb + category ── */}
-      <div className="flex items-center gap-2 flex-wrap">
+      <div className="hidden md:flex items-center gap-2 flex-wrap">
         <Link
           to="/"
           className="text-[10px] tracking-[0.2em] uppercase text-gray-400 hover:text-[#9A7A46] transition-colors"
@@ -136,7 +154,7 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
       </div>
 
       {/* ── Title ── */}
-      <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold font-serif text-[#2A1810] leading-tight tracking-tight">
+      <h1 className="hidden md:block text-2xl md:text-3xl lg:text-4xl font-bold font-serif text-[#2A1810] leading-tight tracking-tight">
         {product.title}
       </h1>
 
@@ -146,6 +164,42 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
         <div className="h-1.5 w-1.5 rounded-full bg-[#9A7A46]" />
         <div className="h-px w-6 bg-[#9A7A46]/50" />
       </div>
+
+      {/* ── Color variant selector ── */}
+      {product.variants.length > 0 && (
+        <div className="space-y-2.5">
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] tracking-[0.25em] uppercase text-gray-500 font-medium">
+              Color
+            </span>
+            <span className="text-[10px] text-gray-700 font-medium capitalize">
+              — {selectedVariant?.color}
+            </span>
+          </div>
+          <div className="flex flex-wrap gap-2.5">
+            {product.variants.map((variant, idx) => (
+              <button
+                key={variant.id}
+                onClick={() => handleVariantChange(idx)}
+                title={variant.color}
+                aria-label={`Select ${variant.color}`}
+                className={`relative w-9 h-9 rounded-full border-2 transition-all duration-200 flex items-center justify-center ${
+                  idx === selectedVariantIdx
+                    ? "border-[#9A7A46] shadow-[0_0_0_3px_rgba(154,122,70,0.2)]"
+                    : "border-[#E8DDD0] hover:border-[#9A7A46]/60"
+                }`}
+                style={{ backgroundColor: variant.colorCode ?? "#e5e7eb" }}
+              >
+                {!variant.colorCode && (
+                  <span className="text-[8px] font-bold text-gray-600 leading-none">
+                    {variant.color.slice(0, 2).toUpperCase()}
+                  </span>
+                )}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* ── Price block ── */}
       <div className="flex items-end gap-3 flex-wrap">
@@ -209,8 +263,67 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
         </p>
       )}
 
+      {/* ── Size selector ── */}
+      {!isOutOfStock && hasSizes && (
+        <div className="space-y-2.5">
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] tracking-[0.25em] uppercase text-gray-500 font-medium">
+              Size
+            </span>
+            {selectedSize ? (
+              <span className="text-[10px] text-gray-700 font-medium">
+                — {selectedSize.size}
+              </span>
+            ) : (
+              <span className="text-[10px] text-amber-600 font-medium">
+                — Please select a size
+              </span>
+            )}
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {selectedVariant.sizes.map((sz) => {
+              const outOfStock = sz.stock === 0;
+              const isSelected = sz.id === selectedSizeId;
+              return (
+                <button
+                  key={sz.id}
+                  onClick={() => handleSizeSelect(sz.id)}
+                  disabled={outOfStock}
+                  className={`relative px-4 py-2 text-xs font-medium tracking-wide border rounded-sm transition-all duration-200 ${
+                    isSelected
+                      ? "border-[#9A7A46] bg-[#9A7A46] text-white"
+                      : outOfStock
+                        ? "border-[#E8DDD0] text-gray-300 cursor-not-allowed line-through"
+                        : "border-[#E8DDD0] text-gray-700 hover:border-[#9A7A46] hover:text-[#9A7A46]"
+                  }`}
+                >
+                  {sz.size}
+                  {!outOfStock && sz.stock <= 5 && (
+                    <span
+                      title={`Only ${sz.stock} left`}
+                      className="absolute -top-1.5 -right-1.5 w-3 h-3 rounded-full bg-amber-400 border-2 border-white"
+                    />
+                  )}
+                </button>
+              );
+            })}
+          </div>
+          {selectedSize && (
+            <p className="text-[11px] tracking-wide">
+              {selectedSize.stock <= 5 ? (
+                <span className="text-amber-600 font-medium">
+                  Only {selectedSize.stock} left in this size
+                </span>
+              ) : (
+                <span className="text-gray-400">{selectedSize.stock} available in this size</span>
+              )}
+            </p>
+          )}
+        </div>
+      )}
+
       {/* ── Quantity selector ── */}
-      {!isOutOfStock && (
+      {!isOutOfStock && !sizeRequired && (
         <div className="flex items-center gap-4">
           <span className="text-[10px] tracking-[0.25em] uppercase text-gray-500 font-medium">
             Qty
@@ -228,8 +341,8 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
               {qty}
             </span>
             <button
-              onClick={() => setQty((q) => Math.min(totalStock, q + 1))}
-              disabled={qty >= totalStock}
+              onClick={() => setQty((q) => Math.min(maxQty, q + 1))}
+              disabled={qty >= maxQty}
               aria-label="Increase quantity"
               className="w-9 h-9 flex items-center justify-center text-gray-500 hover:text-[#9A7A46] hover:bg-[#F5EFE7] transition-colors disabled:opacity-30 disabled:cursor-not-allowed border-l border-[#E8DDD0]"
             >
@@ -277,10 +390,10 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
       {!isOutOfStock && (
         <button
           onClick={handleBuyNow}
-          disabled={authLoading}
+          disabled={authLoading || sizeRequired}
           className="w-full py-3.5 border border-[#9A7A46] text-[#9A7A46] text-xs tracking-[0.2em] uppercase font-medium hover:bg-[#9A7A46] hover:text-white transition-all duration-200 rounded-sm disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {authLoading ? "Please wait…" : "Buy Now"}
+          {authLoading ? "Please wait…" : sizeRequired ? "Select a size to continue" : "Buy Now"}
         </button>
       )}
 

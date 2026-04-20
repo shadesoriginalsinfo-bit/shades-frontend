@@ -291,7 +291,7 @@ export async function deleteAddress(id: string): Promise<{ message: string }> {
 export async function createOrder(payload: {
   shippingAddressId: string;
   paymentMethod: "ONLINE" | "COD";
-  items: { productId: string; quantity: number }[];
+  items: { variantSizeId: string; quantity: number }[];
 }): Promise<IOrder> {
   const { data } = await axios.post("/orders", payload);
   return data.data;
