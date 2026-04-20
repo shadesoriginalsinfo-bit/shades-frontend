@@ -67,18 +67,45 @@ const OrderSuccessPage = () => {
               {order.items.map((item, i) => (
                 <div
                   key={i}
-                  className="flex justify-between items-center py-3 text-sm first:pt-0 last:pb-0"
+                  className="flex justify-between items-start py-3 text-sm first:pt-0 last:pb-0 gap-3"
                 >
-                  <div>
-                    <p className="font-medium text-[#2A1810]">
-                      {item.product.title}
-                    </p>
-                    <p className="text-xs text-gray-500 mt-0.5">
-                      Qty: {item.quantity} &times;{" "}
-                      {formatINR(Number(item.unitPrice))}
-                    </p>
+                  <div className="flex items-start gap-3 flex-1 min-w-0">
+                    {item.variantSize?.variant?.images?.[0] && (
+                      <img
+                        src={item.variantSize.variant.images[0].url}
+                        alt={item.variantSize.variant.images[0].altText ?? item.product.title}
+                        className="w-12 h-12 object-cover rounded-sm border border-[#E8DDD0] shrink-0"
+                      />
+                    )}
+                    <div>
+                      <p className="font-medium text-[#2A1810]">
+                        {item.product.title}
+                      </p>
+                      <div className="flex items-center gap-2 mt-0.5 flex-wrap">
+                        {item.variantSize?.variant?.color && (
+                          <span className="flex items-center gap-1 text-xs text-gray-500">
+                            {item.variantSize.variant.colorCode && (
+                              <span
+                                className="inline-block w-2.5 h-2.5 rounded-full border border-gray-200"
+                                style={{ backgroundColor: item.variantSize.variant.colorCode }}
+                              />
+                            )}
+                            {item.variantSize.variant.color}
+                          </span>
+                        )}
+                        {item.variantSize?.size && (
+                          <span className="text-xs text-gray-500">
+                            Size: {item.variantSize.size}
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-xs text-gray-500 mt-0.5">
+                        Qty: {item.quantity} &times;{" "}
+                        {formatINR(Number(item.unitPrice))}
+                      </p>
+                    </div>
                   </div>
-                  <span className="font-semibold text-[#2A1810]">
+                  <span className="font-semibold text-[#2A1810] shrink-0">
                     {formatINR(Number(item.totalPrice))}
                   </span>
                 </div>

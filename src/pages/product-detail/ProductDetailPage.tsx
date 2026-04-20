@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import Header from "@/pages/home/components/Header";
 import Footer from "@/pages/home/components/Footer";
@@ -14,6 +15,7 @@ import { useQuery } from "@tanstack/react-query";
 
 const ProductDetailPage = () => {
   const { id } = useParams<{ id: string }>();
+  const [selectedVariantIdx, setSelectedVariantIdx] = useState(0);
 
   const {
     data: product,
@@ -75,7 +77,7 @@ const ProductDetailPage = () => {
 
         {/* Product layout: image gallery (left) + info panel (right) */}
         {(isLoading || product) && !isError && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 xl:gap-16 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 md:gap-10 xl:gap-16 items-start">
             {/* ── Left: image gallery ── */}
             <div className="lg:sticky lg:top-24">
               {isLoading ? (
@@ -83,7 +85,7 @@ const ProductDetailPage = () => {
               ) : (
                 <ProductImageGallery
                   images={
-                    [...(product!.variants[0]?.images ?? [])].sort(
+                    [...(product!.variants[selectedVariantIdx]?.images ?? [])].sort(
                       (a, b) => a.position - b.position,
                     )
                   }
@@ -97,7 +99,19 @@ const ProductDetailPage = () => {
               {isLoading ? (
                 <ProductInfoSkeleton />
               ) : (
-                <ProductInfo product={product!} />
+                <div>
+
+                  {/* ── Title ── */}
+                  <h1 className="md:hidden text-2xl md:text-3xl lg:text-4xl font-bold font-serif text-[#2A1810] leading-tight tracking-tight">
+                    {product!.title}
+                  </h1>
+
+                  <ProductInfo
+                    product={product!}
+                    selectedVariantIdx={selectedVariantIdx}
+                    onVariantChange={(idx) => setSelectedVariantIdx(idx)}
+                  />
+                </div>
               )}
             </div>
           </div>

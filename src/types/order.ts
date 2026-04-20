@@ -26,14 +26,22 @@ export const STATUS_PROGRESSION: Record<OrderStatus, OrderStatus[]> = {
 
 export interface IPayment {
   id: string;
-  method: string;
   provider: string;
-  providerOrderId?: string;
-  providerPaymentId?: string;
   status: string;
   amount: number;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface IOrderItemVariantSize {
+  id: string;
+  size: string;
+  variant: {
+    id: string;
+    color: string | null;
+    colorCode: string | null;
+    images: { id: string; url: string; altText: string | null; position: number }[];
+  };
 }
 
 export interface IOrderItem {
@@ -42,6 +50,7 @@ export interface IOrderItem {
   totalPrice: number;
   createdAt: string;
   product: { id: string; title: string };
+  variantSize: IOrderItemVariantSize;
 }
 
 export interface IOrder {

@@ -291,7 +291,7 @@ export async function deleteAddress(id: string): Promise<{ message: string }> {
 export async function createOrder(payload: {
   shippingAddressId: string;
   paymentMethod: "ONLINE" | "COD";
-  items: { productId: string; quantity: number }[];
+  items: { variantSizeId: string; quantity: number }[];
 }): Promise<IOrder> {
   const { data } = await axios.post("/orders", payload);
   return data.data;
@@ -309,9 +309,9 @@ export async function getUserOrder(id: string): Promise<IOrder> {
   return data.data;
 }
 
-export async function cancelOrder(id: string): Promise<IOrder> {
+export async function cancelOrder(id: string): Promise<{ message: string }> {
   const { data } = await axios.post(`/orders/${id}/cancel`);
-  return data.data;
+  return data;
 }
 
 export async function adminGetOrders(

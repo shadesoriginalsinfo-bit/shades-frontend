@@ -118,22 +118,15 @@ const OrdersTab = () => {
                       {order.id}
                     </p>
                   </div>
-                  <div>
-                    <p className="text-[10px] tracking-[0.15em] uppercase text-gray-400 font-medium">
-                      Placed
-                    </p>
-                    <p className="text-xs text-gray-700 mt-0.5">
-                      {formatDate(order.placedAt)}
-                    </p>
-                  </div>
-                  <div>
+                  
+                  {/* <div>
                     <p className="text-[10px] tracking-[0.15em] uppercase text-gray-400 font-medium">
                       Total
                     </p>
                     <p className="text-sm font-bold text-[#2A1810] mt-0.5">
                       {formatINR(order.totalAmount)}
                     </p>
-                  </div>
+                  </div> */}
                   <span
                     className={`text-[10px] tracking-[0.15em] uppercase px-2 py-1 rounded-sm border font-medium ${ORDER_STATUS_COLORS[order.status]}`}
                   >
@@ -171,6 +164,14 @@ const OrdersTab = () => {
               {/* Expanded order details */}
               {expandedId === order.id && (
                 <div className="border-t border-[#E8DDD0] px-5 py-4 bg-white space-y-4">
+                  <div className="flex items-center gap-2">
+                    <p className="text-[10px] tracking-[0.15em] uppercase text-gray-500 font-medium">
+                      Placed On :
+                    </p>
+                    <p className="text-xs text-gray-700">
+                      {formatDate(order.placedAt)}
+                    </p>
+                  </div>
                   {/* Items */}
                   <div>
                     <p className="text-[10px] tracking-[0.2em] uppercase text-gray-400 font-medium mb-2">
@@ -182,15 +183,42 @@ const OrdersTab = () => {
                           key={i}
                           className="flex items-center justify-between text-sm"
                         >
-                          <div className="flex items-center gap-2">
-                            <span className="text-gray-600">
-                              {item.product.title}
-                            </span>
-                            <span className="text-gray-400 text-xs">
-                              × {item.quantity}
-                            </span>
+                          <div className="flex items-start gap-2">
+                            {item.variantSize?.variant?.images?.[0] && (
+                              <img
+                                src={item.variantSize.variant.images[0].url}
+                                alt={item.variantSize.variant.images[0].altText ?? item.product.title}
+                                className="w-10 h-10 object-cover rounded-sm border border-[#E8DDD0] shrink-0"
+                              />
+                            )}
+                            <div>
+                              <span className="text-gray-700 font-medium">
+                                {item.product.title}
+                              </span>
+                              <div className="flex items-center gap-2 mt-0.5 flex-wrap">
+                                {item.variantSize?.variant?.color && (
+                                  <span className="flex items-center gap-1 text-xs text-gray-500">
+                                    {item.variantSize.variant.colorCode && (
+                                      <span
+                                        className="inline-block w-2.5 h-2.5 rounded-full border border-gray-200"
+                                        style={{ backgroundColor: item.variantSize.variant.colorCode }}
+                                      />
+                                    )}
+                                    {item.variantSize.variant.color}
+                                  </span>
+                                )}
+                                {item.variantSize?.size && (
+                                  <span className="text-xs text-gray-500">
+                                    Size: {item.variantSize.size}
+                                  </span>
+                                )}
+                                <span className="text-gray-400 text-xs">
+                                  × {item.quantity}
+                                </span>
+                              </div>
+                            </div>
                           </div>
-                          <span className="font-medium text-gray-800">
+                          <span className="font-medium text-gray-800 shrink-0">
                             {formatINR(item.totalPrice)}
                           </span>
                         </div>

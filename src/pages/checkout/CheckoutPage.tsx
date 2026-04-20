@@ -28,7 +28,7 @@ import Footer from "../home/components/Footer";
 
 // Keep these in sync with backend constants
 
-const SHIPPING_FREE_THRESHOLD = 999;
+const SHIPPING_FREE_THRESHOLD = 500;
 const SHIPPING_FLAT = 70;
 
 const formatINR = (amount: number) => `₹${amount.toLocaleString("en-IN")}`;
@@ -36,6 +36,8 @@ const formatINR = (amount: number) => `₹${amount.toLocaleString("en-IN")}`;
 interface CheckoutState {
   product: IProduct;
   quantity: number;
+  variantId?: string;
+  sizeId?: string;
 }
 
 const emptyAddressForm: ICreateAddress = {
@@ -82,7 +84,13 @@ const CheckoutPage = () => {
     );
   }
 
-  const { product, quantity } = state;
+  const { product, quantity, variantId, sizeId } = state;
+
+  const selectedVariant =
+    product.variants.find((v) => v.id === variantId) ?? product.variants[0];
+  const selectedSize =
+    selectedVariant?.sizes.find((s) => s.id === sizeId) ?? null;
+  const variantImage = selectedVariant?.images.sort((a, b) => a.position - b.position)[0];
   const unitPrice = product.discountPrice ?? product.marketPrice;
   const subtotal = unitPrice * quantity;
   const gstRate = (product.gstPercent ?? 0) / 100;
@@ -146,7 +154,7 @@ const CheckoutPage = () => {
       order = await orderMutation.mutateAsync({
         shippingAddressId: selectedAddressId,
         paymentMethod,
-        items: [{ productId: product.id, quantity }],
+        items: [{ variantSizeId: sizeId!, quantity }],
       });
     } catch {
       return;
@@ -175,7 +183,7 @@ const CheckoutPage = () => {
       order_id: paymentData.razorpayOrderId,
       name: "Shades",
       description: product.title,
-      image: product.variants[0]?.images[0]?.url,
+      image: variantImage?.url,
       theme: { color: "#9A7A46" },
       handler: async (response) => {
         try {
@@ -253,10 +261,10 @@ const CheckoutPage = () => {
                 Order Item
               </h2>
               <div className="flex gap-4">
-                {product.variants[0]?.images[0] && (
+                {variantImage && (
                   <img
-                    src={product.variants[0].images[0].url}
-                    alt={product.variants[0].images[0].altText ?? product.title}
+                    src={variantImage.url}
+                    alt={variantImage.altText ?? product.title}
                     className="w-20 h-20 object-cover rounded-sm border border-[#E8DDD0] shrink-0"
                   />
                 )}
@@ -264,13 +272,43 @@ const CheckoutPage = () => {
                   <p className="font-serif font-semibold text-[#2A1810] text-base leading-snug mb-1 truncate">
                     {product.title}
                   </p>
-                  <div className="flex items-center gap-3 text-sm">
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
                     <span className="text-gray-500">
                       Qty:{" "}
                       <span className="text-gray-800 font-medium">
                         {quantity}
                       </span>
                     </span>
+                    {selectedVariant?.color && (
+                      <>
+                        <span className="text-gray-300">|</span>
+                        <span className="text-gray-500 flex items-center gap-1.5">
+                          Color:{" "}
+                          <span className="flex items-center gap-1">
+                            {selectedVariant.colorCode && (
+                              <span
+                                className="inline-block w-3 h-3 rounded-full border border-gray-200"
+                                style={{ backgroundColor: selectedVariant.colorCode }}
+                              />
+                            )}
+                            <span className="text-gray-800 font-medium capitalize">
+                              {selectedVariant.color}
+                            </span>
+                          </span>
+                        </span>
+                      </>
+                    )}
+                    {selectedSize && (
+                      <>
+                        <span className="text-gray-300">|</span>
+                        <span className="text-gray-500">
+                          Size:{" "}
+                          <span className="text-gray-800 font-medium">
+                            {selectedSize.size}
+                          </span>
+                        </span>
+                      </>
+                    )}
                     <span className="text-gray-300">|</span>
                     <span className="text-gray-500">
                       Unit:{" "}
