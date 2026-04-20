@@ -13,9 +13,13 @@ import type {
 } from "@/types/category";
 import type {
   ICreateProduct,
+  ICreateProductVariant,
   IProduct,
+  IProductImage,
   IProductQuery,
   IProductsResponse,
+  IProductVariant,
+  IProductVariantSize,
   IUpdateProduct,
 } from "@/types/product";
 import type { IAddress, ICreateAddress, IUpdateAddress } from "@/types/address";
@@ -145,35 +149,114 @@ export async function deleteProduct(id: string): Promise<{ message: string }> {
   return data;
 }
 
-export async function addProductImages(productId: string, files: File[]) {
-  const formData = new FormData();
-  files.forEach((file) => formData.append("images", file));
-  const { data } = await axios.post(`/products/${productId}/images`, formData, {
-    headers: { "Content-Type": "multipart/form-data" },
-  });
+// ── Product Variants ──────────────────────────────────────────────────────────
+
+export async function addVariant(
+  productId: string,
+  dto: ICreateProductVariant,
+): Promise<IProductVariant> {
+  const { data } = await axios.post(`/products/${productId}/variants`, dto);
   return data.data;
 }
 
-export async function removeProductImage(productId: string, imageId: string) {
+export async function updateVariant(
+  productId: string,
+  variantId: string,
+  dto: { color?: string; colorCode?: string },
+): Promise<IProductVariant> {
+  const { data } = await axios.patch(
+    `/products/${productId}/variants/${variantId}`,
+    dto,
+  );
+  return data.data;
+}
+
+export async function removeVariant(
+  productId: string,
+  variantId: string,
+): Promise<{ message: string }> {
   const { data } = await axios.delete(
-    `/products/${productId}/images/${imageId}`,
+    `/products/${productId}/variants/${variantId}`,
   );
   return data;
 }
 
-export async function reorderProductImages(
+// ── Variant Images ────────────────────────────────────────────────────────────
+
+export async function addVariantImages(
   productId: string,
-  images: { id: string; position: number }[],
-) {
-  const { data } = await axios.patch(`/products/${productId}/images/reorder`, {
-    images,
-  });
+  variantId: string,
+  files: File[],
+): Promise<IProductImage[]> {
+  const formData = new FormData();
+  files.forEach((file) => formData.append("images", file));
+  const { data } = await axios.post(
+    `/products/${productId}/variants/${variantId}/images`,
+    formData,
+    { headers: { "Content-Type": "multipart/form-data" } },
+  );
   return data.data;
 }
 
-export async function updateProductStock(productId: string, stock: number) {
-  const { data } = await axios.patch(`/products/${productId}/stock`, { stock });
+export async function removeVariantImage(
+  productId: string,
+  variantId: string,
+  imageId: string,
+): Promise<{ message: string }> {
+  const { data } = await axios.delete(
+    `/products/${productId}/variants/${variantId}/images/${imageId}`,
+  );
+  return data;
+}
+
+export async function reorderVariantImages(
+  productId: string,
+  variantId: string,
+  images: { id: string; position: number }[],
+): Promise<IProductImage[]> {
+  const { data } = await axios.patch(
+    `/products/${productId}/variants/${variantId}/images/reorder`,
+    { images },
+  );
   return data.data;
+}
+
+// ── Variant Sizes ─────────────────────────────────────────────────────────────
+
+export async function addVariantSize(
+  productId: string,
+  variantId: string,
+  dto: { size: string; stock: number },
+): Promise<IProductVariantSize> {
+  const { data } = await axios.post(
+    `/products/${productId}/variants/${variantId}/sizes`,
+    dto,
+  );
+  return data.data;
+}
+
+export async function updateVariantSizeStock(
+  productId: string,
+  variantId: string,
+  sizeId: string,
+  stock: number,
+): Promise<{ id: string; size: string; stock: number; updatedAt: string }> {
+  const { data } = await axios.patch(
+    `/products/${productId}/variants/${variantId}/sizes/${sizeId}/stock`,
+    { stock },
+  );
+  return data.data;
+}
+
+export async function removeVariantSize(
+  productId: string,
+  variantId: string,
+  sizeId: string,
+): Promise<{ message: string }> {
+  const { data } = await axios.delete(
+    `/products/${productId}/variants/${variantId}/sizes/${sizeId}`,
+  );
+  return data;
 }
 
 // ── Addresses ─────────────────────────────────────────────────────────────────

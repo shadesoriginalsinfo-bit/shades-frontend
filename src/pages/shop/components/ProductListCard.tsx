@@ -9,7 +9,7 @@ interface ProductListCardProps {
 const formatINR = (amount: number) => `₹${amount.toLocaleString("en-IN")}`;
 
 const ProductListCard = ({ product }: ProductListCardProps) => {
-  const sortedImages = [...product.images].sort(
+  const sortedImages = [...(product.variants[0]?.images ?? [])].sort(
     (a, b) => a.position - b.position,
   );
   const primaryImage = sortedImages[0];
@@ -24,7 +24,11 @@ const ProductListCard = ({ product }: ProductListCardProps) => {
         )
       : null;
 
-  const isOutOfStock = product.stock === 0;
+  const totalStock = product.variants.reduce(
+    (sum, v) => sum + v.sizes.reduce((s, sz) => s + sz.stock, 0),
+    0,
+  );
+  const isOutOfStock = totalStock === 0;
   const category = product.productCategories[0]?.category;
 
   return (
@@ -97,9 +101,9 @@ const ProductListCard = ({ product }: ProductListCardProps) => {
         </div>
 
         {/* Stock */}
-        {!isOutOfStock && product.stock <= 10 && (
+        {!isOutOfStock && totalStock <= 10 && (
           <p className="text-[10px] text-red-500 tracking-wide mt-1">
-            Only {product.stock} left in stock
+            Only {totalStock} left in stock
           </p>
         )}
 

@@ -89,8 +89,12 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
         )
       : null;
 
-  const isOutOfStock = product.stock === 0;
-  const isLowStock = !isOutOfStock && product.stock <= 10;
+  const totalStock = product.variants.reduce(
+    (sum, v) => sum + v.sizes.reduce((s, sz) => s + sz.stock, 0),
+    0,
+  );
+  const isOutOfStock = totalStock === 0;
+  const isLowStock = !isOutOfStock && totalStock <= 10;
   const category = product.productCategories[0]?.category;
 
   // const handleShare = async () => {
@@ -188,12 +192,12 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
         ) : isLowStock ? (
           <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 border border-amber-200 text-amber-700 text-[11px] tracking-wider font-medium rounded-sm">
             <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
-            Only {product.stock} left — order soon
+            Only {totalStock} left — order soon
           </span>
         ) : (
           <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 border border-emerald-200 text-emerald-700 text-[11px] tracking-wider font-medium rounded-sm">
             <BadgeCheck size={12} />
-            In Stock ({product.stock} available)
+            In Stock ({totalStock} available)
           </span>
         )}
       </div>
@@ -224,8 +228,8 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
               {qty}
             </span>
             <button
-              onClick={() => setQty((q) => Math.min(product.stock, q + 1))}
-              disabled={qty >= product.stock}
+              onClick={() => setQty((q) => Math.min(totalStock, q + 1))}
+              disabled={qty >= totalStock}
               aria-label="Increase quantity"
               className="w-9 h-9 flex items-center justify-center text-gray-500 hover:text-[#9A7A46] hover:bg-[#F5EFE7] transition-colors disabled:opacity-30 disabled:cursor-not-allowed border-l border-[#E8DDD0]"
             >

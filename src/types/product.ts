@@ -6,13 +6,30 @@ export interface IProductImage {
   createdAt: string;
 }
 
+export interface IProductVariantSize {
+  id: string;
+  size: string;
+  stock: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface IProductVariant {
+  id: string;
+  color: string;
+  colorCode?: string | null;
+  createdAt: string;
+  updatedAt: string;
+  images: IProductImage[];
+  sizes: IProductVariantSize[];
+}
+
 export interface IProduct {
   id: string;
   title: string;
   marketPrice: number;
   discountPrice?: number | null;
-  stock: number;
-  gstPercent: number
+  gstPercent: number;
   careInstruction?: string;
   description?: string | null;
   shortDesc?: string | null;
@@ -20,7 +37,7 @@ export interface IProduct {
   isDeleted: boolean;
   createdAt: string;
   updatedAt: string;
-  images: IProductImage[];
+  variants: IProductVariant[];
   productCategories: { category: { id: string; name: string; slug: string } }[];
 }
 
@@ -35,6 +52,17 @@ export interface IProductQuery {
   limit?: number;
 }
 
+export interface ICreateProductVariantSize {
+  size: string;
+  stock: number;
+}
+
+export interface ICreateProductVariant {
+  color: string;
+  colorCode?: string;
+  sizes: ICreateProductVariantSize[];
+}
+
 export interface ICreateProduct {
   title: string;
   marketPrice: number;
@@ -42,10 +70,10 @@ export interface ICreateProduct {
   description?: string;
   shortDesc?: string;
   isPublished?: boolean;
-  stock: number;
   categoryIds?: string[];
-  gstPercent: number
+  gstPercent: number;
   careInstruction?: string;
+  variants?: ICreateProductVariant[];
 }
 
 export interface IUpdateProduct {
@@ -56,7 +84,7 @@ export interface IUpdateProduct {
   shortDesc?: string;
   isPublished?: boolean;
   categoryIds?: string[];
-  gstPercent?: number
+  gstPercent?: number;
   careInstruction?: string;
 }
 

@@ -16,7 +16,6 @@ export const emptyProductForm = () => ({
   title: "",
   marketPrice: "",
   discountPrice: "",
-  stock: "",
   gstPercent: "",
   shortDesc: "",
   description: "",
@@ -107,19 +106,6 @@ const ProductFormModal = ({
             restrictSpecialChars={false}
           />
         </LabelField>
-
-        {!editingProduct && (
-          <LabelField label="Stock *">
-            <Input
-              name="stock"
-              type="number"
-              value={form.stock}
-              onChange={onFormChange}
-              placeholder="0"
-              restrictSpecialChars={false}
-            />
-          </LabelField>
-        )}
 
         <div>
           <LabelField label="Short Description">
