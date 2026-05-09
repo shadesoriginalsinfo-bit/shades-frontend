@@ -295,7 +295,7 @@ export default function SignupPage() {
                 )}
               </Button>
 
-              <p className="text-xs text-gray-400 tracking-wide">
+              <p className="text-sm text-gray-400 tracking-wide">
                 Already a member?{" "}
                 <Link
                   to="/login"
@@ -309,7 +309,7 @@ export default function SignupPage() {
         </div>
 
         {/* Bottom tagline */}
-        <p className="text-center text-[10px] tracking-[0.3em] uppercase text-[#9A7A46] md:mt-5">
+        <p className="text-center text-[12px] tracking-[0.3em] uppercase text-[#9A7A46] md:mt-5">
           Secure &nbsp;·&nbsp; Trusted &nbsp;·&nbsp; Exclusive
         </p>
       </div>

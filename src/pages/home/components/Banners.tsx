@@ -270,10 +270,11 @@ export const DiscountBanner = () => (
               FLAT 20% OFF
             </h3>
             <p className="text-white/75 text-sm mt-2 tracking-wide">
-              On all ethnic wear · Use code:{" "}
-              <span className="font-semibold text-white bg-white/15 px-2 py-0.5 rounded">
+              On all ethnic wear
+               {/* · Use code:{" "} */}
+              {/* <span className="font-semibold text-white bg-white/15 px-2 py-0.5 rounded">
                 SHADES20
-              </span>
+              </span> */}
             </p>
           </div>
 
