@@ -48,7 +48,7 @@ const SLIDES: HeroSlide[] = [
     title: "ELEGANCE",
     subtitle: "Redefined In Every Thread",
     ctaPrimary: { label: "Shop Collection", href: "/shop" },
-    ctaSecondary: { label: "About Us", href: "/about" },
+    ctaSecondary: { label: "About Us", href: "/help" },
     bg: "bg-gradient-to-br from-[#F0E6DA] via-[#E8DDD0] to-[#EDE3D8]",
     accentBg: "from-[#B8936A]/25 to-transparent",
     textDark: true,
