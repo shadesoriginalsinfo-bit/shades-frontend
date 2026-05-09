@@ -90,7 +90,7 @@ const LoginPage = () => {
           {/* Heading */}
           <div className="text-center mb-1">
             {/* font-serif resolves to Georgia in Tailwind's default stack */}
-            <h1 className="text-3xl text-gray-800 font-light tracking-tight font-serif">
+            <h1 className="text-4xl text-gray-800 font-light tracking-tight font-serif">
               Welcome Back
             </h1>
           </div>
@@ -101,7 +101,7 @@ const LoginPage = () => {
           <form onSubmit={handleSubmit} className="space-y-7">
             {/* mobileNumber */}
             <div className="space-y-1">
-              <label className="text-[10px] tracking-[0.25em] uppercase text-[#9A7A46] font-semibold">
+              <label className="text-[13px] tracking-[0.05em] uppercase text-[#9A7A46] font-semibold">
                 Mobile Number
               </label>
               <Input
@@ -118,7 +118,7 @@ const LoginPage = () => {
 
             {/* Password */}
             <div className="space-y-1">
-              <label className="text-[10px] tracking-[0.25em] uppercase text-[#9A7A46] font-semibold">
+              <label className="text-[13px] tracking-[0.05em] uppercase text-[#9A7A46] font-semibold">
                 Password
               </label>
               <PasswordInput
@@ -135,7 +135,7 @@ const LoginPage = () => {
             <div className="text-right -mt-5">
               <Link
                 to="/"
-                className="text-[11px] tracking-wider text-[#9A7A46] hover:text-[#9A7A46] transition-colors underline underline-offset-2"
+                className="text-sm tracking-wider text-[#9A7A46] hover:text-[#9A7A46] transition-colors underline underline-offset-2"
               >
                 Go Back Home?
               </Link>
@@ -186,7 +186,7 @@ const LoginPage = () => {
           </form>
 
           {/* Footer */}
-          <p className="text-center text-xs text-gray-400 mt-3 tracking-wide">
+          <p className="text-center text-sm text-gray-400 mt-3 tracking-wide">
             New here?{" "}
             <Link
               to="/signup"
@@ -198,7 +198,7 @@ const LoginPage = () => {
         </div>
 
         {/* Bottom tagline */}
-        <p className="text-center text-[10px] tracking-[0.3em] uppercase text-[#9A7A46] md:mt-5">
+        <p className="text-center text-[12px] tracking-[0.3em] uppercase text-[#9A7A46] md:mt-5">
           Secure &nbsp;·&nbsp; Trusted &nbsp;·&nbsp; Exclusive
         </p>
       </div>
