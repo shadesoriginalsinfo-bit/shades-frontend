@@ -14,7 +14,10 @@ const ProductListCard = ({ product }: ProductListCardProps) => {
   );
   const primaryImage = sortedImages[0];
 
+  const gstRate = (product.gstPercent ?? 0) / 100;
   const finalPrice = product.discountPrice ?? product.marketPrice;
+  const finalPriceWithGst = parseFloat((finalPrice * (1 + gstRate)).toFixed(2));
+  const marketPriceWithGst = parseFloat((product.marketPrice * (1 + gstRate)).toFixed(2));
   const discount =
     product.discountPrice && product.marketPrice > product.discountPrice
       ? Math.round(
@@ -86,11 +89,11 @@ const ProductListCard = ({ product }: ProductListCardProps) => {
         {/* Price */}
         <div className="flex items-baseline gap-2 mt-3">
           <span className="text-base md:text-lg font-semibold text-[#3D2B1F]">
-            {formatINR(finalPrice)}
+            {formatINR(finalPriceWithGst)}
           </span>
           {product.discountPrice && (
             <span className="text-sm text-gray-400 line-through">
-              {formatINR(product.marketPrice)}
+              {formatINR(marketPriceWithGst)}
             </span>
           )}
           {discount && (

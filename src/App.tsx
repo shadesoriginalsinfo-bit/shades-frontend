@@ -19,6 +19,8 @@ import CheckoutPage from "./pages/checkout/CheckoutPage";
 import OrderSuccessPage from "./pages/order-success/OrderSuccessPage";
 import MyProfile from "./pages/my-profile";
 import HelpPage from "./pages/help/HelpPage";
+import CartPage from "./pages/cart/CartPage";
+import CartFloatingBar from "./components/CartFloatingBar";
 
 function App() {
   return (
@@ -34,11 +36,11 @@ function App() {
         <Route path="/shop" element={<ShopPage />} />
         <Route path="/help" element={<HelpPage />} />
         <Route path="/product/:id" element={<ProductDetailPage />} />
+        <Route path="/cart" element={<CartPage />} />
 
         <Route element={<ProtectedRoute />}>
             <Route path="/checkout" element={<CheckoutPage />} />
             <Route path="/order-success" element={<OrderSuccessPage />} />
-            {/* <Route path="/cart" element={<CartPage />} /> */}
             <Route path="/my-profile" element={<MyProfile />} />
 
           <Route element={<ProtectedRoute allowedRoles={[Role.ADMIN]} />}>
@@ -53,6 +55,7 @@ function App() {
         <Route path="/unauthorized" element={<Unauthorized />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
+      <CartFloatingBar />
     </Router>
   )
 }

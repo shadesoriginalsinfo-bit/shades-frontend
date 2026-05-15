@@ -9,6 +9,7 @@ import {
   CheckCircle2,
   Loader2,
   CreditCard,
+  ShoppingBag,
   // Truck,
 } from "lucide-react";
 import {
@@ -21,23 +22,18 @@ import {
 import { handleApiError } from "@/utils/handleApiError";
 import { useRazorpay } from "@/hooks/useRazorpay";
 import toast from "react-hot-toast";
-import type { IProduct } from "@/types/product";
 import type { ICreateAddress } from "@/types/address";
 import Header from "@/components/Header";
 import Footer from "../home/components/Footer";
-
-// Keep these in sync with backend constants
+import { useCart, type CartItem } from "@/context/CartContext";
 
 const SHIPPING_FREE_THRESHOLD = 500;
 const SHIPPING_FLAT = 70;
 
 const formatINR = (amount: number) => `₹${amount.toLocaleString("en-IN")}`;
 
-interface CheckoutState {
-  product: IProduct;
-  quantity: number;
-  variantId?: string;
-  sizeId?: string;
+export interface CheckoutState {
+  items: CartItem[];
 }
 
 const emptyAddressForm: ICreateAddress = {
@@ -55,24 +51,20 @@ const CheckoutPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const { clearCart } = useCart();
 
   const state = location.state as CheckoutState | null;
 
-  const [selectedAddressId, setSelectedAddressId] = useState<string | null>(
-    null,
-  );
+  const [selectedAddressId, setSelectedAddressId] = useState<string | null>(null);
   const [showAddressForm, setShowAddressForm] = useState(false);
-  const [addressForm, setAddressForm] =
-    useState<ICreateAddress>(emptyAddressForm);
-  // const [paymentMethod, setPaymentMethod] = useState<"ONLINE" | "COD">( "ONLINE");
-  const [paymentMethod, setPaymentMethod] = useState<"ONLINE">("ONLINE");
+  const [addressForm, setAddressForm] = useState<ICreateAddress>(emptyAddressForm);
+  const [paymentMethod] = useState<"ONLINE">("ONLINE");
 
-  // Redirect if no checkout state (direct navigation)
-  if (!state?.product) {
+  if (!state?.items?.length) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center gap-4 bg-white">
         <p className="text-gray-500 text-sm tracking-wide">
-          No product selected for checkout.
+          No items selected for checkout.
         </p>
         <Link
           to="/shop"
@@ -84,20 +76,21 @@ const CheckoutPage = () => {
     );
   }
 
-  const { product, quantity, variantId, sizeId } = state;
+  const { items } = state;
 
-  const selectedVariant =
-    product.variants.find((v) => v.id === variantId) ?? product.variants[0];
-  const selectedSize =
-    selectedVariant?.sizes.find((s) => s.id === sizeId) ?? null;
-  const variantImage = selectedVariant?.images.sort((a, b) => a.position - b.position)[0];
-  const unitPrice = product.discountPrice ?? product.marketPrice;
-  const subtotal = unitPrice * quantity;
-  const gstRate = (product.gstPercent ?? 0) / 100;
-  const tax = parseFloat((subtotal * gstRate).toFixed(2));
-  const shipping =
-    subtotal >= 1 && subtotal < SHIPPING_FREE_THRESHOLD ? SHIPPING_FLAT : 0;
-  const total = parseFloat((subtotal + tax + shipping).toFixed(2));
+  // Aggregate totals
+  let subtotal = 0;
+  let taxAmount = 0;
+  for (const item of items) {
+    const unitPrice = item.product.discountPrice ?? item.product.marketPrice;
+    const itemSubtotal = unitPrice * item.quantity;
+    subtotal += itemSubtotal;
+    taxAmount += itemSubtotal * ((item.product.gstPercent ?? 0) / 100);
+  }
+  taxAmount = parseFloat(taxAmount.toFixed(2));
+  const totalQty = items.reduce((s, i) => s + i.quantity, 0);
+  const shipping = subtotal > 1 && subtotal < SHIPPING_FREE_THRESHOLD ? SHIPPING_FLAT : 0;
+  const total = parseFloat((subtotal + taxAmount + shipping).toFixed(2));
 
   const { data: addresses = [], isLoading: addressesLoading } = useQuery({
     queryKey: ["addresses"],
@@ -154,17 +147,11 @@ const CheckoutPage = () => {
       order = await orderMutation.mutateAsync({
         shippingAddressId: selectedAddressId,
         paymentMethod,
-        items: [{ variantSizeId: sizeId!, quantity }],
+        items: items.map((i) => ({ variantSizeId: i.variantSizeId, quantity: i.quantity })),
       });
     } catch {
       return;
     }
-
-    // if (paymentMethod === "COD") {
-    //   toast.success("Order placed successfully!");
-    //   navigate("/order-success", { state: { order } });
-    //   return;
-    // }
 
     let paymentData;
     try {
@@ -176,14 +163,16 @@ const CheckoutPage = () => {
       return;
     }
 
+    const firstItem = items[0];
+
     openRazorpay({
       key: import.meta.env.VITE_RZP_KEY_ID,
       amount: Math.round(Number(paymentData.amount) * 100),
       currency: paymentData.currency,
       order_id: paymentData.razorpayOrderId,
       name: "Shades",
-      description: product.title,
-      image: variantImage?.url,
+      description: items.length === 1 ? firstItem.product.title : `${items.length} items`,
+      image: firstItem.imageUrl,
       theme: { color: "#9A7A46" },
       handler: async (response) => {
         try {
@@ -193,6 +182,7 @@ const CheckoutPage = () => {
             razorpaySignature: response.razorpay_signature,
           });
           toast.success("Payment successful!");
+          clearCart();
           navigate("/order-success", { state: { order } });
         } catch (err) {
           handleApiError(err);
@@ -210,7 +200,6 @@ const CheckoutPage = () => {
     addresses.find((a) => a.id === selectedAddressId) ??
     addresses.find((a) => a.isDefault);
 
-  // Auto-select default address on first load
   if (!selectedAddressId && addresses.length > 0) {
     const def = addresses.find((a) => a.isDefault) ?? addresses[0];
     setSelectedAddressId(def.id);
@@ -232,10 +221,10 @@ const CheckoutPage = () => {
             </Link>
             <span className="text-gray-300 text-xs">·</span>
             <Link
-              to={`/product/${product.id}`}
+              to="/cart"
               className="text-[10px] tracking-[0.2em] uppercase text-gray-400 hover:text-[#9A7A46] transition-colors"
             >
-              Product
+              Cart
             </Link>
             <span className="text-gray-300 text-xs">·</span>
             <span className="text-[10px] tracking-[0.2em] uppercase text-[#9A7A46] font-medium">
@@ -255,81 +244,70 @@ const CheckoutPage = () => {
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-8">
           {/* ── Left column ── */}
           <div className="space-y-6">
-            {/* Product summary */}
+            {/* Order items */}
             <section className="bg-white border border-[#E8DDD0] rounded-sm p-5">
               <h2 className="text-[11px] tracking-[0.25em] uppercase font-semibold text-gray-700 mb-4">
-                Order Item
+                Order Items ({totalQty})
               </h2>
-              <div className="flex gap-4">
-                {variantImage && (
-                  <img
-                    src={variantImage.url}
-                    alt={variantImage.altText ?? product.title}
-                    className="w-20 h-20 object-cover rounded-sm border border-[#E8DDD0] shrink-0"
-                  />
-                )}
-                <div className="flex-1 min-w-0">
-                  <p className="font-serif font-semibold text-[#2A1810] text-base leading-snug mb-1 truncate">
-                    {product.title}
-                  </p>
-                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
-                    <span className="text-gray-500">
-                      Qty:{" "}
-                      <span className="text-gray-800 font-medium">
-                        {quantity}
-                      </span>
-                    </span>
-                    {selectedVariant?.color && (
-                      <>
-                        <span className="text-gray-300">|</span>
-                        <span className="text-gray-500 flex items-center gap-1.5">
-                          Color:{" "}
-                          <span className="flex items-center gap-1">
-                            {selectedVariant.colorCode && (
-                              <span
-                                className="inline-block w-3 h-3 rounded-full border border-gray-200"
-                                style={{ backgroundColor: selectedVariant.colorCode }}
-                              />
-                            )}
-                            <span className="text-gray-800 font-medium capitalize">
-                              {selectedVariant.color}
-                            </span>
+              <div className="space-y-4">
+                {items.map((item) => {
+                  const unitPrice = item.product.discountPrice ?? item.product.marketPrice;
+                  const gstRate = (item.product.gstPercent ?? 0) / 100;
+                  const unitPriceWithGst = parseFloat((unitPrice * (1 + gstRate)).toFixed(2));
+                  return (
+                    <div key={item.variantSizeId} className="flex gap-4 pb-4 border-b border-[#F0E8DE] last:border-0 last:pb-0">
+                      {item.imageUrl ? (
+                        <img
+                          src={item.imageUrl}
+                          alt={item.product.title}
+                          className="w-16 h-16 object-cover rounded-sm border border-[#E8DDD0] shrink-0"
+                        />
+                      ) : (
+                        <div className="w-16 h-16 bg-[#F5EFE7] rounded-sm border border-[#E8DDD0] shrink-0 flex items-center justify-center">
+                          <ShoppingBag size={16} className="text-[#9A7A46]/40" />
+                        </div>
+                      )}
+                      <div className="flex-1 min-w-0">
+                        <p className="font-serif font-semibold text-[#2A1810] text-sm leading-snug mb-1 truncate">
+                          {item.product.title}
+                        </p>
+                        <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5 text-xs text-gray-500">
+                          <span>
+                            Qty: <span className="text-gray-800 font-medium">{item.quantity}</span>
                           </span>
-                        </span>
-                      </>
-                    )}
-                    {selectedSize && (
-                      <>
-                        <span className="text-gray-300">|</span>
-                        <span className="text-gray-500">
-                          Size:{" "}
-                          <span className="text-gray-800 font-medium">
-                            {selectedSize.size}
-                          </span>
-                        </span>
-                      </>
-                    )}
-                    <span className="text-gray-300">|</span>
-                    <span className="text-gray-500">
-                      Unit:{" "}
-                      <span className="text-gray-800 font-medium">
-                        {formatINR(unitPrice)}
-                      </span>
-                    </span>
-                  </div>
-                  {product.discountPrice && (
-                    <p className="text-[11px] text-emerald-600 mt-1 tracking-wide">
-                      You save{" "}
-                      {formatINR((product.marketPrice - unitPrice) * quantity)}{" "}
-                      on this order
-                    </p>
-                  )}
-                </div>
-                <div className="text-right shrink-0">
-                  <p className="font-bold text-[#2A1810] text-lg">
-                    {formatINR(subtotal)}
-                  </p>
-                </div>
+                          {item.colorLabel && (
+                            <>
+                              <span className="text-gray-300">|</span>
+                              <span className="flex items-center gap-1">
+                                {item.colorCode && (
+                                  <span
+                                    className="inline-block w-2.5 h-2.5 rounded-full border border-gray-200"
+                                    style={{ backgroundColor: item.colorCode }}
+                                  />
+                                )}
+                                <span className="capitalize">{item.colorLabel}</span>
+                              </span>
+                            </>
+                          )}
+                          {item.sizeLabel && (
+                            <>
+                              <span className="text-gray-300">|</span>
+                              <span>
+                                Size: <span className="text-gray-800 font-medium">{item.sizeLabel}</span>
+                              </span>
+                            </>
+                          )}
+                        </div>
+                      </div>
+                      <div className="text-right shrink-0">
+                        <p className="font-bold text-[#2A1810] text-sm">
+                          {formatINR(parseFloat((unitPriceWithGst * item.quantity).toFixed(2)))}
+                        </p>
+                        <p className="text-[11px] text-gray-400">{formatINR(unitPriceWithGst)} each</p>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </section>
 
@@ -390,27 +368,19 @@ const CheckoutPage = () => {
                           {addr.postalCode}, {addr.country}
                         </p>
                       </div>
-                      <MapPin
-                        size={14}
-                        className="text-[#9A7A46] shrink-0 mt-1"
-                      />
+                      <MapPin size={14} className="text-[#9A7A46] shrink-0 mt-1" />
                     </label>
                   ))}
                 </div>
               )}
 
-              {/* Add new address toggle */}
               <button
                 onClick={() => setShowAddressForm((v) => !v)}
                 className="flex items-center gap-2 text-xs tracking-[0.15em] uppercase text-[#9A7A46] font-medium hover:text-[#B8936A] transition-colors"
               >
                 <Plus size={13} />
                 Add New Address
-                {showAddressForm ? (
-                  <ChevronUp size={12} />
-                ) : (
-                  <ChevronDown size={12} />
-                )}
+                {showAddressForm ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
               </button>
 
               {showAddressForm && (
@@ -418,13 +388,9 @@ const CheckoutPage = () => {
                   onSubmit={handleSaveAddress}
                   className="mt-4 space-y-3 border-t border-[#E8DDD0] pt-4"
                 >
-                  {/* Label */}
                   <div>
                     <label className="text-[10px] tracking-[0.2em] uppercase text-[#9A7A46] font-medium">
-                      Label{" "}
-                      <span className="text-gray-400 normal-case tracking-normal">
-                        (optional)
-                      </span>
+                      Label <span className="text-gray-400 normal-case tracking-normal">(optional)</span>
                     </label>
                     <input
                       name="label"
@@ -434,8 +400,6 @@ const CheckoutPage = () => {
                       className="mt-1 w-full border border-[#E8DDD0] rounded-sm px-3 py-2 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:border-[#9A7A46] transition-colors"
                     />
                   </div>
-
-                  {/* Line 1 */}
                   <div>
                     <label className="text-[10px] tracking-[0.2em] uppercase text-[#9A7A46] font-medium">
                       Street Address <span className="text-red-400">*</span>
@@ -449,14 +413,9 @@ const CheckoutPage = () => {
                       className="mt-1 w-full border border-[#E8DDD0] rounded-sm px-3 py-2 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:border-[#9A7A46] transition-colors"
                     />
                   </div>
-
-                  {/* Line 2 */}
                   <div>
                     <label className="text-[10px] tracking-[0.2em] uppercase text-[#9A7A46] font-medium">
-                      Landmark{" "}
-                      <span className="text-gray-400 normal-case tracking-normal">
-                        (optional)
-                      </span>
+                      Landmark <span className="text-gray-400 normal-case tracking-normal">(optional)</span>
                     </label>
                     <input
                       name="line2"
@@ -466,8 +425,6 @@ const CheckoutPage = () => {
                       className="mt-1 w-full border border-[#E8DDD0] rounded-sm px-3 py-2 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:border-[#9A7A46] transition-colors"
                     />
                   </div>
-
-                  {/* City + State */}
                   <div className="grid grid-cols-2 gap-3">
                     <div>
                       <label className="text-[10px] tracking-[0.2em] uppercase text-[#9A7A46] font-medium">
@@ -495,8 +452,6 @@ const CheckoutPage = () => {
                       />
                     </div>
                   </div>
-
-                  {/* Country + Postal */}
                   <div className="grid grid-cols-2 gap-3">
                     <div>
                       <label className="text-[10px] tracking-[0.2em] uppercase text-[#9A7A46] font-medium">
@@ -525,8 +480,6 @@ const CheckoutPage = () => {
                       />
                     </div>
                   </div>
-
-                  {/* Set as default */}
                   <label className="flex items-center gap-2 cursor-pointer">
                     <input
                       type="checkbox"
@@ -535,11 +488,8 @@ const CheckoutPage = () => {
                       onChange={handleAddressFormChange}
                       className="accent-[#9A7A46]"
                     />
-                    <span className="text-xs text-gray-600 tracking-wide">
-                      Set as default address
-                    </span>
+                    <span className="text-xs text-gray-600 tracking-wide">Set as default address</span>
                   </label>
-
                   <div className="flex gap-3 pt-1">
                     <button
                       type="submit"
@@ -547,19 +497,14 @@ const CheckoutPage = () => {
                       className="flex items-center gap-2 px-5 py-2.5 bg-[#2A1810] text-white text-xs tracking-[0.2em] uppercase font-medium hover:bg-[#9A7A46] transition-all rounded-sm disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       {addAddressMutation.isPending ? (
-                        <>
-                          <Loader2 size={12} className="animate-spin" /> Saving…
-                        </>
+                        <><Loader2 size={12} className="animate-spin" /> Saving…</>
                       ) : (
                         "Save Address"
                       )}
                     </button>
                     <button
                       type="button"
-                      onClick={() => {
-                        setShowAddressForm(false);
-                        setAddressForm(emptyAddressForm);
-                      }}
+                      onClick={() => { setShowAddressForm(false); setAddressForm(emptyAddressForm); }}
                       className="px-4 py-2.5 border border-[#E8DDD0] text-gray-500 text-xs tracking-[0.2em] uppercase font-medium hover:border-gray-400 transition-all rounded-sm"
                     >
                       Cancel
@@ -568,54 +513,28 @@ const CheckoutPage = () => {
                 </form>
               )}
             </section>
+
             {/* Payment method */}
             <section className="bg-white border border-[#E8DDD0] rounded-sm p-5">
               <h2 className="text-[11px] tracking-[0.25em] uppercase font-semibold text-gray-700 mb-4">
                 Payment Method
               </h2>
               <div className="space-y-2">
-                <label
-                  className={`flex items-center gap-3 p-3.5 border rounded-sm cursor-pointer transition-all ${paymentMethod === "ONLINE" ? "border-[#9A7A46] bg-[#F5EFE7]" : "border-[#E8DDD0] hover:border-[#9A7A46]/50"}`}
-                >
+                <label className="flex items-center gap-3 p-3.5 border border-[#9A7A46] bg-[#F5EFE7] rounded-sm cursor-pointer">
                   <input
                     type="radio"
                     name="paymentMethod"
                     value="ONLINE"
-                    checked={paymentMethod === "ONLINE"}
-                    onChange={() => setPaymentMethod("ONLINE")}
+                    checked
+                    readOnly
                     className="accent-[#9A7A46]"
                   />
                   <CreditCard size={15} className="text-[#9A7A46] shrink-0" />
                   <div>
-                    <p className="text-sm font-medium text-gray-800">
-                      Online Payment
-                    </p>
-                    <p className="text-[11px] text-gray-400 mt-0.5">
-                      Credit / Debit card, UPI, Net banking
-                    </p>
+                    <p className="text-sm font-medium text-gray-800">Online Payment</p>
+                    <p className="text-[11px] text-gray-400 mt-0.5">Credit / Debit card, UPI, Net banking</p>
                   </div>
                 </label>
-                {/* <label
-                  className={`flex items-center gap-3 p-3.5 border rounded-sm cursor-pointer transition-all ${paymentMethod === "COD" ? "border-[#9A7A46] bg-[#F5EFE7]" : "border-[#E8DDD0] hover:border-[#9A7A46]/50"}`}
-                >
-                  <input
-                    type="radio"
-                    name="paymentMethod"
-                    value="COD"
-                    checked={paymentMethod === "COD"}
-                    onChange={() => setPaymentMethod("COD")}
-                    className="accent-[#9A7A46]"
-                  />
-                  <Truck size={15} className="text-[#9A7A46] shrink-0" />
-                  <div>
-                    <p className="text-sm font-medium text-gray-800">
-                      Cash on Delivery
-                    </p>
-                    <p className="text-[11px] text-gray-400 mt-0.5">
-                      Pay when your order arrives
-                    </p>
-                  </div>
-                </label> */}
               </div>
             </section>
           </div>
@@ -629,42 +548,26 @@ const CheckoutPage = () => {
 
               <div className="space-y-2.5 text-sm">
                 <div className="flex justify-between text-gray-600">
-                  <span>
-                    Subtotal ({quantity} item{quantity > 1 ? "s" : ""})
-                  </span>
-                  <span className="font-medium text-gray-800">
-                    {formatINR(subtotal)}
-                  </span>
-                </div>
-                <div className="flex justify-between text-gray-600">
-                  <span>Tax ({product.gstPercent ?? 0}% GST)</span>
-                  <span className="font-medium text-gray-800">
-                    {formatINR(tax)}
-                  </span>
+                  <span>Subtotal ({totalQty} item{totalQty > 1 ? "s" : ""})</span>
+                  <span className="font-medium text-gray-800">{formatINR(parseFloat((subtotal + taxAmount).toFixed(2)))}</span>
                 </div>
                 <div className="flex justify-between text-gray-600">
                   <span>Shipping</span>
-                  <span
-                    className={`font-medium ${shipping === 0 ? "text-emerald-600" : "text-gray-800"}`}
-                  >
+                  <span className={`font-medium ${shipping === 0 ? "text-emerald-600" : "text-gray-800"}`}>
                     {shipping === 0 ? "Free" : formatINR(shipping)}
                   </span>
                 </div>
                 {shipping > 0 && (
                   <p className="text-[10px] text-gray-400 -mt-1">
-                    Add {formatINR(SHIPPING_FREE_THRESHOLD - subtotal)} more for
-                    free shipping
+                    Add {formatINR(SHIPPING_FREE_THRESHOLD - subtotal)} more for free shipping
                   </p>
                 )}
                 <div className="border-t border-[#E8DDD0] pt-2.5 flex justify-between">
                   <span className="font-semibold text-[#2A1810]">Total</span>
-                  <span className="font-bold text-[#2A1810] text-lg">
-                    {formatINR(total)}
-                  </span>
+                  <span className="font-bold text-[#2A1810] text-lg">{formatINR(total)}</span>
                 </div>
               </div>
 
-              {/* Selected address preview */}
               {activeAddress && (
                 <div className="mt-4 p-3 bg-[#F5EFE7] border border-[#E8DDD0] rounded-sm">
                   <div className="flex items-center gap-1.5 mb-1">
@@ -679,40 +582,22 @@ const CheckoutPage = () => {
                   </p>
                   <p className="text-xs text-gray-500">
                     {activeAddress.city}
-                    {activeAddress.state
-                      ? `, ${activeAddress.state}`
-                      : ""} — {activeAddress.postalCode}
+                    {activeAddress.state ? `, ${activeAddress.state}` : ""} — {activeAddress.postalCode}
                   </p>
                 </div>
               )}
 
               <button
                 onClick={handlePlaceOrder}
-                disabled={
-                  orderMutation.isPending ||
-                  isPaymentProcessing ||
-                  !selectedAddressId
-                }
+                disabled={orderMutation.isPending || isPaymentProcessing || !selectedAddressId}
                 className="mt-5 w-full flex items-center justify-center gap-2.5 py-3.5 bg-[#2A1810] text-white text-xs tracking-[0.2em] uppercase font-medium hover:bg-[#9A7A46] transition-all duration-200 rounded-sm disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_4px_20px_rgba(0,0,0,0.12)]"
               >
                 {orderMutation.isPending ? (
-                  <>
-                    <Loader2 size={14} className="animate-spin" /> Creating
-                    Order…
-                  </>
+                  <><Loader2 size={14} className="animate-spin" /> Creating Order…</>
                 ) : isPaymentProcessing ? (
-                  <>
-                    <Loader2 size={14} className="animate-spin" /> Processing
-                    Payment…
-                  </>
+                  <><Loader2 size={14} className="animate-spin" /> Processing Payment…</>
                 ) : (
-                  <>
-                    <CheckCircle2 size={14} />{" "}
-                    {
-                      // paymentMethod === "COD" ? "Place Order" :
-                      "Proceed to Payment"
-                    }
-                  </>
+                  <><CheckCircle2 size={14} /> Proceed to Payment</>
                 )}
               </button>
 
