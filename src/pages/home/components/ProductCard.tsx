@@ -15,7 +15,10 @@ const ProductCard = ({ product }: ProductCardProps) => {
   const primaryImage = firstVariantImages[0];
   const hoverImage = firstVariantImages[1];
 
+  const gstRate = (product.gstPercent ?? 0) / 100;
   const finalPrice = product.discountPrice ?? product.marketPrice;
+  const finalPriceWithGst = parseFloat((finalPrice * (1 + gstRate)).toFixed(2));
+  const marketPriceWithGst = parseFloat((product.marketPrice * (1 + gstRate)).toFixed(2));
   const discount =
     product.discountPrice && product.marketPrice > product.discountPrice
       ? Math.round(
@@ -149,16 +152,16 @@ const ProductCard = ({ product }: ProductCardProps) => {
         {/* Price row */}
         <div className="flex items-baseline gap-1 md:gap-2 mt-3">
           <span className="text-[15px] md:text-base font-semibold text-[#3D2B1F] tracking-tight">
-            {formatINR(finalPrice)}
+            {formatINR(finalPriceWithGst)}
           </span>
           {product.discountPrice && (
             <span className="text-[11px] md:text-sm text-gray-400 line-through font-normal">
-              {formatINR(product.marketPrice)}
+              {formatINR(marketPriceWithGst)}
             </span>
           )}
           {discount && (
             <span className="text-[11px] md:text-xs text-emerald-600 font-medium ml-auto">
-              Save {formatINR(product.marketPrice - finalPrice)}
+              Save {formatINR(parseFloat((marketPriceWithGst - finalPriceWithGst).toFixed(2)))}
             </span>
           )}
         </div>

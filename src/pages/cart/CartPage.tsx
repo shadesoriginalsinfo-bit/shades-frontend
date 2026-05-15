@@ -20,6 +20,7 @@ const CartItemRow = ({ item }: { item: CartItem }) => {
       ?.sizes.find((s) => s.id === item.variantSizeId)?.stock ?? 99;
 
   const unitPrice = item.product.discountPrice ?? item.product.marketPrice;
+  const unitPriceWithGst = parseFloat((unitPrice * (1 + (item.product.gstPercent ?? 0) / 100)).toFixed(2));
 
   return (
     <div className="flex gap-4 py-5 border-b border-[#E8DDD0] last:border-0">
@@ -58,7 +59,7 @@ const CartItemRow = ({ item }: { item: CartItem }) => {
             </>
           )}
           <span className="text-gray-300">|</span>
-          <span>{formatINR(unitPrice)} each</span>
+          <span>{formatINR(unitPriceWithGst)} each</span>
         </div>
 
         <div className="flex items-center justify-between gap-3 flex-wrap">
@@ -85,7 +86,7 @@ const CartItemRow = ({ item }: { item: CartItem }) => {
 
           <div className="flex items-center gap-3">
             <span className="font-bold text-[#2A1810] text-sm">
-              {formatINR(unitPrice * item.quantity)}
+              {formatINR(parseFloat((unitPriceWithGst * item.quantity).toFixed(2)))}
             </span>
             <button
               onClick={() => removeItem(item.variantSizeId)}
@@ -208,11 +209,7 @@ const CartPage = () => {
               <div className="space-y-2.5 text-sm">
                 <div className="flex justify-between text-gray-600">
                   <span>Subtotal ({itemCount} item{itemCount !== 1 ? "s" : ""})</span>
-                  <span className="font-medium text-gray-800">{formatINR(subtotal)}</span>
-                </div>
-                <div className="flex justify-between text-gray-600">
-                  <span>Tax (GST)</span>
-                  <span className="font-medium text-gray-800">{formatINR(taxAmount)}</span>
+                  <span className="font-medium text-gray-800">{formatINR(parseFloat((subtotal + taxAmount).toFixed(2)))}</span>
                 </div>
                 <div className="flex justify-between text-gray-600">
                   <span>Shipping</span>

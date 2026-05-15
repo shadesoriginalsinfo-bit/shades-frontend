@@ -46,6 +46,7 @@ const CartFloatingBar = () => {
     <div className="overflow-y-auto space-y-3 pr-0.5" style={{ maxHeight: "300px" }}>
       {items.map((item) => {
         const unitPrice = item.product.discountPrice ?? item.product.marketPrice;
+        const unitPriceWithGst = parseFloat((unitPrice * (1 + (item.product.gstPercent ?? 0) / 100)).toFixed(2));
         return (
           <div
             key={item.variantSizeId}
@@ -90,7 +91,7 @@ const CartFloatingBar = () => {
             </div>
             <div className="flex items-center gap-1.5 shrink-0">
               <span className="text-xs font-bold text-[#2A1810]">
-                {formatINR(unitPrice * item.quantity)}
+                {formatINR(parseFloat((unitPriceWithGst * item.quantity).toFixed(2)))}
               </span>
               <button
                 onClick={() => removeItem(item.variantSizeId)}
@@ -110,11 +111,7 @@ const CartFloatingBar = () => {
     <div className="border-t border-[#E8DDD0] pt-2.5 mt-2 space-y-1 text-[11px]">
       <div className="flex justify-between text-gray-500">
         <span>Subtotal</span>
-        <span className="font-medium text-gray-700">{formatINR(subtotal)}</span>
-      </div>
-      <div className="flex justify-between text-gray-500">
-        <span>Tax (GST)</span>
-        <span className="font-medium text-gray-700">{formatINR(taxAmount)}</span>
+        <span className="font-medium text-gray-700">{formatINR(parseFloat((subtotal + taxAmount).toFixed(2)))}</span>
       </div>
       <div className="flex justify-between text-gray-500">
         <span>Shipping</span>

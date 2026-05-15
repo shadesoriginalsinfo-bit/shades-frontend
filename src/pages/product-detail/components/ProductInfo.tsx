@@ -123,7 +123,10 @@ const ProductInfo = ({ product, selectedVariantIdx, onVariantChange }: ProductIn
   //   }
   // };
 
+  const gstRate = (product.gstPercent ?? 0) / 100;
   const finalPrice = product.discountPrice ?? product.marketPrice;
+  const finalPriceWithGst = parseFloat((finalPrice * (1 + gstRate)).toFixed(2));
+  const marketPriceWithGst = parseFloat((product.marketPrice * (1 + gstRate)).toFixed(2));
   const discount =
     product.discountPrice && product.marketPrice > product.discountPrice
       ? Math.round(
@@ -229,12 +232,12 @@ const ProductInfo = ({ product, selectedVariantIdx, onVariantChange }: ProductIn
       {/* ── Price block ── */}
       <div className="flex items-end gap-3 flex-wrap">
         <span className="text-3xl font-bold text-[#2A1810] tracking-tight">
-          {formatINR(finalPrice)}
+          {formatINR(finalPriceWithGst)}
         </span>
         {product.discountPrice && (
           <>
             <span className="text-lg text-gray-400 line-through font-normal mb-0.5">
-              {formatINR(product.marketPrice)}
+              {formatINR(marketPriceWithGst)}
             </span>
             <span className="mb-1 inline-flex items-center gap-1 px-2.5 py-1 bg-emerald-50 border border-emerald-200 text-emerald-700 text-[11px] font-semibold tracking-wider rounded-sm">
               {discount}% OFF
@@ -248,7 +251,7 @@ const ProductInfo = ({ product, selectedVariantIdx, onVariantChange }: ProductIn
         <p className="text-xs text-emerald-600 font-medium -mt-1 tracking-wide">
           You save{" "}
           <span className="font-bold">
-            {formatINR(product.marketPrice - finalPrice)}
+            {formatINR(parseFloat((marketPriceWithGst - finalPriceWithGst).toFixed(2)))}
           </span>{" "}
           on this order
         </p>

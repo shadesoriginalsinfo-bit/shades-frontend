@@ -252,6 +252,8 @@ const CheckoutPage = () => {
               <div className="space-y-4">
                 {items.map((item) => {
                   const unitPrice = item.product.discountPrice ?? item.product.marketPrice;
+                  const gstRate = (item.product.gstPercent ?? 0) / 100;
+                  const unitPriceWithGst = parseFloat((unitPrice * (1 + gstRate)).toFixed(2));
                   return (
                     <div key={item.variantSizeId} className="flex gap-4 pb-4 border-b border-[#F0E8DE] last:border-0 last:pb-0">
                       {item.imageUrl ? (
@@ -299,9 +301,9 @@ const CheckoutPage = () => {
                       </div>
                       <div className="text-right shrink-0">
                         <p className="font-bold text-[#2A1810] text-sm">
-                          {formatINR(unitPrice * item.quantity)}
+                          {formatINR(parseFloat((unitPriceWithGst * item.quantity).toFixed(2)))}
                         </p>
-                        <p className="text-[11px] text-gray-400">{formatINR(unitPrice)} each</p>
+                        <p className="text-[11px] text-gray-400">{formatINR(unitPriceWithGst)} each</p>
                       </div>
                     </div>
                   );
@@ -547,11 +549,7 @@ const CheckoutPage = () => {
               <div className="space-y-2.5 text-sm">
                 <div className="flex justify-between text-gray-600">
                   <span>Subtotal ({totalQty} item{totalQty > 1 ? "s" : ""})</span>
-                  <span className="font-medium text-gray-800">{formatINR(subtotal)}</span>
-                </div>
-                <div className="flex justify-between text-gray-600">
-                  <span>Tax (GST)</span>
-                  <span className="font-medium text-gray-800">{formatINR(taxAmount)}</span>
+                  <span className="font-medium text-gray-800">{formatINR(parseFloat((subtotal + taxAmount).toFixed(2)))}</span>
                 </div>
                 <div className="flex justify-between text-gray-600">
                   <span>Shipping</span>

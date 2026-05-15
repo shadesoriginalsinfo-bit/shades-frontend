@@ -229,8 +229,7 @@ const OrdersTab = () => {
                   {/* Price breakdown */}
                   <div className="border-t border-[#E8DDD0] pt-3 space-y-1.5">
                     {[
-                      { label: "Subtotal", value: order.subtotal },
-                      { label: "Tax (GST)", value: order.taxAmount },
+                      { label: "Subtotal", value: order.subtotal + order.taxAmount },
                       { label: "Shipping", value: order.shippingAmount },
                       ...(order.discountAmount > 0
                         ? [{ label: "Discount", value: -order.discountAmount }]

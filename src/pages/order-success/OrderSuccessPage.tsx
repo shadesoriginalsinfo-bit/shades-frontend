@@ -122,13 +122,7 @@ const OrderSuccessPage = () => {
               <div className="flex justify-between text-gray-600">
                 <span>Subtotal</span>
                 <span className="font-medium text-gray-800">
-                  {formatINR(Number(order.subtotal))}
-                </span>
-              </div>
-              <div className="flex justify-between text-gray-600">
-                <span>Tax (18% GST)</span>
-                <span className="font-medium text-gray-800">
-                  {formatINR(Number(order.taxAmount))}
+                  {formatINR(Number(order.subtotal) + Number(order.taxAmount))}
                 </span>
               </div>
               <div className="flex justify-between text-gray-600">
