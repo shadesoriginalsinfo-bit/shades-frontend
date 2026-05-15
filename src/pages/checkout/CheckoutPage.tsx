@@ -18,6 +18,7 @@ import {
   createOrder,
   initiatePayment,
   verifyPayment,
+  getAppConfig,
 } from "@/lib/api";
 import { handleApiError } from "@/utils/handleApiError";
 import { useRazorpay } from "@/hooks/useRazorpay";
@@ -26,9 +27,6 @@ import type { ICreateAddress } from "@/types/address";
 import Header from "@/components/Header";
 import Footer from "../home/components/Footer";
 import { useCart, type CartItem } from "@/context/CartContext";
-
-const SHIPPING_FREE_THRESHOLD = 500;
-const SHIPPING_FLAT = 70;
 
 const formatINR = (amount: number) => `₹${amount.toLocaleString("en-IN")}`;
 
@@ -77,6 +75,15 @@ const CheckoutPage = () => {
   }
 
   const { items } = state;
+
+  const { data: appConfig } = useQuery({
+    queryKey: ["app-config"],
+    queryFn: getAppConfig,
+    staleTime: 5 * 60 * 1000,
+  });
+
+  const SHIPPING_FLAT = parseFloat(appConfig?.SHIPPING_FLAT ?? "70");
+  const SHIPPING_FREE_THRESHOLD = parseFloat(appConfig?.SHIPPING_FREE_THRESHOLD ?? "500");
 
   // Aggregate totals
   let subtotal = 0;

@@ -13,6 +13,7 @@ import DashboardPage from "./pages/admin/dashboard";
 import OrdersPage from "./pages/admin/orders";
 import UsersPage from "./pages/admin/users";
 import ProductsPage from "./pages/admin/products";
+import SettingsPage from "./pages/admin/settings";
 import ShopPage from "./pages/shop";
 import ProductDetailPage from "./pages/product-detail/ProductDetailPage";
 import CheckoutPage from "./pages/checkout/CheckoutPage";
@@ -49,6 +50,7 @@ function App() {
               <Route path="/admin/orders" element={<OrdersPage />} />
               <Route path="/admin/products" element={<ProductsPage />} />
               <Route path="/admin/users" element={<UsersPage />} />
+              <Route path="/admin/settings" element={<SettingsPage />} />
             </Route>
           </Route>
         </Route>
