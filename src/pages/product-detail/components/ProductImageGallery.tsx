@@ -73,8 +73,8 @@ const ProductImageGallery = ({ images, title }: ProductImageGalleryProps) => {
             }`}
           >
             <img
-              src={img.url}
-              alt={img.altText ?? `${title} image ${i + 1}`}
+              src={img?.url}
+              alt={img?.altText ?? `${title} image ${i + 1}`}
               className="w-full h-full object-cover"
             />
             {i === activeIdx && (
@@ -94,8 +94,8 @@ const ProductImageGallery = ({ images, title }: ProductImageGalleryProps) => {
           onMouseMove={handleMouseMove}
         >
           <img
-            src={active.url}
-            alt={active.altText ?? title}
+            src={active?.url}
+            alt={active?.altText ?? title}
             className={`w-full h-full object-cover transition-transform duration-100 ${
               zoomed ? "scale-[1.85]" : "scale-100"
             }`}

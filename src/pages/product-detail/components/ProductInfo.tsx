@@ -1,9 +1,7 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
-  // Heart,
-  // ShoppingBag,
-  // Share2,
+  ShoppingBag,
   ChevronDown,
   ChevronUp,
   Truck,
@@ -12,9 +10,11 @@ import {
   BadgeCheck,
   Minus,
   Plus,
+  Check,
 } from "lucide-react";
 import { type IProduct } from "@/types/product";
-import { useAuthUser } from "@/hooks/useAuth";
+import { useCart } from "@/context/CartContext";
+import toast from "react-hot-toast";
 
 interface ProductInfoProps {
   product: IProduct;
@@ -69,8 +69,8 @@ const Accordion = ({
 const ProductInfo = ({ product, selectedVariantIdx, onVariantChange }: ProductInfoProps) => {
   const [qty, setQty] = useState(1);
   const [selectedSizeId, setSelectedSizeId] = useState<string | null>(null);
-  const navigate = useNavigate();
-  const { data: user, isLoading: authLoading } = useAuthUser();
+  const [addedToCart, setAddedToCart] = useState(false);
+  const { addItem } = useCart();
 
   const selectedVariant = product.variants[selectedVariantIdx];
 
@@ -78,25 +78,50 @@ const ProductInfo = ({ product, selectedVariantIdx, onVariantChange }: ProductIn
     onVariantChange(idx);
     setSelectedSizeId(null);
     setQty(1);
+    setAddedToCart(false);
   };
 
   const handleSizeSelect = (sizeId: string) => {
     setSelectedSizeId(sizeId);
     setQty(1);
+    setAddedToCart(false);
   };
 
   const selectedSize = selectedVariant?.sizes.find((s) => s.id === selectedSizeId) ?? null;
   const variantStock = selectedVariant?.sizes.reduce((s, sz) => s + sz.stock, 0) ?? 0;
   const maxQty = selectedSize ? selectedSize.stock : variantStock;
 
-  const handleBuyNow = () => {
-    const checkoutState = { product, quantity: qty, variantId: selectedVariant?.id, sizeId: selectedSizeId };
-    if (user) {
-      navigate("/checkout", { state: checkoutState });
-    } else {
-      navigate("/login", { state: { from: "/checkout", checkoutState } });
+  const sortedImages = selectedVariant?.images.sort((a, b) => a.position - b.position) ?? [];
+
+  const buildCartItem = () => ({
+    variantSizeId: selectedSizeId!,
+    quantity: qty,
+    product,
+    variantId: selectedVariant?.id ?? "",
+    sizeLabel: selectedSize?.size ?? "",
+    colorLabel: selectedVariant?.color ?? "",
+    colorCode: selectedVariant?.colorCode,
+    imageUrl: sortedImages[0]?.url,
+  });
+
+  const handleAddToCart = () => {
+    if (!selectedSizeId) {
+      toast.error("Please select a size first");
+      return;
     }
+    addItem(buildCartItem());
+    setAddedToCart(true);
+    toast.success("Added to Cart");
   };
+
+  // const handleBuyNow = () => {
+  //   const checkoutState: CheckoutState = { items: [buildCartItem()] };
+  //   if (user) {
+  //     navigate("/checkout", { state: checkoutState });
+  //   } else {
+  //     navigate("/login", { state: { from: "/checkout", checkoutState } });
+  //   }
+  // };
 
   const finalPrice = product.discountPrice ?? product.marketPrice;
   const discount =
@@ -353,48 +378,34 @@ const ProductInfo = ({ product, selectedVariantIdx, onVariantChange }: ProductIn
       )}
 
       {/* ── Action buttons ── */}
-      <div className="flex items-stretch gap-3">
-        {/* Add to cart */}
-        {/* <button
-          disabled={isOutOfStock}
-          className="flex-1 flex items-center justify-center gap-2.5 py-3.5 bg-[#1a1a1a] text-white text-xs tracking-[0.2em] uppercase font-medium hover:bg-[#9A7A46] transition-all duration-200 rounded-sm disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_4px_20px_rgba(0,0,0,0.15)]"
-        >
-          <ShoppingBag size={15} />
-          {isOutOfStock ? "Out of Stock" : "Add to Cart"}
-        </button> */}
-
-        {/* Wishlist */}
-        {/* <button
-          onClick={() => setWishlisted((w) => !w)}
-          aria-label={wishlisted ? "Remove from wishlist" : "Add to wishlist"}
-          className={`w-12 flex items-center justify-center border rounded-sm transition-all duration-200 ${
-            wishlisted
-              ? "border-red-300 bg-red-50 text-red-500 shadow-inner"
-              : "border-[#E8DDD0] text-gray-400 hover:border-[#9A7A46] hover:text-[#9A7A46] hover:bg-[#F5EFE7]"
-          }`}
-        >
-          <Heart size={16} fill={wishlisted ? "currentColor" : "none"} />
-        </button> */}
-
-        {/* Share */}
-        {/* <button
-          onClick={handleShare}
-          aria-label="Share product"
-          className="w-12 flex items-center justify-center border border-[#E8DDD0] text-gray-400 hover:border-[#9A7A46] hover:text-[#9A7A46] hover:bg-[#F5EFE7] rounded-sm transition-all duration-200"
-        >
-          <Share2 size={15} />
-        </button> */}
-      </div>
-
-      {/* ── Buy now ── */}
       {!isOutOfStock && (
-        <button
-          onClick={handleBuyNow}
-          disabled={authLoading || sizeRequired}
-          className="w-full py-3.5 border border-[#9A7A46] text-[#9A7A46] text-xs tracking-[0.2em] uppercase font-medium hover:bg-[#9A7A46] hover:text-white transition-all duration-200 rounded-sm disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {authLoading ? "Please wait…" : sizeRequired ? "Select a size to continue" : "Buy Now"}
-        </button>
+        <div className="flex flex-col gap-3">
+          {/* Add to Cart */}
+          <button
+            onClick={handleAddToCart}
+            disabled={sizeRequired}
+            className={`w-full flex items-center justify-center gap-2.5 py-3.5 text-xs tracking-[0.2em] uppercase font-medium transition-all duration-200 rounded-sm disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_4px_20px_rgba(0,0,0,0.10)] ${
+              addedToCart
+                ? "bg-emerald-600 text-white"
+                : "bg-[#2A1810] text-white hover:bg-[#9A7A46]"
+            }`}
+          >
+            {addedToCart ? (
+              <><Check size={14} /> Added to Cart</>
+            ) : (
+              <><ShoppingBag size={14} />{sizeRequired ? "Select a size to add" : "Add to Cart"}</>
+            )}
+          </button>
+
+          {/* Buy Now
+          <button
+            onClick={handleBuyNow}
+            disabled={authLoading || sizeRequired}
+            className="w-full py-3.5 border border-[#9A7A46] text-[#9A7A46] text-xs tracking-[0.2em] uppercase font-medium hover:bg-[#9A7A46] hover:text-white transition-all duration-200 rounded-sm disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {authLoading ? "Please wait…" : sizeRequired ? "Select a size to continue" : "Buy Now"}
+          </button> */}
+        </div>
       )}
 
       {/* ── Trust icons row ── */}

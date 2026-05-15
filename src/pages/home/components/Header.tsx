@@ -14,6 +14,7 @@ import { useAuthUser } from "@/hooks/useAuth";
 import { useLogout } from "@/hooks/useLogout";
 import dummyAvatar from "@/assets/profile.webp";
 import { useCategories } from "@/hooks/useCategories";
+import { useCart } from "@/context/CartContext";
 
 interface NavItem {
   label: string;
@@ -100,7 +101,7 @@ const Header = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // const cartCount = 2;
+  const { itemCount: cartCount } = useCart();
   const avatar = user?.avatar ? user.avatar : dummyAvatar;
 
   return (
@@ -204,18 +205,18 @@ const Header = () => {
               )}
 
               {/* Cart */}
-              {/* <Link
+              <Link
                 to="/cart"
-                className="relative flex items-center gap-2 bg-[#1a1a1a] text-white text-xs px-4 py-2.5 hover:bg-[#9A7A46] transition-all duration-200 tracking-wider rounded-sm"
+                className="relative hidden md:flex items-center gap-2 bg-[#1a1a1a] text-white text-xs px-4 py-2.5 hover:bg-[#9A7A46] transition-all duration-200 tracking-wider rounded-sm"
               >
                 <ShoppingBag size={14} />
-                <span className="hidden sm:inline">Basket</span>
+                <span>Cart</span>
                 {cartCount > 0 && (
                   <span className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-[#9A7A46] text-white text-[9px] flex items-center justify-center font-bold">
-                    {cartCount}
+                    {cartCount > 99 ? "99+" : cartCount}
                   </span>
                 )}
-              </Link> */}
+              </Link>
 
               {/* Mobile menu toggle */}
               <button
@@ -281,9 +282,14 @@ const Header = () => {
               )}
               <Link
                 to="/cart"
-                className="flex items-center gap-2 bg-[#1a1a1a] text-white text-xs tracking-wider px-4 py-2.5 rounded-sm"
+                className="relative flex items-center gap-2 bg-[#1a1a1a] text-white text-xs tracking-wider px-4 py-2.5 rounded-sm"
               >
                 <ShoppingBag size={14} /> Cart
+                {cartCount > 0 && (
+                  <span className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-[#9A7A46] text-white text-[9px] flex items-center justify-center font-bold">
+                    {cartCount > 99 ? "99+" : cartCount}
+                  </span>
+                )}
               </Link>
             </div>
           </div>
