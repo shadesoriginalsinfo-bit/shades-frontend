@@ -1,13 +1,12 @@
 import { Link, useNavigate } from "react-router-dom";
 import { Minus, Plus, Trash2, ShoppingBag, ArrowRight } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
 import { useCart, type CartItem } from "@/context/CartContext";
 import { useAuthUser } from "@/hooks/useAuth";
+import { getAppConfig } from "@/lib/api";
 import Header from "@/pages/home/components/Header";
 import Footer from "@/pages/home/components/Footer";
 import type { CheckoutState } from "@/pages/checkout/CheckoutPage";
-
-const SHIPPING_FREE_THRESHOLD = 500;
-const SHIPPING_FLAT = 70;
 
 const formatINR = (amount: number) => `₹${amount.toLocaleString("en-IN")}`;
 
@@ -106,6 +105,14 @@ const CartPage = () => {
   const { items, clearCart, itemCount } = useCart();
   const { data: user } = useAuthUser();
   const navigate = useNavigate();
+
+  const { data: appConfig } = useQuery({
+    queryKey: ["app-config"],
+    queryFn: getAppConfig,
+    staleTime: 5 * 60 * 1000,
+  });
+  const SHIPPING_FREE_THRESHOLD = parseFloat(appConfig?.SHIPPING_FREE_THRESHOLD ?? "500");
+  const SHIPPING_FLAT = parseFloat(appConfig?.SHIPPING_FLAT ?? "70");
 
   let subtotal = 0;
   let taxAmount = 0;

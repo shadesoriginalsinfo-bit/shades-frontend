@@ -252,6 +252,33 @@ const OrdersTab = () => {
                     </div>
                   </div>
 
+                  {/* Payment IDs */}
+                  {order.payments?.some(
+                    (p) => p.providerOrderId || p.providerPaymentId,
+                  ) && (
+                    <div className="border-t border-[#E8DDD0] pt-3">
+                      <p className="text-[10px] tracking-[0.2em] uppercase text-gray-400 font-medium mb-1">
+                        Payment Reference
+                      </p>
+                      {order.payments.map((p) =>
+                        p.providerOrderId || p.providerPaymentId ? (
+                          <div key={p.id} className="space-y-0.5">
+                            {p.providerOrderId && (
+                              <p className="text-[10px] font-mono text-gray-500">
+                                Order: {p.providerOrderId}
+                              </p>
+                            )}
+                            {p.providerPaymentId && (
+                              <p className="text-[10px] font-mono text-gray-500">
+                                Payment: {p.providerPaymentId}
+                              </p>
+                            )}
+                          </div>
+                        ) : null,
+                      )}
+                    </div>
+                  )}
+
                   {/* Tracking number */}
 
                   <div className="border-t border-[#E8DDD0] pt-3">

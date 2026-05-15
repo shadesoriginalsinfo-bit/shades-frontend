@@ -262,6 +262,16 @@ const OrdersPage = () => {
                     <span className="font-mono text-xs text-gray-600">
                       {order.id}
                     </span>
+                    {order.payments?.[0]?.providerOrderId && (
+                      <p className="font-mono text-[10px] text-gray-400 mt-0.5">
+                        {order.payments[0].providerOrderId}
+                      </p>
+                    )}
+                    {order.payments?.[0]?.providerPaymentId && (
+                      <p className="font-mono text-[10px] text-gray-400 mt-0.5">
+                        {order.payments[0].providerPaymentId}
+                      </p>
+                    )}
                   </td>
 
                   {/* Customer */}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { useQuery } from "@tanstack/react-query";
 import {
   Truck,
   RefreshCcw,
@@ -14,6 +15,7 @@ import {
   Mail,
   Clock,
 } from "lucide-react";
+import { getAppConfig } from "@/lib/api";
 import Header from "../home/components/Header";
 import Footer from "../home/components/Footer";
 
@@ -189,6 +191,29 @@ export default function HelpPage() {
   const [activeSection, setActiveSection] = useState("shipping");
   const observerRef = useRef<IntersectionObserver | null>(null);
 
+  const { data: appConfig } = useQuery({
+    queryKey: ["app-config"],
+    queryFn: getAppConfig,
+    staleTime: 5 * 60 * 1000,
+  });
+  const shippingFlat = parseFloat(appConfig?.SHIPPING_FLAT ?? "70");
+  const shippingFreeThreshold = parseFloat(appConfig?.SHIPPING_FREE_THRESHOLD ?? "500");
+
+  const sections = SECTIONS.map((s) =>
+    s.id === "shipping"
+      ? {
+          ...s,
+          points: [
+            "Orders are processed within 24–48 hours.",
+            "Delivery time: 3–5 working days across India, depending on your pin code.",
+            `Free shipping on orders above ₹${shippingFreeThreshold.toLocaleString("en-IN")}.`,
+            `₹${shippingFlat.toLocaleString("en-IN")} shipping charge for orders below ₹${shippingFreeThreshold.toLocaleString("en-IN")}.`,
+            "You will receive a tracking link after dispatch.",
+          ],
+        }
+      : s,
+  );
+
   // Highlight nav item as user scrolls
   useEffect(() => {
     observerRef.current = new IntersectionObserver(
@@ -350,7 +375,7 @@ export default function HelpPage() {
 
         {/* Content */}
         <main className="flex-1 min-w-0 space-y-5">
-          {SECTIONS.map((section) => (
+          {sections.map((section) => (
             <SectionCard
               key={section.id}
               section={section}

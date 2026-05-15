@@ -304,19 +304,32 @@ export function OrderDetailModal({
               </p>
               <div className="border border-[#E8DDD0] divide-y divide-[#E8DDD0]">
                 {order.payments.map((p) => (
-                  <div
-                    key={p.id}
-                    className="flex items-center justify-between px-3 py-2"
-                  >
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm text-gray-700 capitalize">
-                        {p.provider}
+                  <div key={p.id}>
+                    <div className="flex items-center justify-between px-3 py-2">
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm text-gray-700 capitalize">
+                          {p.provider}
+                        </span>
+                        <PaymentBadge status={p.status} />
+                      </div>
+                      <span className="text-sm font-medium text-gray-800">
+                        ₹{p.amount.toLocaleString("en-IN")}
                       </span>
-                      <PaymentBadge status={p.status} />
                     </div>
-                    <span className="text-sm font-medium text-gray-800">
-                      ₹{p.amount.toLocaleString("en-IN")}
-                    </span>
+                    {(p.providerOrderId || p.providerPaymentId) && (
+                      <div className="px-3 pb-2 space-y-0.5">
+                        {p.providerOrderId && (
+                          <p className="text-[10px] font-mono text-gray-400">
+                            Order: {p.providerOrderId}
+                          </p>
+                        )}
+                        {p.providerPaymentId && (
+                          <p className="text-[10px] font-mono text-gray-400">
+                            Payment: {p.providerPaymentId}
+                          </p>
+                        )}
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>

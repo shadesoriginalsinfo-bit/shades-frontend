@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { ShoppingBag, ChevronUp, ChevronDown, X, ArrowRight, Trash2, Minus, Plus } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
 import { useCart } from "@/context/CartContext";
 import { useAuthUser } from "@/hooks/useAuth";
+import { getAppConfig } from "@/lib/api";
 import type { CheckoutState } from "@/pages/checkout/CheckoutPage";
 
 const HIDDEN_ROUTES = ["/cart", "/checkout", "/order-success", "/admin", "/login", "/signup"];
-const SHIPPING_FREE_THRESHOLD = 500;
-const SHIPPING_FLAT = 70;
 
 const formatINR = (n: number) => `₹${n.toLocaleString("en-IN")}`;
 
@@ -17,6 +17,14 @@ const CartFloatingBar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [expanded, setExpanded] = useState(false);
+
+  const { data: appConfig } = useQuery({
+    queryKey: ["app-config"],
+    queryFn: getAppConfig,
+    staleTime: 5 * 60 * 1000,
+  });
+  const SHIPPING_FREE_THRESHOLD = parseFloat(appConfig?.SHIPPING_FREE_THRESHOLD ?? "500");
+  const SHIPPING_FLAT = parseFloat(appConfig?.SHIPPING_FLAT ?? "70");
 
   if (HIDDEN_ROUTES.some((r) => location.pathname.startsWith(r))) return null;
   if (itemCount === 0) return null;
@@ -30,7 +38,7 @@ const CartFloatingBar = () => {
     taxAmount += itemSubtotal * ((item.product.gstPercent ?? 0) / 100);
   }
   taxAmount = parseFloat(taxAmount.toFixed(2));
-  const shipping = subtotal > 1 && subtotal < SHIPPING_FREE_THRESHOLD ? SHIPPING_FLAT : 0;
+  const shipping = subtotal < SHIPPING_FREE_THRESHOLD ? SHIPPING_FLAT : 0;
   const total = parseFloat((subtotal + taxAmount + shipping).toFixed(2));
 
   const handleCheckout = () => {

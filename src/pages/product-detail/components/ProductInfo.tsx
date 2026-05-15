@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import {
   ShoppingBag,
   ChevronDown,
@@ -14,6 +15,7 @@ import {
 } from "lucide-react";
 import { type IProduct } from "@/types/product";
 import { useCart } from "@/context/CartContext";
+import { getAppConfig } from "@/lib/api";
 import toast from "react-hot-toast";
 
 interface ProductInfoProps {
@@ -71,6 +73,14 @@ const ProductInfo = ({ product, selectedVariantIdx, onVariantChange }: ProductIn
   const [selectedSizeId, setSelectedSizeId] = useState<string | null>(null);
   const [addedToCart, setAddedToCart] = useState(false);
   const { addItem } = useCart();
+
+  const { data: appConfig } = useQuery({
+    queryKey: ["app-config"],
+    queryFn: getAppConfig,
+    staleTime: 5 * 60 * 1000,
+  });
+  const shippingFlat = parseFloat(appConfig?.SHIPPING_FLAT ?? "70");
+  const shippingFreeThreshold = parseFloat(appConfig?.SHIPPING_FREE_THRESHOLD ?? "500");
 
   const selectedVariant = product.variants[selectedVariantIdx];
 
@@ -506,9 +516,9 @@ const ProductInfo = ({ product, selectedVariantIdx, onVariantChange }: ProductIn
           <ul className="space-y-2 text-gray-600">
             {[
               "Orders are processed within 24-48 hours.",
-              "Delivery time: 3–5 working days across India. depending on your pin code.",
-              "Free shipping on orders above ₹999.",
-              "₹70 shipping charge for orders below ₹999.",
+              "Delivery time: 3–5 working days across India, depending on your pin code.",
+              `Free shipping on orders above ₹${shippingFreeThreshold.toLocaleString("en-IN")}.`,
+              `₹${shippingFlat.toLocaleString("en-IN")} shipping charge for orders below ₹${shippingFreeThreshold.toLocaleString("en-IN")}.`,
               "You will receive a tracking link after dispatch.",
             ].map((info) => (
               <li key={info} className="flex items-start gap-2">

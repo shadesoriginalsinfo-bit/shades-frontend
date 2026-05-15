@@ -29,6 +29,8 @@ export interface IPayment {
   provider: string;
   status: string;
   amount: number;
+  providerOrderId?: string | null;
+  providerPaymentId?: string | null;
   createdAt: string;
   updatedAt: string;
 }
