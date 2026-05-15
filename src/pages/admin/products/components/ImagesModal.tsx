@@ -22,7 +22,7 @@ import toast from "react-hot-toast";
 import { formatFileSize } from "@/utils/formatFileSize";
 
 const MAX_INPUT_MB = 10;
-const TARGET_MB = 2;
+const TARGET_MB = 1.5;
 const MAX_OUTPUT_MB = 5;
 const MAX_INPUT_BYTES = MAX_INPUT_MB * 1024 * 1024;
 const MAX_OUTPUT_BYTES = MAX_OUTPUT_MB * 1024 * 1024;
@@ -145,36 +145,39 @@ const ImagesModal = ({
     if (!files.length) return;
 
     setCompressing(true);
-    const accepted: File[] = [];
 
-    for (const f of files) {
-      if (f.size > MAX_INPUT_BYTES) {
-        toast.error(`"${f.name}" exceeds ${MAX_INPUT_MB} MB limit — skipped`);
-        continue;
-      }
+    const results = await Promise.all(
+      files.map(async (f) => {
+        if (f.size > MAX_INPUT_BYTES) {
+          toast.error(`"${f.name}" exceeds ${MAX_INPUT_MB} MB limit — skipped`);
+          return null;
+        }
 
-      if (f.size <= MAX_OUTPUT_BYTES) {
-        accepted.push(f);
-        continue;
-      }
+        if (f.size <= MAX_OUTPUT_BYTES) return f;
 
-      try {
-        const compressed = await compressImage(f);
-        if (compressed.size > MAX_OUTPUT_BYTES) {
-          toast.error(
-            `"${f.name}" is still ${formatFileSize(compressed.size)} after compression (limit ${MAX_OUTPUT_MB} MB) — skipped`,
+        try {
+          const compressed = await compressImage(f);
+          console.log(
+            `[compress] "${f.name}" ${(f.size / 1024 / 1024).toFixed(2)} MB → ${(compressed.size / 1024 / 1024).toFixed(2)} MB`,
           );
-        } else {
+          if (compressed.size > MAX_OUTPUT_BYTES) {
+            toast.error(
+              `"${f.name}" is still ${formatFileSize(compressed.size)} after compression (limit ${MAX_OUTPUT_MB} MB) — skipped`,
+            );
+            return null;
+          }
           toast.success(
             `"${f.name}" compressed to ${formatFileSize(compressed.size)}`,
           );
-          accepted.push(compressed);
+          return compressed;
+        } catch {
+          toast.error(`Compression failed for "${f.name}" — skipped`);
+          return null;
         }
-      } catch {
-        toast.error(`Compression failed for "${f.name}" — skipped`);
-      }
-    }
+      }),
+    );
 
+    const accepted = results.filter((f): f is File => f !== null);
     setCompressing(false);
     if (accepted.length) setPendingFiles((prev) => [...prev, ...accepted]);
   };
