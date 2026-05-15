@@ -393,6 +393,21 @@ export async function verifyPayment(payload: {
   return data.data;
 }
 
+// ── App Config ────────────────────────────────────────────────────────────────
+
+export async function getAppConfig(): Promise<Record<string, string>> {
+  const { data } = await axios.get("/config");
+  return data.data;
+}
+
+export async function adminSetConfig(
+  key: string,
+  value: string,
+): Promise<{ message: string }> {
+  const { data } = await axios.put(`/config/${key}`, { value });
+  return data;
+}
+
 // ── Admin Dashboard ───────────────────────────────────────────────────────────
 
 export async function adminGetDashboard(params?: {
