@@ -64,10 +64,10 @@ const CartFloatingBar = () => {
               </div>
             )}
             <div className="flex-1 min-w-0">
-              <p className="text-xs font-semibold text-[#2A1810] truncate font-serif leading-snug">
+              <p className="text-sm font-semibold text-[#2A1810] truncate font-serif leading-snug">
                 {item.product.title}
               </p>
-              <div className="flex items-center gap-1.5 mt-0.5 text-[10px] text-gray-500">
+              <div className="flex items-center gap-1.5 mt-0.5 text-xs text-gray-500">
                 {item.colorLabel && (
                   <span className="flex items-center gap-1 capitalize">
                     {item.colorCode && (
@@ -94,7 +94,7 @@ const CartFloatingBar = () => {
                 >
                   <Minus size={9} />
                 </button>
-                <span className="text-[11px] font-semibold text-[#2A1810] w-5 text-center">
+                <span className="text-xs font-semibold text-[#2A1810] w-5 text-center">
                   {item.quantity}
                 </span>
                 <button
@@ -107,7 +107,7 @@ const CartFloatingBar = () => {
               </div>
             </div>
             <div className="flex flex-col items-end gap-1 shrink-0">
-              <span className="text-xs font-bold text-[#2A1810]">
+              <span className="text-sm font-bold text-[#2A1810]">
                 {formatINR(parseFloat((unitPriceWithGst * item.quantity).toFixed(2)))}
               </span>
               <button
@@ -125,7 +125,7 @@ const CartFloatingBar = () => {
   );
 
   const TotalsRow = () => (
-    <div className="border-t border-[#E8DDD0] pt-2.5 mt-2 space-y-1 text-[11px]">
+    <div className="border-t border-[#E8DDD0] pt-2.5 mt-2 space-y-1 text-xs">
       <div className="flex justify-between text-gray-500">
         <span>Subtotal</span>
         <span className="font-medium text-gray-700">{formatINR(parseFloat((subtotal + taxAmount).toFixed(2)))}</span>
@@ -136,7 +136,7 @@ const CartFloatingBar = () => {
           {shipping === 0 ? "Free" : formatINR(shipping)}
         </span>
       </div>
-      <div className="flex justify-between pt-1.5 border-t border-[#E8DDD0] font-semibold text-[#2A1810] text-xs">
+      <div className="flex justify-between pt-1.5 border-t border-[#E8DDD0] font-semibold text-[#2A1810] text-sm">
         <span>Total</span>
         <span>{formatINR(total)}</span>
       </div>
@@ -155,7 +155,7 @@ const CartFloatingBar = () => {
         >
           <div className="px-4 pt-4 pb-3">
             <div className="flex items-center justify-between mb-3">
-              <span className="text-[10px] tracking-[0.2em] uppercase font-semibold text-[#9A7A46]">
+              <span className="text-xs tracking-[0.2em] uppercase font-semibold text-[#9A7A46]">
                 Basket · {itemCount} item{itemCount !== 1 ? "s" : ""}
               </span>
               <button
@@ -181,10 +181,10 @@ const CartFloatingBar = () => {
                 {expanded ? <ChevronDown size={16} /> : <ChevronUp size={16} />}
               </span>
               <div className="flex flex-col items-start min-w-0">
-                <span className="text-[#2A1810] text-xs font-semibold tracking-wide">
+                <span className="text-[#2A1810] text-sm font-semibold tracking-wide">
                   {itemCount} item{itemCount !== 1 ? "s" : ""}
                 </span>
-                <span className="text-[#9A7A46] text-[14px] font-bold">{formatINR(total)}</span>
+                <span className="text-[#9A7A46] text-base font-bold">{formatINR(total)}</span>
               </div>
             </button>
 
@@ -192,7 +192,7 @@ const CartFloatingBar = () => {
 
             <button
               onClick={handleCheckout}
-              className="flex items-center gap-1.5 bg-[#9A7A46] hover:bg-[#B8936A] text-white text-[11px] tracking-[0.15em] uppercase font-medium px-4 py-2.5 rounded-sm transition-all duration-200 shrink-0"
+              className="flex items-center gap-1.5 bg-[#9A7A46] hover:bg-[#B8936A] text-white text-xs tracking-[0.15em] uppercase font-medium px-4 py-2.5 rounded-sm transition-all duration-200 shrink-0"
             >
               Checkout <ArrowRight size={12} />
             </button>
