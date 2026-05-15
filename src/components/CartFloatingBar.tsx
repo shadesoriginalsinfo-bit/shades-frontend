@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { ShoppingBag, ChevronUp, ChevronDown, X, ArrowRight, Trash2 } from "lucide-react";
+import { ShoppingBag, ChevronUp, ChevronDown, X, ArrowRight, Trash2, Minus, Plus } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useAuthUser } from "@/hooks/useAuth";
 import type { CheckoutState } from "@/pages/checkout/CheckoutPage";
@@ -12,7 +12,7 @@ const SHIPPING_FLAT = 70;
 const formatINR = (n: number) => `₹${n.toLocaleString("en-IN")}`;
 
 const CartFloatingBar = () => {
-  const { items, itemCount, removeItem } = useCart();
+  const { items, itemCount, removeItem, updateQuantity } = useCart();
   const { data: user } = useAuthUser();
   const navigate = useNavigate();
   const location = useLocation();
@@ -81,15 +81,32 @@ const CartFloatingBar = () => {
                 )}
                 {item.sizeLabel && (
                   <>
-                    <span className="text-gray-600">·</span>
+                    <span className="text-gray-300">·</span>
                     <span>{item.sizeLabel}</span>
                   </>
                 )}
-                <span className="text-gray-600">·</span>
-                <span>×{item.quantity}</span>
+              </div>
+              <div className="flex items-center gap-1 mt-1.5">
+                <button
+                  onClick={() => updateQuantity(item.variantSizeId, item.quantity - 1)}
+                  className="w-5 h-5 flex items-center justify-center border border-[#E8DDD0] rounded-sm text-gray-500 hover:border-[#9A7A46] hover:text-[#9A7A46] transition-colors"
+                  aria-label="Decrease quantity"
+                >
+                  <Minus size={9} />
+                </button>
+                <span className="text-[11px] font-semibold text-[#2A1810] w-5 text-center">
+                  {item.quantity}
+                </span>
+                <button
+                  onClick={() => updateQuantity(item.variantSizeId, item.quantity + 1)}
+                  className="w-5 h-5 flex items-center justify-center border border-[#E8DDD0] rounded-sm text-gray-500 hover:border-[#9A7A46] hover:text-[#9A7A46] transition-colors"
+                  aria-label="Increase quantity"
+                >
+                  <Plus size={9} />
+                </button>
               </div>
             </div>
-            <div className="flex items-center gap-1.5 shrink-0">
+            <div className="flex flex-col items-end gap-1 shrink-0">
               <span className="text-xs font-bold text-[#2A1810]">
                 {formatINR(parseFloat((unitPriceWithGst * item.quantity).toFixed(2)))}
               </span>
