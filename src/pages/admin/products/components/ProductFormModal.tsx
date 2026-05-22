@@ -20,6 +20,9 @@ export const emptyProductForm = () => ({
   shortDesc: "",
   description: "",
   careInstruction: "",
+  flipkartLink: "",
+  meeshoLink: "",
+  amazonLink: "",
   isPublished: true,
   categoryIds: [] as string[],
 });
@@ -143,6 +146,40 @@ const ProductFormModal = ({
               }
               rows={4}
               className="w-full bg-transparent text-sm text-gray-800 outline-none border border-[#D4B896] px-2 pb-1 pt-1.5 placeholder:text-[#9A7A46]/70 placeholder:text-xs placeholder:tracking-wider focus:border-[#9A7A46] focus:shadow-[0_1px_0_0_#9A7A46] resize-none"
+            />
+          </LabelField>
+        </div>
+
+        {/* Marketplace Links */}
+        <div className="space-y-3">
+          <p className="text-[10px] tracking-[0.25em] uppercase text-[#9A7A46]/80 font-medium">
+            Marketplace Links
+          </p>
+          <LabelField label="Flipkart URL">
+            <Input
+              name="flipkartLink"
+              value={form.flipkartLink}
+              onChange={onFormChange}
+              placeholder="https://flipkart.com/..."
+              restrictSpecialChars={false}
+            />
+          </LabelField>
+          <LabelField label="Meesho URL">
+            <Input
+              name="meeshoLink"
+              value={form.meeshoLink}
+              onChange={onFormChange}
+              placeholder="https://meesho.com/..."
+              restrictSpecialChars={false}
+            />
+          </LabelField>
+          <LabelField label="Amazon URL">
+            <Input
+              name="amazonLink"
+              value={form.amazonLink}
+              onChange={onFormChange}
+              placeholder="https://amazon.in/..."
+              restrictSpecialChars={false}
             />
           </LabelField>
         </div>

@@ -1,5 +1,8 @@
-import { Truck, RefreshCw, Shield, Star, ArrowRight } from "lucide-react";
+import { Truck, RefreshCw, Gift, BadgeCheck, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
+import SectionHeading from "./SectionHeading";
+import carouselImg from "@/assets/carouselImg.png";
+import carouselImg2 from "@/assets/carouselImg2.png";
 
 /* ─────────────────────────────────────────────
    PromoStrip — thin scrolling announcement bar
@@ -44,29 +47,31 @@ interface TrustItem {
 }
 
 const TRUST_ITEMS: TrustItem[] = [
-  { icon: Truck, label: "Free Delivery", sub: "On orders above ₹999" },
-  { icon: RefreshCw, label: "Easy Exchange", sub: "Hassle-free exchange" },
-  { icon: Shield, label: "Secure Payment", sub: "100% safe checkout" },
-  { icon: Star, label: "Premium Quality", sub: "Handcrafted with care" },
+  { icon: Truck, label: "FREE SHIPPING", sub: "On all prepaid orders" },
+  { icon: Gift, label: "CASH ON DELIVERY", sub: "Available Pan India" },
+  { icon: BadgeCheck, label: "PREMIUM QUALITY", sub: "Finest Fabrics" },
+  { icon: RefreshCw, label: "EASY RETURNS", sub: "Hassle free returns" },
 ];
 
 export const TrustBar = () => (
   <section className="border-y border-[#E8DDD0] bg-[#FDFAF7]">
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+    <div className="max-w-7xl mx-auto px-0 sm:px-6 lg:px-8 py-4 sm:py-7">
+      <div className="grid grid-cols-4 divide-x divide-[#E8DDD0]">
         {TRUST_ITEMS.map(({ icon: Icon, label, sub }) => (
           <div
             key={label}
-            className="flex flex-col sm:flex-row items-center sm:items-start gap-3 text-center sm:text-left"
+            className="flex flex-col items-center gap-1.5 sm:gap-2.5 text-center px-2 sm:px-6"
           >
-            <div className="w-11 h-11 rounded-full bg-[#F5EFE7] border border-[#E8DDD0] flex items-center justify-center shrink-0">
-              <Icon size={18} className="text-[#C6A46C]" />
-            </div>
+            <Icon
+              size={22}
+              className="text-[#1a1a1a] sm:w-7 sm:h-7"
+              strokeWidth={1.4}
+            />
             <div>
-              <p className="text-sm font-medium text-gray-800 leading-tight">
+              <p className="text-[8px] sm:text-[11px] font-bold text-[#1a1a1a] leading-tight sm:tracking-wide uppercase text-nowrap">
                 {label}
               </p>
-              <p className="text-xs text-gray-400 mt-0.5 tracking-wide">
+              <p className="text-[7px] sm:text-[11px] text-gray-500 mt-0.5 leading-tight">
                 {sub}
               </p>
             </div>
@@ -247,6 +252,65 @@ export const ThreeBanners = () => (
 );
 
 /* ─────────────────────────────────────────────
+   CategorySection — 3-card shop-by-category
+   ───────────────────────────────────────────── */
+interface CategoryCard {
+  label: string;
+  href: string;
+  image: string;
+}
+
+const CATEGORY_CARDS: CategoryCard[] = [
+  { label: "Kurtis", href: "/shop?category=kurtis", image: carouselImg },
+  {
+    label: "Co-ord Sets",
+    href: "/shop?category=co-ord-sets",
+    image: carouselImg2,
+  },
+  { label: "New Arrivals", href: "/shop", image: carouselImg },
+];
+
+export const CategorySection = () => (
+  <section className="py-10 sm:py-14 bg-[#FDFAF7]">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <SectionHeading
+        title="Explore Our Collections"
+        subtitle="Handpicked pieces crafted with love and tradition"
+      />
+      <div className="grid grid-cols-3 gap-2 sm:gap-5">
+        {CATEGORY_CARDS.map(({ label, href, image }) => (
+          <Link
+            key={label}
+            to={href}
+            className="group relative overflow-hidden rounded-xl sm:rounded-2xl aspect-3/4 block"
+          >
+            {/* Photo */}
+            <img
+              src={image}
+              alt={label}
+              className="absolute inset-0 w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
+            />
+
+            {/* Gradient overlay */}
+            <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/20 to-transparent" />
+
+            {/* Text + CTA */}
+            <div className="absolute bottom-0 left-0 right-0 flex flex-col items-center pb-3 sm:pb-8 gap-2 sm:gap-4">
+              <p className="text-white text-[11px] sm:text-3xl font-bold tracking-widest uppercase text-center px-1">
+                {label}
+              </p>
+              <span className="border border-white text-white text-[7px] sm:text-[11px] tracking-[0.15em] sm:tracking-[0.25em] uppercase px-2 sm:px-6 py-1 sm:py-2.5 transition-colors duration-200 group-hover:bg-white group-hover:text-[#1a1a1a]">
+                Shop Now
+              </span>
+            </div>
+          </Link>
+        ))}
+      </div>
+    </div>
+  </section>
+);
+
+/* ─────────────────────────────────────────────
    DiscountBanner — full-width promo bar
    ───────────────────────────────────────────── */
 export const DiscountBanner = () => (
@@ -271,7 +335,7 @@ export const DiscountBanner = () => (
             </h3>
             <p className="text-white/75 text-sm mt-2 tracking-wide">
               On all ethnic wear
-               {/* · Use code:{" "} */}
+              {/* · Use code:{" "} */}
               {/* <span className="font-semibold text-white bg-white/15 px-2 py-0.5 rounded">
                 SHADES20
               </span> */}

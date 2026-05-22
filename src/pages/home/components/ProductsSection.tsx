@@ -26,7 +26,7 @@ interface ProductsSectionProps {
 const LIMIT = 8;
 
 const ProductsSection = ({
-  eyebrow = "Our Collection",
+  // eyebrow = "Our Collection",
   title = "Featured Products",
   subtitle = "Handpicked pieces crafted with love and tradition",
   limit = LIMIT,
@@ -52,7 +52,7 @@ const ProductsSection = ({
   return (
     <section className="py-16 bg-white">
       <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-16">
-        <SectionHeading eyebrow={eyebrow} title={title} subtitle={subtitle} />
+        <SectionHeading title={title} subtitle={subtitle} />
 
         {/* Category filter */}
         {showCategoryFilter && !fixedCategoryId && categories.length > 0 && (

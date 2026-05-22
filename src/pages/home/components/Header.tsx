@@ -109,14 +109,55 @@ const Header = () => {
       {/* Main header */}
       <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-[#E8DDD0] shadow-[0_1px_12px_rgba(0,0,0,0.04)]">
         <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-16">
-          <div className="flex items-center justify-between h-16 gap-6">
+          {/* Mobile header row */}
+          <div className="md:hidden relative flex items-center h-16">
+            {/* Left: Hamburger */}
+            <button
+              className="p-2 text-gray-700 hover:text-[#9A7A46] transition-colors"
+              onClick={() => setMobileOpen(!mobileOpen)}
+            >
+              {mobileOpen ? <X size={22} /> : <Menu size={22} />}
+            </button>
+
+            {/* Center: Logo */}
+            <Link
+              to="/"
+              className="absolute left-1/2 -translate-x-1/2 flex items-center"
+            >
+              <img src={logo} alt="Shades" className="h-11 object-contain" />
+            </Link>
+
+            {/* Right: Search + Cart */}
+            <div className="ml-auto flex items-center gap-0.5">
+              <Link
+                to="/shop"
+                className="p-2 text-gray-700 hover:text-[#9A7A46] transition-colors"
+              >
+                <Search size={20} />
+              </Link>
+              <Link
+                to="/cart"
+                className="relative p-2 text-gray-700 hover:text-[#9A7A46] transition-colors"
+              >
+                <ShoppingBag size={20} />
+                {cartCount > 0 && (
+                  <span className="absolute top-0.5 right-0.5 w-4 h-4 rounded-full bg-[#9A7A46] text-white text-[9px] flex items-center justify-center font-bold">
+                    {cartCount > 99 ? "99+" : cartCount}
+                  </span>
+                )}
+              </Link>
+            </div>
+          </div>
+
+          {/* Desktop header row */}
+          <div className="hidden md:flex items-center justify-between h-16 gap-6">
             {/* Logo */}
             <Link to="/" className="flex items-center gap-2 shrink-0">
               <img src={logo} alt="Shades" className="h-12 object-contain" />
             </Link>
 
             {/* Desktop Nav */}
-            <nav className="hidden md:flex items-center gap-8 h-full">
+            <nav className="flex items-center gap-8 h-full">
               {NAV_ITEMS.map((item) => (
                 <NavLink
                   key={item.label}
@@ -128,8 +169,6 @@ const Header = () => {
 
             {/* Right Actions */}
             <div className="flex items-center gap-2 shrink-0">
-              {/* Search */}
-
               {location.pathname !== "/shop" && (
                 <div className="flex items-center gap-1 border border-[#c4b9a5] rounded-md">
                   <input
@@ -144,7 +183,7 @@ const Header = () => {
                         );
                       }
                     }}
-                    className="hidden md:block w-48 bg-white/5 px-4 py-2.5 text-xs text-gray-500 placeholder:text-gray-400 outline-none rounded-sm tracking-wide focus:none"
+                    className="w-48 bg-white/5 px-4 py-2.5 text-xs text-gray-500 placeholder:text-gray-400 outline-none rounded-sm tracking-wide focus:none"
                   />
                   <button
                     onClick={() =>
@@ -152,7 +191,7 @@ const Header = () => {
                         `/shop?search=${encodeURIComponent(searchQuery)}`,
                       )
                     }
-                    className="hidden md:flex w-9 h-9 items-center justify-center text-gray-500 hover:text-[#9A7A46] transition-colors hover:bg-[#F5EFE7] rounded-md cursor-pointer"
+                    className="flex w-9 h-9 items-center justify-center text-gray-500 hover:text-[#9A7A46] transition-colors hover:bg-[#F5EFE7] rounded-md cursor-pointer"
                   >
                     <Search size={17} />
                   </button>
@@ -161,7 +200,7 @@ const Header = () => {
 
               {!isLoading && user ? (
                 <div
-                  className="relative hidden md:flex"
+                  className="relative"
                   onMouseEnter={() => setProfileOpen(true)}
                   onMouseLeave={() => setProfileOpen(false)}
                 >
@@ -197,17 +236,16 @@ const Header = () => {
               ) : (
                 <Link
                   to="/login"
-                  className="hidden md:flex items-center gap-1.5 text-xs tracking-wider text-gray-600 hover:text-[#9A7A46] transition-colors border border-[#E8DDD0] hover:border-[#9A7A46] rounded-sm px-3 py-2"
+                  className="flex items-center gap-1.5 text-xs tracking-wider text-gray-600 hover:text-[#9A7A46] transition-colors border border-[#E8DDD0] hover:border-[#9A7A46] rounded-sm px-3 py-2"
                 >
                   <User size={14} />
                   <span>Sign In</span>
                 </Link>
               )}
 
-              {/* Cart */}
               <Link
                 to="/cart"
-                className="relative hidden md:flex items-center gap-2 bg-[#1a1a1a] text-white text-xs px-4 py-2.5 hover:bg-[#9A7A46] transition-all duration-200 tracking-wider rounded-sm"
+                className="relative flex items-center gap-2 bg-[#1a1a1a] text-white text-xs px-4 py-2.5 hover:bg-[#9A7A46] transition-all duration-200 tracking-wider rounded-sm"
               >
                 <ShoppingBag size={14} />
                 <span>Cart</span>
@@ -217,14 +255,6 @@ const Header = () => {
                   </span>
                 )}
               </Link>
-
-              {/* Mobile menu toggle */}
-              <button
-                className="md:hidden p-2 text-gray-700 hover:text-[#9A7A46] transition-colors"
-                onClick={() => setMobileOpen(!mobileOpen)}
-              >
-                {mobileOpen ? <X size={20} /> : <Menu size={20} />}
-              </button>
             </div>
           </div>
         </div>
@@ -280,17 +310,6 @@ const Header = () => {
                   <span>Sign In</span>
                 </Link>
               )}
-              <Link
-                to="/cart"
-                className="relative flex items-center gap-2 bg-[#1a1a1a] text-white text-xs tracking-wider px-4 py-2.5 rounded-sm"
-              >
-                <ShoppingBag size={14} /> Cart
-                {cartCount > 0 && (
-                  <span className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-[#9A7A46] text-white text-[9px] flex items-center justify-center font-bold">
-                    {cartCount > 99 ? "99+" : cartCount}
-                  </span>
-                )}
-              </Link>
             </div>
           </div>
         )}

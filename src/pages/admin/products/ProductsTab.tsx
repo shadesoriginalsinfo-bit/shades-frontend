@@ -118,6 +118,9 @@ const ProductsTab = () => {
       shortDesc: product.shortDesc ?? "",
       description: product.description ?? "",
       careInstruction: product.careInstruction ?? "",
+      flipkartLink: product.flipkartLink ?? "",
+      meeshoLink: product.meeshoLink ?? "",
+      amazonLink: product.amazonLink ?? "",
       isPublished: product.isPublished,
       categoryIds: product.productCategories.map((pc) => pc.category.id),
     });
@@ -144,6 +147,9 @@ const ProductsTab = () => {
       shortDesc: form.shortDesc || undefined,
       description: form.description || undefined,
       careInstruction: form.careInstruction || undefined,
+      flipkartLink: form.flipkartLink || undefined,
+      meeshoLink: form.meeshoLink || undefined,
+      amazonLink: form.amazonLink || undefined,
       isPublished: form.isPublished,
       categoryIds: form.categoryIds.length ? form.categoryIds : undefined,
     };

@@ -13,6 +13,55 @@ import {
   Plus,
   Check,
 } from "lucide-react";
+
+const FlipkartLogo = () => (
+  <svg width="18" height="18" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="32" height="32" rx="5" fill="#2874F0"/>
+    {/* F — top bar */}
+    <rect x="8" y="8" width="16" height="3.5" rx="1" fill="white"/>
+    {/* F — vertical stem */}
+    <rect x="8" y="8" width="3.5" height="16" rx="1" fill="white"/>
+    {/* F — middle bar */}
+    <rect x="8" y="14.5" width="11" height="3" rx="1" fill="white"/>
+  </svg>
+);
+
+const MeeshoLogo = () => (
+  <svg width="18" height="18" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="32" height="32" rx="5" fill="#F43397"/>
+    {/* M shape */}
+    <path
+      d="M6 24V9l10 9 10-9v15h-3.5V15l-6.5 6-6.5-6v9H6z"
+      fill="white"
+    />
+  </svg>
+);
+
+const AmazonLogo = () => (
+  <svg width="22" height="18" viewBox="0 0 48 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+    {/* "a" letterform */}
+    <path
+      d="M13 10.5C13 7.5 15 6 19 6C23 6 25 7.5 25 10.5V22H22V20.5C21 21.8 19.5 22.5 17.5 22.5C14.5 22.5 13 21 13 18C13 15 15 13.5 19 13.5H22V11C22 9.5 21 8.5 19 8.5C17 8.5 16 9.5 16 11H13V10.5ZM22 16H19C17 16 16 16.8 16 18.2C16 19.5 17 20.2 18.5 20.2C20.5 20.2 22 19 22 17V16Z"
+      fill="#FF9900"
+    />
+    {/* smile/arrow */}
+    <path
+      d="M8 26C16 30 32 30 40 26"
+      stroke="#FF9900"
+      strokeWidth="2.5"
+      strokeLinecap="round"
+      fill="none"
+    />
+    <path
+      d="M37 23L40 26L37 29"
+      stroke="#FF9900"
+      strokeWidth="2.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      fill="none"
+    />
+  </svg>
+);
 import { type IProduct } from "@/types/product";
 import { useCart } from "@/context/CartContext";
 import { getAppConfig } from "@/lib/api";
@@ -418,6 +467,50 @@ const ProductInfo = ({ product, selectedVariantIdx, onVariantChange }: ProductIn
           >
             {authLoading ? "Please wait…" : sizeRequired ? "Select a size to continue" : "Buy Now"}
           </button> */}
+        </div>
+      )}
+
+      {/* ── Marketplace links ── */}
+      {(product.flipkartLink || product.meeshoLink || product.amazonLink) && (
+        <div className="space-y-2.5">
+          <p className="text-[10px] tracking-[0.25em] uppercase text-gray-400 font-medium">
+            Also available on
+          </p>
+          <div className="flex flex-wrap gap-2.5">
+            {product.flipkartLink && (
+              <a
+                href={product.flipkartLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 pl-2 pr-4 py-2 border border-[#2874F0] text-[#2874F0] text-xs font-medium tracking-wide rounded-md hover:bg-[#2874F0] hover:text-white transition-all duration-200 group"
+              >
+                <FlipkartLogo />
+                <span className="group-hover:text-white">Shop on Flipkart</span>
+              </a>
+            )}
+            {product.meeshoLink && (
+              <a
+                href={product.meeshoLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 pl-2 pr-4 py-2 border border-[#F43397] text-[#F43397] text-xs font-medium tracking-wide rounded-md hover:bg-[#F43397] hover:text-white transition-all duration-200 group"
+              >
+                <MeeshoLogo />
+                <span className="group-hover:text-white">Shop on Meesho</span>
+              </a>
+            )}
+            {product.amazonLink && (
+              <a
+                href={product.amazonLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 pl-2 pr-4 py-2 border border-[#FF9900] text-[#232F3E] text-xs font-medium tracking-wide rounded-md hover:bg-[#FF9900] transition-all duration-200"
+              >
+                <AmazonLogo />
+                Shop on Amazon
+              </a>
+            )}
+          </div>
         </div>
       )}
 

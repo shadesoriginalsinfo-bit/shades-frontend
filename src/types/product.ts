@@ -33,6 +33,9 @@ export interface IProduct {
   careInstruction?: string;
   description?: string | null;
   shortDesc?: string | null;
+  flipkartLink?: string | null;
+  meeshoLink?: string | null;
+  amazonLink?: string | null;
   isPublished: boolean;
   isDeleted: boolean;
   createdAt: string;
@@ -73,6 +76,9 @@ export interface ICreateProduct {
   categoryIds?: string[];
   gstPercent: number;
   careInstruction?: string;
+  flipkartLink?: string;
+  meeshoLink?: string;
+  amazonLink?: string;
   variants?: ICreateProductVariant[];
 }
 
@@ -86,6 +92,9 @@ export interface IUpdateProduct {
   categoryIds?: string[];
   gstPercent?: number;
   careInstruction?: string;
+  flipkartLink?: string;
+  meeshoLink?: string;
+  amazonLink?: string;
 }
 
 export interface IProductMeta {
