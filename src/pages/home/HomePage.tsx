@@ -3,19 +3,18 @@ import HeroCarousel from "./components/HeroCarousel";
 import {
   PromoStrip,
   TrustBar,
+  CategorySection,
   FeatureBanners,
   ThreeBanners,
   DiscountBanner,
 } from "./components/Banners";
-import ProductsSection from "./components/ProductsSection";
+// import ProductsSection from "./components/ProductsSection";
 import Footer from "./components/Footer";
 import FAQSection from "./components/FAQSection";
-
 
 const HomePage = () => {
   return (
     <div className="min-h-screen bg-white font-sans antialiased">
-
       <PromoStrip />
       <Header />
 
@@ -25,32 +24,35 @@ const HomePage = () => {
       {/* Trust badges */}
       <TrustBar />
 
+      {/* Shop by category */}
+      <CategorySection />
+
       {/* Featured products with category filter */}
-      <ProductsSection
-        eyebrow="Our Collection"
-        title="Featured Products"
+      {/* <ProductsSection
+        // eyebrow="Explore Our Collection"
+        title="Explore Our Collection"
         subtitle="Handpicked pieces crafted with love and tradition"
         limit={8}
-        showCategoryFilter={true}
-      />
+        showCategoryFilter={false}
+      /> */}
 
       {/* 2-column editorial feature banners */}
       <FeatureBanners />
 
       {/* New Arrivals — no category filter */}
-      <ProductsSection
+      {/* <ProductsSection
         eyebrow="Just In"
         title="New Arrivals"
         subtitle="Fresh styles added every week — be the first to wear them"
         limit={4}
         showCategoryFilter={false}
-      />
+      /> */}
 
       {/* 3-column mini category banners */}
-      <ThreeBanners />
+      {/* <ThreeBanners /> */}
 
       <FAQSection />
-      
+
       {/* Full-width discount banner */}
       <DiscountBanner />
 

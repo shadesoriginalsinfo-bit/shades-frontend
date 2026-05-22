@@ -1,5 +1,8 @@
 import { Truck, RefreshCw, Gift, BadgeCheck, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
+import SectionHeading from "./SectionHeading";
+import carouselImg from "@/assets/carouselImg.png";
+import carouselImg2 from "@/assets/carouselImg2.png";
 
 /* ─────────────────────────────────────────────
    PromoStrip — thin scrolling announcement bar
@@ -241,6 +244,65 @@ export const ThreeBanners = () => (
               size={16}
               className={`absolute right-5 bottom-5 ${textColor} opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-200`}
             />
+          </Link>
+        ))}
+      </div>
+    </div>
+  </section>
+);
+
+/* ─────────────────────────────────────────────
+   CategorySection — 3-card shop-by-category
+   ───────────────────────────────────────────── */
+interface CategoryCard {
+  label: string;
+  href: string;
+  image: string;
+}
+
+const CATEGORY_CARDS: CategoryCard[] = [
+  { label: "Kurtis", href: "/shop?category=kurtis", image: carouselImg },
+  {
+    label: "Co-ord Sets",
+    href: "/shop?category=co-ord-sets",
+    image: carouselImg2,
+  },
+  { label: "New Arrivals", href: "/shop", image: carouselImg },
+];
+
+export const CategorySection = () => (
+  <section className="py-10 sm:py-14 bg-[#FDFAF7]">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <SectionHeading
+        title="Explore Our Collections"
+        subtitle="Handpicked pieces crafted with love and tradition"
+      />
+      <div className="grid grid-cols-3 gap-2 sm:gap-5">
+        {CATEGORY_CARDS.map(({ label, href, image }) => (
+          <Link
+            key={label}
+            to={href}
+            className="group relative overflow-hidden rounded-xl sm:rounded-2xl aspect-3/4 block"
+          >
+            {/* Photo */}
+            <img
+              src={image}
+              alt={label}
+              className="absolute inset-0 w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
+            />
+
+            {/* Gradient overlay */}
+            <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/20 to-transparent" />
+
+            {/* Text + CTA */}
+            <div className="absolute bottom-0 left-0 right-0 flex flex-col items-center pb-3 sm:pb-8 gap-2 sm:gap-4">
+              <p className="text-white text-[11px] sm:text-3xl font-bold tracking-widest uppercase text-center px-1">
+                {label}
+              </p>
+              <span className="border border-white text-white text-[7px] sm:text-[11px] tracking-[0.15em] sm:tracking-[0.25em] uppercase px-2 sm:px-6 py-1 sm:py-2.5 transition-colors duration-200 group-hover:bg-white group-hover:text-[#1a1a1a]">
+                Shop Now
+              </span>
+            </div>
           </Link>
         ))}
       </div>
