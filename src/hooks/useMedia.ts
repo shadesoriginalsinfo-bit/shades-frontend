@@ -1,5 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { deleteMedia, getMedia, uploadMedia } from "@/lib/api";
+import {
+  deleteMedia,
+  getMedia,
+  updateMedia,
+  uploadMedia,
+} from "@/lib/api";
 import toast from "react-hot-toast";
 import { handleApiError } from "@/utils/handleApiError";
 
@@ -31,6 +36,16 @@ export function useAdminMedia() {
     onError: handleApiError,
   });
 
+  const updateMutation = useMutation({
+    mutationFn: ({ id, dto }: { id: string; dto: { isActive?: boolean; sortOrder?: number } }) =>
+      updateMedia(id, dto),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [MEDIA_QUERY_KEY] });
+      toast.success("Updated");
+    },
+    onError: handleApiError,
+  });
+
   const deleteMutation = useMutation({
     mutationFn: deleteMedia,
     onSuccess: () => {
@@ -45,6 +60,10 @@ export function useAdminMedia() {
     isLoading,
     upload: (files: File[]) => uploadMutation.mutate(files),
     uploading: uploadMutation.isPending,
+    update: (id: string, dto: { isActive?: boolean; sortOrder?: number }) =>
+      updateMutation.mutate({ id, dto }),
+    updating: updateMutation.isPending,
+    updatingId: updateMutation.variables?.id,
     remove: (id: string) => deleteMutation.mutate(id),
     removing: deleteMutation.isPending,
     removingId: deleteMutation.variables,

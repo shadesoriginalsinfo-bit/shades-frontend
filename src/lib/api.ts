@@ -444,6 +444,14 @@ export async function uploadMedia(files: File[]): Promise<IMedia[]> {
   return data.data;
 }
 
+export async function updateMedia(
+  id: string,
+  dto: { isActive?: boolean; sortOrder?: number; altText?: string },
+): Promise<IMedia> {
+  const { data } = await axios.patch(`/media/${id}`, dto);
+  return data.data;
+}
+
 export async function deleteMedia(id: string): Promise<{ message: string }> {
   const { data } = await axios.delete(`/media/${id}`);
   return data;
