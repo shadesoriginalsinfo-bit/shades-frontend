@@ -1,4 +1,4 @@
-import { Truck, RefreshCw, Shield, Star, ArrowRight } from "lucide-react";
+import { Truck, RefreshCw, Gift, BadgeCheck, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 
 /* ─────────────────────────────────────────────
@@ -44,29 +44,31 @@ interface TrustItem {
 }
 
 const TRUST_ITEMS: TrustItem[] = [
-  { icon: Truck, label: "Free Delivery", sub: "On orders above ₹999" },
-  { icon: RefreshCw, label: "Easy Exchange", sub: "Hassle-free exchange" },
-  { icon: Shield, label: "Secure Payment", sub: "100% safe checkout" },
-  { icon: Star, label: "Premium Quality", sub: "Handcrafted with care" },
+  { icon: Truck, label: "FREE SHIPPING", sub: "On all prepaid orders" },
+  { icon: Gift, label: "CASH ON DELIVERY", sub: "Available Pan India" },
+  { icon: BadgeCheck, label: "PREMIUM QUALITY", sub: "Finest Fabrics" },
+  { icon: RefreshCw, label: "EASY RETURNS", sub: "Hassle free returns" },
 ];
 
 export const TrustBar = () => (
   <section className="border-y border-[#E8DDD0] bg-[#FDFAF7]">
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+    <div className="max-w-7xl mx-auto px-0 sm:px-6 lg:px-8 py-4 sm:py-7">
+      <div className="grid grid-cols-4 divide-x divide-[#E8DDD0]">
         {TRUST_ITEMS.map(({ icon: Icon, label, sub }) => (
           <div
             key={label}
-            className="flex flex-col sm:flex-row items-center sm:items-start gap-3 text-center sm:text-left"
+            className="flex flex-col items-center gap-1.5 sm:gap-2.5 text-center px-2 sm:px-6"
           >
-            <div className="w-11 h-11 rounded-full bg-[#F5EFE7] border border-[#E8DDD0] flex items-center justify-center shrink-0">
-              <Icon size={18} className="text-[#C6A46C]" />
-            </div>
+            <Icon
+              size={22}
+              className="text-[#1a1a1a] sm:w-7 sm:h-7"
+              strokeWidth={1.4}
+            />
             <div>
-              <p className="text-sm font-medium text-gray-800 leading-tight">
+              <p className="text-[8px] sm:text-[11px] font-bold text-[#1a1a1a] leading-tight sm:tracking-wide uppercase text-nowrap">
                 {label}
               </p>
-              <p className="text-xs text-gray-400 mt-0.5 tracking-wide">
+              <p className="text-[7px] sm:text-[11px] text-gray-500 mt-0.5 leading-tight">
                 {sub}
               </p>
             </div>
@@ -271,7 +273,7 @@ export const DiscountBanner = () => (
             </h3>
             <p className="text-white/75 text-sm mt-2 tracking-wide">
               On all ethnic wear
-               {/* · Use code:{" "} */}
+              {/* · Use code:{" "} */}
               {/* <span className="font-semibold text-white bg-white/15 px-2 py-0.5 rounded">
                 SHADES20
               </span> */}
