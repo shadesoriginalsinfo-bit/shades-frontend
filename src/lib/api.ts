@@ -408,6 +408,47 @@ export async function adminSetConfig(
   return data;
 }
 
+// ── Media ─────────────────────────────────────────────────────────────────────
+
+export interface IMedia {
+  id: string;
+  category: string;
+  url: string;
+  altText: string | null;
+  isActive: boolean;
+  sortOrder: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export async function getMedia(
+  category?: string,
+  onlyActive = false,
+): Promise<IMedia[]> {
+  const { data } = await axios.get("/media", {
+    params: {
+      ...(category ? { category } : {}),
+      ...(onlyActive ? { active: "true" } : {}),
+    },
+  });
+  return data.data;
+}
+
+export async function uploadMedia(files: File[]): Promise<IMedia[]> {
+  const formData = new FormData();
+  files.forEach((f) => formData.append("images", f));
+  formData.append("category", "banner");
+  const { data } = await axios.post("/media/upload", formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+  return data.data;
+}
+
+export async function deleteMedia(id: string): Promise<{ message: string }> {
+  const { data } = await axios.delete(`/media/${id}`);
+  return data;
+}
+
 // ── Admin Dashboard ───────────────────────────────────────────────────────────
 
 export async function adminGetDashboard(params?: {

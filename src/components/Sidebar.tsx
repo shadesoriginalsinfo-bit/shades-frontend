@@ -9,6 +9,7 @@ import {
   ShoppingCart,
   HomeIcon,
   Settings2,
+  Images,
 } from "lucide-react";
 import { useLogout } from "@/hooks/useLogout";
 import LoadingModal from "@/pages/LoadingPage";
@@ -43,6 +44,12 @@ export const navLinks: SidebarItem[] = [
     icon: <Users />,
     key: "users",
     path: "/admin/users",
+  },
+  {
+    label: "Media",
+    icon: <Images />,
+    key: "media",
+    path: "/admin/media",
   },
   {
     label: "Settings",

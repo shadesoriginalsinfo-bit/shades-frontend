@@ -1,11 +1,12 @@
 import Header from "./components/Header";
-import HeroCarousel from "./components/HeroCarousel";
+// import HeroCarousel from "./components/HeroCarousel";
+import MediaCarousel from "./components/MediaCarousel";
 import {
   PromoStrip,
   TrustBar,
   CategorySection,
   FeatureBanners,
-  ThreeBanners,
+  // ThreeBanners,
   DiscountBanner,
 } from "./components/Banners";
 // import ProductsSection from "./components/ProductsSection";
@@ -19,7 +20,8 @@ const HomePage = () => {
       <Header />
 
       {/* Hero carousel */}
-      <HeroCarousel />
+      {/* <HeroCarousel /> */}
+      <MediaCarousel />
 
       {/* Trust badges */}
       <TrustBar />

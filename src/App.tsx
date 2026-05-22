@@ -14,6 +14,7 @@ import OrdersPage from "./pages/admin/orders";
 import UsersPage from "./pages/admin/users";
 import ProductsPage from "./pages/admin/products";
 import SettingsPage from "./pages/admin/settings";
+import MediaPage from "./pages/admin/media";
 import ShopPage from "./pages/shop";
 import ProductDetailPage from "./pages/product-detail/ProductDetailPage";
 import CheckoutPage from "./pages/checkout/CheckoutPage";
@@ -51,6 +52,7 @@ function App() {
               <Route path="/admin/products" element={<ProductsPage />} />
               <Route path="/admin/users" element={<UsersPage />} />
               <Route path="/admin/settings" element={<SettingsPage />} />
+              <Route path="/admin/media" element={<MediaPage />} />
             </Route>
           </Route>
         </Route>
