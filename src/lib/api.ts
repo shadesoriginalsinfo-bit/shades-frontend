@@ -187,13 +187,14 @@ export async function addVariantImages(
   productId: string,
   variantId: string,
   files: File[],
+  signal?: AbortSignal,
 ): Promise<IProductImage[]> {
   const formData = new FormData();
   files.forEach((file) => formData.append("images", file));
   const { data } = await axios.post(
     `/products/${productId}/variants/${variantId}/images`,
     formData,
-    { headers: { "Content-Type": "multipart/form-data" } },
+    { headers: { "Content-Type": "multipart/form-data" }, signal },
   );
   return data.data;
 }
@@ -434,12 +435,13 @@ export async function getMedia(
   return data.data;
 }
 
-export async function uploadMedia(files: File[]): Promise<IMedia[]> {
+export async function uploadMedia(files: File[], signal?: AbortSignal): Promise<IMedia[]> {
   const formData = new FormData();
   files.forEach((f) => formData.append("images", f));
   formData.append("category", "banner");
   const { data } = await axios.post("/media/upload", formData, {
     headers: { "Content-Type": "multipart/form-data" },
+    signal,
   });
   return data.data;
 }
