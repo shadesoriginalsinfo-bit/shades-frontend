@@ -55,12 +55,12 @@ const MediaCarousel = () => {
         className="absolute inset-0 w-full h-full object-cover scale-110 blur-2xl opacity-70 pointer-events-none"
       />
 
-      {/* Main image — object-contain so nothing is cropped or stretched */}
+      {/* Main image — cover on mobile (fills frame), contain on md+ (full image visible) */}
       <img
         key={animKey}
         src={slide.url}
         alt={slide.altText ?? "banner"}
-        className="absolute inset-0 w-full h-full object-contain object-center"
+        className="absolute inset-0 w-full h-full object-cover md:object-contain object-center"
         style={{ animation: "carouselFade 0.6s ease both" }}
       />
 
