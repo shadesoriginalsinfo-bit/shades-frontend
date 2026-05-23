@@ -135,6 +135,9 @@ const MediaUploadZone = ({ onUpload, uploading }: Props) => {
             <span className="text-xs text-gray-300">
               Max {MAX_INPUT_MB} MB per file · Up to {MAX_FILES} images per upload
             </span>
+            <span className="text-[10px] text-[#9A7A46]/50 mt-0.5">
+              Recommended: 1920 × 600 px · Min: 1280 × 420 px · Ratio 16:5 · JPEG / WebP
+            </span>
           </>
         )}
       </button>

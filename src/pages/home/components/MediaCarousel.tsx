@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import { useMediaBanners } from "@/hooks/useMedia";
 
 const MediaCarousel = () => {
@@ -35,7 +35,9 @@ const MediaCarousel = () => {
 
   if (isLoading) {
     return (
-      <div className="w-full h-[420px] sm:h-[500px] md:h-[580px] bg-[#F0EBE3] animate-pulse" />
+      <div className="w-full h-[420px] sm:h-[500px] md:h-[580px] bg-[#F0EBE3] animate-pulse flex items-center justify-center">
+        <Loader2 className="size-8 text-[#9A7A46]/50 animate-spin" />
+      </div>
     );
   }
 
@@ -45,12 +47,20 @@ const MediaCarousel = () => {
 
   return (
     <section className="relative w-full h-[420px] sm:h-[500px] md:h-[580px] overflow-hidden bg-[#1a1a1a]">
-      {/* Image */}
+      {/* Blurred backdrop — fills letterbox gaps with the same image */}
+      <img
+        src={slide.url}
+        alt=""
+        aria-hidden="true"
+        className="absolute inset-0 w-full h-full object-cover scale-110 blur-2xl opacity-70 pointer-events-none"
+      />
+
+      {/* Main image — object-contain so nothing is cropped or stretched */}
       <img
         key={animKey}
         src={slide.url}
         alt={slide.altText ?? "banner"}
-        className="absolute inset-0 w-full h-full object-cover object-center"
+        className="absolute inset-0 w-full h-full object-contain object-center"
         style={{ animation: "carouselFade 0.6s ease both" }}
       />
 
