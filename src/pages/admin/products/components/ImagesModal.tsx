@@ -26,6 +26,7 @@ const TARGET_MB = 1.5;
 const MAX_OUTPUT_MB = 5;
 const MAX_INPUT_BYTES = MAX_INPUT_MB * 1024 * 1024;
 const MAX_OUTPUT_BYTES = MAX_OUTPUT_MB * 1024 * 1024;
+const MAX_FILES = 10;
 
 interface Props {
   open: boolean;
@@ -144,10 +145,22 @@ const ImagesModal = ({
     e.currentTarget.value = "";
     if (!files.length) return;
 
+    const available = MAX_FILES - pendingFiles.length;
+    if (available <= 0) {
+      toast.error(`Maximum ${MAX_FILES} images per upload`);
+      return;
+    }
+    const capped = files.slice(0, available);
+    if (capped.length < files.length) {
+      toast.error(
+        `Only ${capped.length} image${capped.length === 1 ? "" : "s"} added — limit is ${MAX_FILES} per upload`,
+      );
+    }
+
     setCompressing(true);
 
     const results = await Promise.all(
-      files.map(async (f) => {
+      capped.map(async (f) => {
         if (f.size > MAX_INPUT_BYTES) {
           toast.error(`"${f.name}" exceeds ${MAX_INPUT_MB} MB limit — skipped`);
           return null;
@@ -303,7 +316,7 @@ const ImagesModal = ({
 
             <button
               type="button"
-              disabled={compressing}
+              disabled={compressing || pendingFiles.length >= MAX_FILES}
               onClick={() => inputRef.current?.click()}
               className="w-full border-2 border-dashed border-[#E8DDD0] rounded hover:border-[#9A7A46]/40 transition-colors py-5 flex flex-col items-center gap-1.5 text-gray-400 hover:text-[#9A7A46]/60 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:border-[#E8DDD0] disabled:hover:text-gray-400"
             >
@@ -315,10 +328,13 @@ const ImagesModal = ({
               ) : (
                 <>
                   <ImagePlus className="size-5" />
-                  <span className="text-xs">Click to select images</span>
+                  <span className="text-xs">
+                    {pendingFiles.length >= MAX_FILES
+                      ? `Limit reached (${MAX_FILES})`
+                      : "Click to select images"}
+                  </span>
                   <span className="text-[10px] text-gray-300">
-                    Max {MAX_INPUT_MB} MB per file · Multiple selection
-                    supported
+                    Max {MAX_INPUT_MB} MB per file · Up to {MAX_FILES} images per upload
                   </span>
                 </>
               )}

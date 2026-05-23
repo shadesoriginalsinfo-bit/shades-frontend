@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Check, ImagePlus, Layers, Pencil, Plus, Trash2, X } from "lucide-react";
 import toast from "react-hot-toast";
@@ -60,6 +60,15 @@ const VariantsModal = ({ open, onClose, product }: Props) => {
   const [imagesVariantId, setImagesVariantId] = useState<string | null>(null);
   const imagesVariant =
     product?.variants.find((v) => v.id === imagesVariantId) ?? null;
+  const addImagesAbortRef = useRef<AbortController | null>(null);
+
+  useEffect(() => {
+    if (!imagesVariantId) addImagesAbortRef.current?.abort();
+  }, [imagesVariantId]);
+
+  useEffect(() => {
+    return () => { addImagesAbortRef.current?.abort(); };
+  }, []);
 
   // ── Mutations ─────────────────────────────────────────────────────────────
   const addVariantMut = useMutation({
@@ -137,10 +146,12 @@ const VariantsModal = ({ open, onClose, product }: Props) => {
     mutationFn: ({
       variantId,
       files,
+      signal,
     }: {
       variantId: string;
       files: File[];
-    }) => addVariantImages(product!.id, variantId, files),
+      signal: AbortSignal;
+    }) => addVariantImages(product!.id, variantId, files, signal),
     onSuccess: () => {
       toast.success("Images added");
       invalidate();
@@ -533,10 +544,12 @@ const VariantsModal = ({ open, onClose, product }: Props) => {
         open={!!imagesVariantId}
         onClose={() => setImagesVariantId(null)}
         variant={imagesVariant}
-        onAddImages={(files) =>
-          imagesVariantId &&
-          addImagesMut.mutate({ variantId: imagesVariantId, files })
-        }
+        onAddImages={(files) => {
+          if (!imagesVariantId) return;
+          addImagesAbortRef.current?.abort();
+          addImagesAbortRef.current = new AbortController();
+          addImagesMut.mutate({ variantId: imagesVariantId, files, signal: addImagesAbortRef.current.signal });
+        }}
         onRemoveImage={(imageId) =>
           imagesVariantId &&
           removeImageMut.mutate({ variantId: imagesVariantId, imageId })

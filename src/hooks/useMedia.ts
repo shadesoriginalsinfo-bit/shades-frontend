@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   deleteMedia,
@@ -20,6 +21,7 @@ export function useMediaBanners() {
 
 export function useAdminMedia() {
   const queryClient = useQueryClient();
+  const uploadAbortRef = useRef<AbortController | null>(null);
 
   const { data: items = [], isLoading } = useQuery({
     queryKey: [MEDIA_QUERY_KEY, "banner", "all"],
@@ -28,13 +30,18 @@ export function useAdminMedia() {
   });
 
   const uploadMutation = useMutation({
-    mutationFn: uploadMedia,
+    mutationFn: ({ files, signal }: { files: File[]; signal: AbortSignal }) =>
+      uploadMedia(files, signal),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [MEDIA_QUERY_KEY] });
       toast.success("Images uploaded successfully");
     },
     onError: handleApiError,
   });
+
+  useEffect(() => {
+    return () => { uploadAbortRef.current?.abort(); };
+  }, []);
 
   const updateMutation = useMutation({
     mutationFn: ({ id, dto }: { id: string; dto: { isActive?: boolean; sortOrder?: number } }) =>
@@ -58,7 +65,11 @@ export function useAdminMedia() {
   return {
     items,
     isLoading,
-    upload: (files: File[]) => uploadMutation.mutate(files),
+    upload: (files: File[]) => {
+      uploadAbortRef.current?.abort();
+      uploadAbortRef.current = new AbortController();
+      uploadMutation.mutate({ files, signal: uploadAbortRef.current.signal });
+    },
     uploading: uploadMutation.isPending,
     update: (id: string, dto: { isActive?: boolean; sortOrder?: number }) =>
       updateMutation.mutate({ id, dto }),
