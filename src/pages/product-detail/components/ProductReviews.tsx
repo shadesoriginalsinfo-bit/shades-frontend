@@ -216,6 +216,7 @@ function ReviewForm({ productId, editing, onClose }: ReviewFormProps) {
 interface ReviewCardProps {
   review: IReview;
   isOwn: boolean;
+  isAdmin: boolean;
   deleteLoading: boolean;
   onEdit: () => void;
   onDelete: () => void;
@@ -224,6 +225,7 @@ interface ReviewCardProps {
 function ReviewCard({
   review,
   isOwn,
+  isAdmin,
   deleteLoading,
   onEdit,
   onDelete,
@@ -278,26 +280,30 @@ function ReviewCard({
           </div>
         </div>
 
-        {/* Edit / delete (own review only) */}
-        {isOwn && (
+        {/* Edit (owner) / Delete (admin) */}
+        {(isOwn || isAdmin) && (
           <div className="flex items-center gap-0.5 shrink-0">
-            <button
-              type="button"
-              onClick={onEdit}
-              className="p-1.5 text-gray-400 hover:text-[#9A7A46] transition-colors"
-              title="Edit review"
-            >
-              <Pencil size={13} />
-            </button>
-            <button
-              type="button"
-              onClick={onDelete}
-              disabled={deleteLoading}
-              className="p-1.5 text-gray-400 hover:text-red-500 transition-colors disabled:opacity-50"
-              title="Delete review"
-            >
-              <Trash2 size={13} />
-            </button>
+            {isOwn && (
+              <button
+                type="button"
+                onClick={onEdit}
+                className="p-1.5 text-gray-400 hover:text-[#9A7A46] transition-colors"
+                title="Edit review"
+              >
+                <Pencil size={13} />
+              </button>
+            )}
+            {isAdmin && (
+              <button
+                type="button"
+                onClick={onDelete}
+                disabled={deleteLoading}
+                className="p-1.5 text-gray-400 hover:text-red-500 transition-colors disabled:opacity-50"
+                title="Delete review"
+              >
+                <Trash2 size={13} />
+              </button>
+            )}
           </div>
         )}
       </div>
@@ -497,6 +503,7 @@ const ProductReviews = ({ productId }: { productId: string }) => {
                     key={review.id}
                     review={review}
                     isOwn={review.user.id === user?.id}
+                    isAdmin={user?.role === "ADMIN"}
                     deleteLoading={deleteMutation.isPending}
                     onEdit={() => handleEdit(review)}
                     onDelete={() => deleteMutation.mutate(review.id)}
