@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Star, Pencil, Trash2, X } from "lucide-react";
 import toast from "react-hot-toast";
@@ -22,7 +22,11 @@ function StarDisplay({ rating, size = 14 }: { rating: number; size?: number }) {
     <div className="flex items-center gap-0.5">
       {[1, 2, 3, 4, 5].map((n) => {
         const fillPct =
-          rating >= n ? 100 : rating > n - 1 ? Math.round((rating - (n - 1)) * 100) : 0;
+          rating >= n
+            ? 100
+            : rating > n - 1
+              ? Math.round((rating - (n - 1)) * 100)
+              : 0;
         return (
           <span
             key={n}
@@ -112,7 +116,9 @@ function ReviewForm({ productId, editing, onClose }: ReviewFormProps) {
       }),
     onSuccess: () => {
       toast.success("Review submitted!");
-      queryClient.invalidateQueries({ queryKey: [REVIEWS_QUERY_KEY, productId] });
+      queryClient.invalidateQueries({
+        queryKey: [REVIEWS_QUERY_KEY, productId],
+      });
       onClose();
     },
     onError: handleApiError,
@@ -126,7 +132,9 @@ function ReviewForm({ productId, editing, onClose }: ReviewFormProps) {
       }),
     onSuccess: () => {
       toast.success("Review updated");
-      queryClient.invalidateQueries({ queryKey: [REVIEWS_QUERY_KEY, productId] });
+      queryClient.invalidateQueries({
+        queryKey: [REVIEWS_QUERY_KEY, productId],
+      });
       onClose();
     },
     onError: handleApiError,
@@ -165,7 +173,9 @@ function ReviewForm({ productId, editing, onClose }: ReviewFormProps) {
       <div className="space-y-1.5">
         <label className="text-[10px] tracking-[0.2em] uppercase text-gray-500 font-medium">
           Comment{" "}
-          <span className="normal-case text-gray-400 tracking-normal">(optional)</span>
+          <span className="normal-case text-gray-400 tracking-normal">
+            (optional)
+          </span>
         </label>
         <textarea
           value={comment}
@@ -175,7 +185,9 @@ function ReviewForm({ productId, editing, onClose }: ReviewFormProps) {
           maxLength={2000}
           className="w-full bg-transparent text-sm text-gray-700 outline-none border border-[#D4B896] px-3 py-2 placeholder:text-gray-300 placeholder:text-xs focus:border-[#9A7A46] focus:shadow-[0_1px_0_0_#9A7A46] resize-none"
         />
-        <p className="text-right text-[10px] text-gray-400">{comment.length} / 2000</p>
+        <p className="text-right text-[10px] text-gray-400">
+          {comment.length} / 2000
+        </p>
       </div>
 
       <div className="flex items-center gap-2">
@@ -209,7 +221,13 @@ interface ReviewCardProps {
   onDelete: () => void;
 }
 
-function ReviewCard({ review, isOwn, deleteLoading, onEdit, onDelete }: ReviewCardProps) {
+function ReviewCard({
+  review,
+  isOwn,
+  deleteLoading,
+  onEdit,
+  onDelete,
+}: ReviewCardProps) {
   const initials = review.user.name
     .split(" ")
     .map((w) => w[0] ?? "")
@@ -234,7 +252,9 @@ function ReviewCard({ review, isOwn, deleteLoading, onEdit, onDelete }: ReviewCa
             />
           ) : (
             <div className="w-9 h-9 rounded-full bg-[#F5EFE7] border border-[#E8DDD0] flex items-center justify-center shrink-0">
-              <span className="text-[11px] font-semibold text-[#9A7A46]">{initials}</span>
+              <span className="text-[11px] font-semibold text-[#9A7A46]">
+                {initials}
+              </span>
             </div>
           )}
           <div className="min-w-0">
@@ -286,7 +306,9 @@ function ReviewCard({ review, isOwn, deleteLoading, onEdit, onDelete }: ReviewCa
       <div className="mt-3 ml-12 space-y-2">
         <StarDisplay rating={review.rating} size={13} />
         {review.comment && (
-          <p className="text-sm text-gray-600 leading-relaxed">{review.comment}</p>
+          <p className="text-sm text-gray-600 leading-relaxed">
+            {review.comment}
+          </p>
         )}
       </div>
     </div>
@@ -318,6 +340,8 @@ function ReviewSkeleton() {
 
 const ProductReviews = ({ productId }: { productId: string }) => {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
+  const location = useLocation();
   const { data: user } = useAuthUser();
 
   const [showForm, setShowForm] = useState(false);
@@ -340,7 +364,9 @@ const ProductReviews = ({ productId }: { productId: string }) => {
     mutationFn: (reviewId: string) => deleteProductReview(productId, reviewId),
     onSuccess: () => {
       toast.success("Review deleted");
-      queryClient.invalidateQueries({ queryKey: [REVIEWS_QUERY_KEY, productId] });
+      queryClient.invalidateQueries({
+        queryKey: [REVIEWS_QUERY_KEY, productId],
+      });
     },
     onError: handleApiError,
   });
@@ -349,7 +375,9 @@ const ProductReviews = ({ productId }: { productId: string }) => {
   const meta = data?.meta;
   const avgRating = meta?.averageRating ?? 0;
   const totalReviews = meta?.totalReviews ?? 0;
-  const myReview = user ? (reviews.find((r) => r.user.id === user.id) ?? null) : null;
+  const myReview = user
+    ? (reviews.find((r) => r.user.id === user.id) ?? null)
+    : null;
 
   const handleEdit = (review: IReview) => {
     setShowForm(false);
@@ -362,9 +390,9 @@ const ProductReviews = ({ productId }: { productId: string }) => {
   };
 
   return (
-    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
+    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-4 md:py-16">
       {/* Section divider heading */}
-      <div className="flex items-center gap-4 mb-8 md:mb-10">
+      <div className="flex items-center gap-4 mb-4 md:mb-10">
         <div className="h-px flex-1 bg-[#E8DDD0]" />
         <h2 className="text-[11px] tracking-[0.35em] uppercase text-[#9A7A46]/70 font-medium whitespace-nowrap">
           Customer Reviews
@@ -406,22 +434,22 @@ const ProductReviews = ({ productId }: { productId: string }) => {
           {/* Write review area */}
           <div>
             {!user ? (
-              // Guest
-              <p className="text-sm text-gray-500 leading-relaxed">
-                <Link
-                  to="/login"
-                  className="text-[#9A7A46] hover:text-[#B8936A] font-medium underline underline-offset-2 transition-colors"
-                >
-                  Sign in
-                </Link>{" "}
-                to write a review for this product.
-              </p>
+              // Guest — redirect to login, come back after
+              <button
+                type="button"
+                onClick={() =>
+                  navigate("/login", { state: { from: location.pathname } })
+                }
+                className="w-full py-2.5 bg-[#2A1810] text-white text-xs tracking-[0.15em] uppercase font-medium hover:bg-[#9A7A46] transition-colors"
+              >
+                Write a Review
+              </button>
             ) : myReview && !editingReview ? (
               // Already reviewed (not currently editing)
               <p className="text-xs text-gray-500 leading-relaxed">
                 You've already reviewed this product. Click the{" "}
-                <Pencil size={11} className="inline -mt-0.5 text-[#9A7A46]" /> icon on
-                your review to edit it.
+                <Pencil size={11} className="inline -mt-0.5 text-[#9A7A46]" />{" "}
+                icon on your review to edit it.
               </p>
             ) : !showForm && !editingReview ? (
               // Logged in, no review yet, form closed
@@ -449,32 +477,34 @@ const ProductReviews = ({ productId }: { productId: string }) => {
             </div>
           )}
 
-          {/* Reviews list */}
-          {isLoading ? (
-            <>
-              <ReviewSkeleton />
-              <ReviewSkeleton />
-              <ReviewSkeleton />
-            </>
-          ) : reviews.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-14 text-gray-400 border border-dashed border-[#E8DDD0]">
-              <Star size={28} className="mb-2.5 opacity-25" />
-              <p className="text-sm">No reviews yet — be the first!</p>
-            </div>
-          ) : (
-            <div>
-              {reviews.map((review) => (
-                <ReviewCard
-                  key={review.id}
-                  review={review}
-                  isOwn={review.user.id === user?.id}
-                  deleteLoading={deleteMutation.isPending}
-                  onEdit={() => handleEdit(review)}
-                  onDelete={() => deleteMutation.mutate(review.id)}
-                />
-              ))}
-            </div>
-          )}
+          {/* Reviews list — fixed height, scrollable */}
+          <div className="max-h-[520px] overflow-y-auto pr-1">
+            {isLoading ? (
+              <>
+                <ReviewSkeleton />
+                <ReviewSkeleton />
+                <ReviewSkeleton />
+              </>
+            ) : reviews.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-14 text-gray-400 border border-dashed border-[#E8DDD0]">
+                <Star size={28} className="mb-2.5 opacity-25" />
+                <p className="text-sm">No reviews yet — be the first!</p>
+              </div>
+            ) : (
+              <div>
+                {reviews.map((review) => (
+                  <ReviewCard
+                    key={review.id}
+                    review={review}
+                    isOwn={review.user.id === user?.id}
+                    deleteLoading={deleteMutation.isPending}
+                    onEdit={() => handleEdit(review)}
+                    onDelete={() => deleteMutation.mutate(review.id)}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </section>

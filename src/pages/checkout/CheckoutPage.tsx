@@ -53,14 +53,17 @@ const CheckoutPage = () => {
 
   const state = location.state as CheckoutState | null;
 
-  const [selectedAddressId, setSelectedAddressId] = useState<string | null>(null);
+  const [selectedAddressId, setSelectedAddressId] = useState<string | null>(
+    null,
+  );
   const [showAddressForm, setShowAddressForm] = useState(false);
-  const [addressForm, setAddressForm] = useState<ICreateAddress>(emptyAddressForm);
+  const [addressForm, setAddressForm] =
+    useState<ICreateAddress>(emptyAddressForm);
   const [paymentMethod] = useState<"ONLINE">("ONLINE");
 
   if (!state?.items?.length) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center gap-4 bg-white">
+      <div className="min-h-screen flex flex-col items-center justify-center gap-4 bg-white py-4">
         <p className="text-gray-500 text-sm tracking-wide">
           No items selected for checkout.
         </p>
@@ -83,7 +86,9 @@ const CheckoutPage = () => {
   });
 
   const SHIPPING_FLAT = parseFloat(appConfig?.SHIPPING_FLAT ?? "70");
-  const SHIPPING_FREE_THRESHOLD = parseFloat(appConfig?.SHIPPING_FREE_THRESHOLD ?? "500");
+  const SHIPPING_FREE_THRESHOLD = parseFloat(
+    appConfig?.SHIPPING_FREE_THRESHOLD ?? "500",
+  );
 
   // Aggregate totals
   let subtotal = 0;
@@ -96,7 +101,8 @@ const CheckoutPage = () => {
   }
   taxAmount = parseFloat(taxAmount.toFixed(2));
   const totalQty = items.reduce((s, i) => s + i.quantity, 0);
-  const shipping = subtotal > 1 && subtotal < SHIPPING_FREE_THRESHOLD ? SHIPPING_FLAT : 0;
+  const shipping =
+    subtotal > 1 && subtotal < SHIPPING_FREE_THRESHOLD ? SHIPPING_FLAT : 0;
   const total = parseFloat((subtotal + taxAmount + shipping).toFixed(2));
 
   const { data: addresses = [], isLoading: addressesLoading } = useQuery({
@@ -154,7 +160,10 @@ const CheckoutPage = () => {
       order = await orderMutation.mutateAsync({
         shippingAddressId: selectedAddressId,
         paymentMethod,
-        items: items.map((i) => ({ variantSizeId: i.variantSizeId, quantity: i.quantity })),
+        items: items.map((i) => ({
+          variantSizeId: i.variantSizeId,
+          quantity: i.quantity,
+        })),
       });
     } catch {
       return;
@@ -178,7 +187,8 @@ const CheckoutPage = () => {
       currency: paymentData.currency,
       order_id: paymentData.razorpayOrderId,
       name: "Shades",
-      description: items.length === 1 ? firstItem.product.title : `${items.length} items`,
+      description:
+        items.length === 1 ? firstItem.product.title : `${items.length} items`,
       image: firstItem.imageUrl,
       theme: { color: "#9A7A46" },
       handler: async (response) => {
@@ -258,11 +268,17 @@ const CheckoutPage = () => {
               </h2>
               <div className="space-y-4">
                 {items.map((item) => {
-                  const unitPrice = item.product.discountPrice ?? item.product.marketPrice;
+                  const unitPrice =
+                    item.product.discountPrice ?? item.product.marketPrice;
                   const gstRate = (item.product.gstPercent ?? 0) / 100;
-                  const unitPriceWithGst = parseFloat((unitPrice * (1 + gstRate)).toFixed(2));
+                  const unitPriceWithGst = parseFloat(
+                    (unitPrice * (1 + gstRate)).toFixed(2),
+                  );
                   return (
-                    <div key={item.variantSizeId} className="flex gap-4 pb-4 border-b border-[#F0E8DE] last:border-0 last:pb-0">
+                    <div
+                      key={item.variantSizeId}
+                      className="flex gap-4 pb-4 border-b border-[#F0E8DE] last:border-0 last:pb-0"
+                    >
                       {item.imageUrl ? (
                         <img
                           src={item.imageUrl}
@@ -271,7 +287,10 @@ const CheckoutPage = () => {
                         />
                       ) : (
                         <div className="w-16 h-16 bg-[#F5EFE7] rounded-sm border border-[#E8DDD0] shrink-0 flex items-center justify-center">
-                          <ShoppingBag size={16} className="text-[#9A7A46]/40" />
+                          <ShoppingBag
+                            size={16}
+                            className="text-[#9A7A46]/40"
+                          />
                         </div>
                       )}
                       <div className="flex-1 min-w-0">
@@ -280,7 +299,10 @@ const CheckoutPage = () => {
                         </p>
                         <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5 text-xs text-gray-500">
                           <span>
-                            Qty: <span className="text-gray-800 font-medium">{item.quantity}</span>
+                            Qty:{" "}
+                            <span className="text-gray-800 font-medium">
+                              {item.quantity}
+                            </span>
                           </span>
                           {item.colorLabel && (
                             <>
@@ -292,7 +314,9 @@ const CheckoutPage = () => {
                                     style={{ backgroundColor: item.colorCode }}
                                   />
                                 )}
-                                <span className="capitalize">{item.colorLabel}</span>
+                                <span className="capitalize">
+                                  {item.colorLabel}
+                                </span>
                               </span>
                             </>
                           )}
@@ -300,7 +324,10 @@ const CheckoutPage = () => {
                             <>
                               <span className="text-gray-300">|</span>
                               <span>
-                                Size: <span className="text-gray-800 font-medium">{item.sizeLabel}</span>
+                                Size:{" "}
+                                <span className="text-gray-800 font-medium">
+                                  {item.sizeLabel}
+                                </span>
                               </span>
                             </>
                           )}
@@ -308,9 +335,15 @@ const CheckoutPage = () => {
                       </div>
                       <div className="text-right shrink-0">
                         <p className="font-bold text-[#2A1810] text-sm">
-                          {formatINR(parseFloat((unitPriceWithGst * item.quantity).toFixed(2)))}
+                          {formatINR(
+                            parseFloat(
+                              (unitPriceWithGst * item.quantity).toFixed(2),
+                            ),
+                          )}
                         </p>
-                        <p className="text-[11px] text-gray-400">{formatINR(unitPriceWithGst)} each</p>
+                        <p className="text-[11px] text-gray-400">
+                          {formatINR(unitPriceWithGst)} each
+                        </p>
                       </div>
                     </div>
                   );
@@ -375,7 +408,10 @@ const CheckoutPage = () => {
                           {addr.postalCode}, {addr.country}
                         </p>
                       </div>
-                      <MapPin size={14} className="text-[#9A7A46] shrink-0 mt-1" />
+                      <MapPin
+                        size={14}
+                        className="text-[#9A7A46] shrink-0 mt-1"
+                      />
                     </label>
                   ))}
                 </div>
@@ -387,7 +423,11 @@ const CheckoutPage = () => {
               >
                 <Plus size={13} />
                 Add New Address
-                {showAddressForm ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
+                {showAddressForm ? (
+                  <ChevronUp size={12} />
+                ) : (
+                  <ChevronDown size={12} />
+                )}
               </button>
 
               {showAddressForm && (
@@ -397,7 +437,10 @@ const CheckoutPage = () => {
                 >
                   <div>
                     <label className="text-[10px] tracking-[0.2em] uppercase text-[#9A7A46] font-medium">
-                      Label <span className="text-gray-400 normal-case tracking-normal">(optional)</span>
+                      Label{" "}
+                      <span className="text-gray-400 normal-case tracking-normal">
+                        (optional)
+                      </span>
                     </label>
                     <input
                       name="label"
@@ -422,7 +465,10 @@ const CheckoutPage = () => {
                   </div>
                   <div>
                     <label className="text-[10px] tracking-[0.2em] uppercase text-[#9A7A46] font-medium">
-                      Landmark <span className="text-gray-400 normal-case tracking-normal">(optional)</span>
+                      Landmark{" "}
+                      <span className="text-gray-400 normal-case tracking-normal">
+                        (optional)
+                      </span>
                     </label>
                     <input
                       name="line2"
@@ -495,7 +541,9 @@ const CheckoutPage = () => {
                       onChange={handleAddressFormChange}
                       className="accent-[#9A7A46]"
                     />
-                    <span className="text-xs text-gray-600 tracking-wide">Set as default address</span>
+                    <span className="text-xs text-gray-600 tracking-wide">
+                      Set as default address
+                    </span>
                   </label>
                   <div className="flex gap-3 pt-1">
                     <button
@@ -504,14 +552,19 @@ const CheckoutPage = () => {
                       className="flex items-center gap-2 px-5 py-2.5 bg-[#2A1810] text-white text-xs tracking-[0.2em] uppercase font-medium hover:bg-[#9A7A46] transition-all rounded-sm disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       {addAddressMutation.isPending ? (
-                        <><Loader2 size={12} className="animate-spin" /> Saving…</>
+                        <>
+                          <Loader2 size={12} className="animate-spin" /> Saving…
+                        </>
                       ) : (
                         "Save Address"
                       )}
                     </button>
                     <button
                       type="button"
-                      onClick={() => { setShowAddressForm(false); setAddressForm(emptyAddressForm); }}
+                      onClick={() => {
+                        setShowAddressForm(false);
+                        setAddressForm(emptyAddressForm);
+                      }}
                       className="px-4 py-2.5 border border-[#E8DDD0] text-gray-500 text-xs tracking-[0.2em] uppercase font-medium hover:border-gray-400 transition-all rounded-sm"
                     >
                       Cancel
@@ -538,8 +591,12 @@ const CheckoutPage = () => {
                   />
                   <CreditCard size={15} className="text-[#9A7A46] shrink-0" />
                   <div>
-                    <p className="text-sm font-medium text-gray-800">Online Payment</p>
-                    <p className="text-[11px] text-gray-400 mt-0.5">Credit / Debit card, UPI, Net banking</p>
+                    <p className="text-sm font-medium text-gray-800">
+                      Online Payment
+                    </p>
+                    <p className="text-[11px] text-gray-400 mt-0.5">
+                      Credit / Debit card, UPI, Net banking
+                    </p>
                   </div>
                 </label>
               </div>
@@ -555,23 +612,32 @@ const CheckoutPage = () => {
 
               <div className="space-y-2.5 text-sm">
                 <div className="flex justify-between text-gray-600">
-                  <span>Subtotal ({totalQty} item{totalQty > 1 ? "s" : ""})</span>
-                  <span className="font-medium text-gray-800">{formatINR(parseFloat((subtotal + taxAmount).toFixed(2)))}</span>
+                  <span>
+                    Subtotal ({totalQty} item{totalQty > 1 ? "s" : ""})
+                  </span>
+                  <span className="font-medium text-gray-800">
+                    {formatINR(parseFloat((subtotal + taxAmount).toFixed(2)))}
+                  </span>
                 </div>
                 <div className="flex justify-between text-gray-600">
                   <span>Shipping</span>
-                  <span className={`font-medium ${shipping === 0 ? "text-emerald-600" : "text-gray-800"}`}>
+                  <span
+                    className={`font-medium ${shipping === 0 ? "text-emerald-600" : "text-gray-800"}`}
+                  >
                     {shipping === 0 ? "Free" : formatINR(shipping)}
                   </span>
                 </div>
                 {shipping > 0 && (
                   <p className="text-[10px] text-gray-400 -mt-1">
-                    Add {formatINR(SHIPPING_FREE_THRESHOLD - subtotal)} more for free shipping
+                    Add {formatINR(SHIPPING_FREE_THRESHOLD - subtotal)} more for
+                    free shipping
                   </p>
                 )}
                 <div className="border-t border-[#E8DDD0] pt-2.5 flex justify-between">
                   <span className="font-semibold text-[#2A1810]">Total</span>
-                  <span className="font-bold text-[#2A1810] text-lg">{formatINR(total)}</span>
+                  <span className="font-bold text-[#2A1810] text-lg">
+                    {formatINR(total)}
+                  </span>
                 </div>
               </div>
 
@@ -589,22 +655,36 @@ const CheckoutPage = () => {
                   </p>
                   <p className="text-xs text-gray-500">
                     {activeAddress.city}
-                    {activeAddress.state ? `, ${activeAddress.state}` : ""} — {activeAddress.postalCode}
+                    {activeAddress.state
+                      ? `, ${activeAddress.state}`
+                      : ""} — {activeAddress.postalCode}
                   </p>
                 </div>
               )}
 
               <button
                 onClick={handlePlaceOrder}
-                disabled={orderMutation.isPending || isPaymentProcessing || !selectedAddressId}
+                disabled={
+                  orderMutation.isPending ||
+                  isPaymentProcessing ||
+                  !selectedAddressId
+                }
                 className="mt-5 w-full flex items-center justify-center gap-2.5 py-3.5 bg-[#2A1810] text-white text-xs tracking-[0.2em] uppercase font-medium hover:bg-[#9A7A46] transition-all duration-200 rounded-sm disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_4px_20px_rgba(0,0,0,0.12)]"
               >
                 {orderMutation.isPending ? (
-                  <><Loader2 size={14} className="animate-spin" /> Creating Order…</>
+                  <>
+                    <Loader2 size={14} className="animate-spin" /> Creating
+                    Order…
+                  </>
                 ) : isPaymentProcessing ? (
-                  <><Loader2 size={14} className="animate-spin" /> Processing Payment…</>
+                  <>
+                    <Loader2 size={14} className="animate-spin" /> Processing
+                    Payment…
+                  </>
                 ) : (
-                  <><CheckCircle2 size={14} /> Proceed to Payment</>
+                  <>
+                    <CheckCircle2 size={14} /> Proceed to Payment
+                  </>
                 )}
               </button>
 

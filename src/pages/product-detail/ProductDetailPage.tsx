@@ -85,11 +85,9 @@ const ProductDetailPage = () => {
                 <GallerySkeleton />
               ) : (
                 <ProductImageGallery
-                  images={
-                    [...(product!.variants[selectedVariantIdx]?.images ?? [])].sort(
-                      (a, b) => a.position - b.position,
-                    )
-                  }
+                  images={[
+                    ...(product!.variants[selectedVariantIdx]?.images ?? []),
+                  ].sort((a, b) => a.position - b.position)}
                   title={product!.title}
                 />
               )}
@@ -101,7 +99,6 @@ const ProductDetailPage = () => {
                 <ProductInfoSkeleton />
               ) : (
                 <div>
-
                   {/* ── Title ── */}
                   <h1 className="md:hidden text-2xl md:text-3xl lg:text-4xl font-bold font-serif text-[#2A1810] leading-tight tracking-tight">
                     {product!.title}
