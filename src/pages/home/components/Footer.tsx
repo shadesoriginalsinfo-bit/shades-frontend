@@ -40,15 +40,15 @@ const Footer = () => {
 
   return (
     <footer className="bg-[#100C07] text-white">
-      <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-16 pt-14 pb-8">
+      <div className="max-w-8xl mx-auto px-3 sm:px-6 lg:px-16 pt-5 pb-3 md:pt-14 md:pb-8">
         {/* Main grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-10 pb-12 border-b border-white/[0.07]">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-10 pb-4 md:pb-12 border-b border-white/[0.07]">
           {/* Brand column */}
           <div className="col-span-2 md:col-span-2">
-            <h3 className="text-3xl font-bold font-serif text-[#C6A46C] tracking-widest mb-4">
+            <h3 className="text-xl md:text-3xl font-bold font-serif text-[#C6A46C] tracking-widest mb-1.5 md:mb-4">
               SHADES
             </h3>
-            <p className="text-xs text-gray-300 leading-relaxed tracking-wide max-w-xs">
+            <p className="text-[11px] md:text-xs text-gray-300 leading-relaxed tracking-wide max-w-xs">
               Crafting timeless ethnic wear that celebrates your unique
               identity. Each piece tells a story of tradition, elegance, and
               artisanship.
@@ -71,7 +71,7 @@ const Footer = () => {
             <GoldDivider />
 
             {/* Contact info */}
-            <div className="mt-7 space-y-2.5">
+            <div className="mt-2 md:mt-7 space-y-1 md:space-y-2.5">
               {[
                 // { Icon: MapPin, text: "123 Fashion Street, Mumbai, MH 400001", href: undefined },
                 {
@@ -95,8 +95,8 @@ const Footer = () => {
                   href: undefined,
                 },
               ].map(({ Icon, text, href }) => (
-                <div key={text} className="flex items-start gap-2.5">
-                  <Icon size={13} className="text-[#C6A46C] mt-0.5 shrink-0" />
+                <div key={text} className="flex items-start gap-1.5 md:gap-2.5">
+                  <Icon size={11} className="text-[#C6A46C] mt-0.5 shrink-0 md:w-[13px] md:h-[13px]" />
                   {href ? (
                     <a
                       href={href}
@@ -106,12 +106,12 @@ const Footer = () => {
                           ? "noopener noreferrer"
                           : undefined
                       }
-                      className="text-xs text-gray-300 tracking-wide hover:text-[#C6A46C] transition-colors"
+                      className="text-[11px] md:text-xs text-gray-300 tracking-wide hover:text-[#C6A46C] transition-colors"
                     >
                       {text}
                     </a>
                   ) : (
-                    <span className="text-xs text-gray-300 tracking-wide">
+                    <span className="text-[11px] md:text-xs text-gray-300 tracking-wide">
                       {text}
                     </span>
                   )}
@@ -123,15 +123,15 @@ const Footer = () => {
           {/* Link columns */}
           {FOOTER_LINKS.map(({ heading, links }) => (
             <div key={heading}>
-              <h4 className="text-[10px] tracking-[0.3em] uppercase text-[#C6A46C] font-semibold mb-5">
+              <h4 className="text-[9px] md:text-[10px] tracking-[0.2em] md:tracking-[0.3em] uppercase text-[#C6A46C] font-semibold mb-2 md:mb-5">
                 {heading}
               </h4>
-              <ul className="space-y-3">
+              <ul className="space-y-1 md:space-y-3">
                 {links.map(({ label, href }) => (
                   <li key={label}>
                     <a
                       href={href}
-                      className="text-xs text-gray-300 hover:text-[#C6A46C] transition-colors duration-200 tracking-wide"
+                      className="text-[11px] md:text-xs text-gray-300 hover:text-[#C6A46C] transition-colors duration-200 tracking-wide"
                     >
                       {label}
                     </a>
@@ -143,12 +143,11 @@ const Footer = () => {
         </div>
 
         {/* Bottom bar */}
-        <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-xs text-gray-300 tracking-wider text-center sm:text-left">
-            © {new Date().getFullYear()} Shades Ethnic Wear. All rights
-            reserved.
+        <div className="pt-2.5 md:pt-6 flex flex-row items-center justify-between gap-1 md:gap-4">
+          <p className="text-[10px] md:text-xs text-gray-300 tracking-wider">
+            © {new Date().getFullYear()} Shades Ethnic Wear.
           </p>
-          <p className="text-[10px] tracking-[0.3em] uppercase text-[#C6A46C]">
+          <p className="text-[9px] md:text-[10px] tracking-[0.2em] md:tracking-[0.3em] uppercase text-[#C6A46C]">
             Secure &nbsp;·&nbsp; Trusted &nbsp;·&nbsp; Exclusive
           </p>
         </div>
