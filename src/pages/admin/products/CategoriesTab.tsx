@@ -72,6 +72,7 @@ const CategoriesTab = () => {
       queryClient.invalidateQueries({ queryKey: ["admin-categories-tree"] });
       queryClient.invalidateQueries({ queryKey: [CATEGORIES_QUERY_KEY] });
       setEditingCat(null);
+      setForm(emptyForm());
     },
     onError: handleApiError,
   });
@@ -216,6 +217,7 @@ const CategoriesTab = () => {
           if (!open) {
             setShowCreate(false);
             setEditingCat(null);
+            setForm(emptyForm());
           }
         }}
         editingCat={editingCat}
