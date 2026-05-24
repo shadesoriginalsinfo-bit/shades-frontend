@@ -5,13 +5,13 @@ import {
   PromoStrip,
   TrustBar,
   CategorySection,
-  FeatureBanners,
+  // FeatureBanners,
   // ThreeBanners,
-  DiscountBanner,
+  // DiscountBanner,
 } from "./components/Banners";
 // import ProductsSection from "./components/ProductsSection";
 import Footer from "./components/Footer";
-import FAQSection from "./components/FAQSection";
+// import FAQSection from "./components/FAQSection";
 
 const HomePage = () => {
   return (
@@ -39,7 +39,7 @@ const HomePage = () => {
       /> */}
 
       {/* 2-column editorial feature banners */}
-      <FeatureBanners />
+      {/* <FeatureBanners /> */}
 
       {/* New Arrivals — no category filter */}
       {/* <ProductsSection
@@ -53,10 +53,10 @@ const HomePage = () => {
       {/* 3-column mini category banners */}
       {/* <ThreeBanners /> */}
 
-      <FAQSection />
+      {/* <FAQSection /> */}
 
       {/* Full-width discount banner */}
-      <DiscountBanner />
+      {/* <DiscountBanner /> */}
 
       <Footer />
     </div>

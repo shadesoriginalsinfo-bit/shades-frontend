@@ -2,7 +2,9 @@ import { Truck, RefreshCw, Gift, BadgeCheck, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import SectionHeading from "./SectionHeading";
 import carouselImg from "@/assets/carouselImg.png";
-import carouselImg2 from "@/assets/carouselImg2.png";
+import KurtiImg from "@/assets/kurti.png";
+import shortKurtiImg from "@/assets/short-kurti.png";
+import cordSets from "@/assets/cord-set.jpeg";
 
 /* ─────────────────────────────────────────────
    PromoStrip — thin scrolling announcement bar
@@ -261,13 +263,22 @@ interface CategoryCard {
 }
 
 const CATEGORY_CARDS: CategoryCard[] = [
-  { label: "Kurtis", href: "/shop?category=kurtis", image: carouselImg },
+  { label: "Kurtis", href: "/shop?category=kurtis", image: KurtiImg },
   {
     label: "Co-ord Sets",
     href: "/shop?category=co-ord-sets",
-    image: carouselImg2,
+    image: cordSets,
   },
-  { label: "New Arrivals", href: "/shop", image: carouselImg },
+  {
+    label: "New Arrivals",
+    href: "/shop?category=new-arrival",
+    image: carouselImg,
+  },
+  {
+    label: "Short Kurtis",
+    href: "/shop?category=short-kurtis",
+    image: shortKurtiImg,
+  },
 ];
 
 export const CategorySection = () => (
@@ -277,7 +288,7 @@ export const CategorySection = () => (
         title="Explore Our Collections"
         subtitle="Handpicked pieces crafted with love and tradition"
       />
-      <div className="grid grid-cols-3 gap-2 sm:gap-5">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 sm:gap-5">
         {CATEGORY_CARDS.map(({ label, href, image }) => (
           <Link
             key={label}
