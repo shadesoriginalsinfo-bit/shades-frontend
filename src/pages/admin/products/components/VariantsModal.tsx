@@ -231,7 +231,7 @@ const VariantsModal = ({ open, onClose, product }: Props) => {
   // ── Render ────────────────────────────────────────────────────────────────
   return (
     <>
-      <Dialog open={open} onOpenChange={(o) => { if (!o) onClose(); }}>
+      <Dialog open={open} onOpenChange={(o) => { if (!o) { resetAddForm(); setAddSizeFor(null); setSizeLabel(""); setSizeStock("0"); setEditingStock(null); onClose(); } }}>
         <DialogContent className="sm:max-w-2xl max-h-[90vh] flex flex-col gap-0">
           <DialogHeader className="pb-1">
             <DialogTitle className="font-light tracking-wide text-gray-800 font-serif">

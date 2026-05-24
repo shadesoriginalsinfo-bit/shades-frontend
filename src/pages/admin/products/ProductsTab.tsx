@@ -77,6 +77,7 @@ const ProductsTab = () => {
       toast.success("Product updated");
       queryClient.invalidateQueries({ queryKey: [PRODUCTS_QUERY_KEY] });
       setEditingProduct(null);
+      setForm(emptyProductForm());
     },
     onError: handleApiError,
   });
