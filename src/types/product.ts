@@ -38,6 +38,8 @@ export interface IProduct {
   amazonLink?: string | null;
   isPublished: boolean;
   isDeleted: boolean;
+  ratingAvg?: number;
+  reviewCount?: number;
   createdAt: string;
   updatedAt: string;
   variants: IProductVariant[];

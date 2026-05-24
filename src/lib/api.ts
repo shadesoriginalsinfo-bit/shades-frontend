@@ -32,6 +32,12 @@ import type {
 } from "@/types/order";
 import type { IDashboardData } from "@/types/dashboard";
 import type { Role } from "@/types/enum";
+import type {
+  IReview,
+  IReviewsResponse,
+  ICreateReview,
+  IUpdateReview,
+} from "@/types/review";
 import axios from "./axios";
 
 // ── Auth ────────────────────────────────────────────────────────────────
@@ -406,6 +412,46 @@ export async function adminSetConfig(
   value: string,
 ): Promise<{ message: string }> {
   const { data } = await axios.put(`/config/${key}`, { value });
+  return data;
+}
+
+// ── Reviews ───────────────────────────────────────────────────────────────────
+
+export async function getProductReviews(
+  productId: string,
+  params?: { limit?: number; page?: number; sortBy?: string; sortOrder?: string },
+): Promise<IReviewsResponse> {
+  const { data } = await axios.get(`/products/${productId}/reviews`, { params });
+  return data;
+}
+
+export async function createProductReview(
+  productId: string,
+  payload: ICreateReview,
+): Promise<{ data: IReview }> {
+  const { data } = await axios.post(`/products/${productId}/reviews`, payload);
+  return data;
+}
+
+export async function updateProductReview(
+  productId: string,
+  reviewId: string,
+  payload: IUpdateReview,
+): Promise<{ data: IReview }> {
+  const { data } = await axios.patch(
+    `/products/${productId}/reviews/${reviewId}`,
+    payload,
+  );
+  return data;
+}
+
+export async function deleteProductReview(
+  productId: string,
+  reviewId: string,
+): Promise<{ message: string }> {
+  const { data } = await axios.delete(
+    `/products/${productId}/reviews/${reviewId}`,
+  );
   return data;
 }
 

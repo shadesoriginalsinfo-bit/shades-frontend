@@ -9,6 +9,7 @@ import ProductInfo from "./components/ProductInfo";
 import ProductInfoSkeleton from "./components/ProductInfoSkeleton";
 import RelatedProducts from "./components/RelatedProducts";
 import ProductNotFound from "./components/ProductNotFound";
+import ProductReviews from "./components/ProductReviews";
 import { PromoStrip } from "@/pages/home/components/Banners";
 import { getProductById } from "@/lib/api";
 import { useQuery } from "@tanstack/react-query";
@@ -117,6 +118,9 @@ const ProductDetailPage = () => {
           </div>
         )}
       </main>
+
+      {/* ── Reviews ── fetched independently, doesn't block above content */}
+      {id && <ProductReviews productId={id} />}
 
       {/* ── Related products ── */}
       {!isLoading && !isError && product && (
