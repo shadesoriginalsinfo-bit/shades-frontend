@@ -92,9 +92,9 @@ export interface IUpdateProduct {
   categoryIds?: string[];
   gstPercent?: number;
   careInstruction?: string;
-  flipkartLink?: string;
-  meeshoLink?: string;
-  amazonLink?: string;
+  flipkartLink?: string | null;
+  meeshoLink?: string | null;
+  amazonLink?: string | null;
 }
 
 export interface IProductMeta {

@@ -156,7 +156,16 @@ const ProductsTab = () => {
     };
 
     if (isEdit && editingProduct) {
-      updateMutation.mutate({ id: editingProduct.id, payload: base });
+      updateMutation.mutate({
+        id: editingProduct.id,
+        payload: {
+          ...base,
+          // Send null to explicitly clear a link; undefined would leave it untouched
+          flipkartLink: form.flipkartLink || null,
+          meeshoLink: form.meeshoLink || null,
+          amazonLink: form.amazonLink || null,
+        },
+      });
     } else {
       createMutation.mutate(base);
     }
