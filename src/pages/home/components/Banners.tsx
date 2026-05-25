@@ -1,7 +1,7 @@
 import { Truck, RefreshCw, Gift, BadgeCheck, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import SectionHeading from "./SectionHeading";
-import carouselImg from "@/assets/carouselImg.png";
+import newArrivalsImg from "@/assets/new-arrivals.png";
 import KurtiImg from "@/assets/kurti.png";
 import shortKurtiImg from "@/assets/short-kurti.png";
 import cordSets from "@/assets/cord-set.jpeg";
@@ -272,7 +272,7 @@ const CATEGORY_CARDS: CategoryCard[] = [
   {
     label: "New Arrivals",
     href: "/shop?category=new-arrival",
-    image: carouselImg,
+    image: newArrivalsImg,
   },
   {
     label: "Short Kurtis",
