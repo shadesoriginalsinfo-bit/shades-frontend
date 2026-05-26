@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { ShoppingBag, Loader2, ChevronLeft, ChevronRight } from "lucide-react";
+import { ShoppingBag, Loader2, ChevronLeft, ChevronRight, FileDown } from "lucide-react";
 import toast from "react-hot-toast";
 import { getUserOrders, cancelOrder } from "@/lib/api";
 import type { IOrder, OrderStatus } from "@/types/order";
 import { handleApiError } from "@/utils/handleApiError";
+import { downloadInvoice } from "@/utils/downloadInvoice";
+import logoUrl from "@/assets/logo2.png";
 
 const ORDER_STATUS_COLORS: Record<OrderStatus, string> = {
   // DRAFT: "bg-amber-50 text-amber-700 border-amber-200",
@@ -135,6 +137,19 @@ const OrdersTab = () => {
                 </div>
 
                 <div className="flex items-center gap-3 shrink-0">
+                  {/* Download Invoice */}
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      downloadInvoice(order, logoUrl);
+                    }}
+                    className="flex items-center gap-1.5 text-[10px] tracking-[0.15em] uppercase text-[#9A7A46] border border-[#9A7A46]/40 px-2.5 py-1.5 rounded-sm hover:bg-[#F5EFE7] transition-colors"
+                    title="Download Invoice"
+                  >
+                    <FileDown size={11} />
+                    Invoice
+                  </button>
+
                   {CANCELLABLE.includes(order.status) && (
                     <button
                       onClick={(e) => {

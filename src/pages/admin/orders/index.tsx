@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { ShoppingBag, ChevronDown, X } from "lucide-react";
+import { ShoppingBag, ChevronDown, X, FileDown } from "lucide-react";
 import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
 import { Pagination } from "@/components/Pagination";
@@ -18,6 +18,8 @@ import {
   PaymentMethodBadge,
   StatusBadge,
 } from "./components/Badges";
+import { downloadInvoice } from "@/utils/downloadInvoice";
+import logoUrl from "@/assets/logo2.png";
 
 const LIMIT = 20;
 
@@ -247,14 +249,25 @@ const OrdersPage = () => {
                 >
                   {/* Actions */}
                   <td className="px-4 py-3 text-right">
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => setSelectedOrder(order)}
-                      className="border-[#E8DDD0] text-[#9A7A50] hover:bg-[#F8F4EE] hover:border-[#9A7A46] text-xs"
-                    >
-                      View
-                    </Button>
+                    <div className="flex items-center justify-end gap-2">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => setSelectedOrder(order)}
+                        className="border-[#E8DDD0] text-[#9A7A50] hover:bg-[#F8F4EE] hover:border-[#9A7A46] text-xs"
+                      >
+                        View
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => downloadInvoice(order, logoUrl)}
+                        className="border-[#E8DDD0] text-[#9A7A50] hover:bg-[#F8F4EE] hover:border-[#9A7A46] text-xs"
+                        title="Download Invoice"
+                      >
+                        <FileDown className="size-3.5" />
+                      </Button>
+                    </div>
                   </td>
 
                   {/* Order ID */}
