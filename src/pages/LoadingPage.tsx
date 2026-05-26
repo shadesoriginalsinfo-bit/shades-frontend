@@ -1,5 +1,5 @@
 import React from "react";
-import { BarLoader, ClipLoader } from "react-spinners";
+import { ClipLoader } from "react-spinners";
 
 const LoadingModal: React.FC = () => {
   return (
