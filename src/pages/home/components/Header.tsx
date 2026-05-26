@@ -95,6 +95,7 @@ const Header = () => {
   ];
 
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [mobileShopOpen, setMobileShopOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -262,20 +263,63 @@ const Header = () => {
         {/* Mobile Nav drawer */}
         {mobileOpen && (
           <div className="md:hidden bg-white border-t border-[#E8DDD0] px-4 py-5 space-y-1">
-            {NAV_ITEMS.map((item) => (
-              <Link
-                key={item.label}
-                to={item.href}
-                className={`block py-3 text-sm font-medium tracking-wide border-b border-[#E8DDD0]/50 last:border-0 ${
-                  location.pathname === item.href
-                    ? "text-[#9A7A46]"
-                    : "text-gray-700"
-                }`}
-                onClick={() => setMobileOpen(false)}
-              >
-                {item.label}
-              </Link>
-            ))}
+            {NAV_ITEMS.map((item) =>
+              item.children ? (
+                <div key={item.label} className="border-b border-[#E8DDD0]/50">
+                  {/* Shop row — tap to toggle */}
+                  <button
+                    className={`w-full flex items-center justify-between py-3 text-sm font-medium tracking-wide ${
+                      location.pathname === item.href
+                        ? "text-[#9A7A46]"
+                        : "text-gray-700"
+                    }`}
+                    onClick={() => setMobileShopOpen((prev) => !prev)}
+                  >
+                    {item.label}
+                    <ChevronDown
+                      size={15}
+                      className={`transition-transform duration-200 ${mobileShopOpen ? "rotate-180" : ""}`}
+                    />
+                  </button>
+
+                  {/* Category list */}
+                  {mobileShopOpen && (
+                    <div className="pb-2 space-y-0.5">
+                      <Link
+                        to="/shop"
+                        className="block px-3 py-2.5 text-xs tracking-wider text-gray-500 hover:text-[#9A7A46] hover:bg-[#F5EFE7] transition-colors rounded-sm"
+                        onClick={() => setMobileOpen(false)}
+                      >
+                        All Products
+                      </Link>
+                      {categories.map((cat) => (
+                        <Link
+                          key={cat.slug}
+                          to={`/shop?category=${cat.slug}`}
+                          className="block px-3 py-2.5 text-xs tracking-wider text-gray-500 hover:text-[#9A7A46] hover:bg-[#F5EFE7] transition-colors rounded-sm"
+                          onClick={() => setMobileOpen(false)}
+                        >
+                          {cat.name}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <Link
+                  key={item.label}
+                  to={item.href}
+                  className={`block py-3 text-sm font-medium tracking-wide border-b border-[#E8DDD0]/50 last:border-0 ${
+                    location.pathname === item.href
+                      ? "text-[#9A7A46]"
+                      : "text-gray-700"
+                  }`}
+                  onClick={() => setMobileOpen(false)}
+                >
+                  {item.label}
+                </Link>
+              )
+            )}
             <div className="pt-3 flex items-center gap-3">
               {!isLoading && user ? (
                 <>
