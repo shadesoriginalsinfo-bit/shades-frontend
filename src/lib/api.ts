@@ -514,3 +514,55 @@ export async function adminGetDashboard(params?: {
   const { data } = await axios.get("/admin/dashboard", { params });
   return data.data;
 }
+
+// ── Promo Items ───────────────────────────────────────────────────────────────
+
+export interface IPromoItem {
+  id: string;
+  text: string;
+  isActive: boolean;
+  sortOrder: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export async function getPromoItems(): Promise<IPromoItem[]> {
+  const { data } = await axios.get("/promo-items");
+  return data.data;
+}
+
+export async function adminGetAllPromoItems(): Promise<IPromoItem[]> {
+  const { data } = await axios.get("/promo-items/admin/all");
+  return data.data;
+}
+
+export async function adminCreatePromoItem(dto: {
+  text: string;
+  isActive?: boolean;
+  sortOrder?: number;
+}): Promise<IPromoItem> {
+  const { data } = await axios.post("/promo-items", dto);
+  return data.data;
+}
+
+export async function adminUpdatePromoItem(
+  id: string,
+  dto: { text?: string; isActive?: boolean; sortOrder?: number },
+): Promise<IPromoItem> {
+  const { data } = await axios.patch(`/promo-items/${id}`, dto);
+  return data.data;
+}
+
+export async function adminDeletePromoItem(
+  id: string,
+): Promise<{ message: string }> {
+  const { data } = await axios.delete(`/promo-items/${id}`);
+  return data;
+}
+
+export async function adminReorderPromoItems(
+  items: { id: string; sortOrder: number }[],
+): Promise<IPromoItem[]> {
+  const { data } = await axios.patch("/promo-items/reorder", { items });
+  return data.data;
+}

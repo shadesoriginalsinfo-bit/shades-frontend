@@ -10,6 +10,7 @@ import {
   HomeIcon,
   Settings2,
   Images,
+  Megaphone,
 } from "lucide-react";
 import { useLogout } from "@/hooks/useLogout";
 import LoadingModal from "@/pages/LoadingPage";
@@ -50,6 +51,12 @@ export const navLinks: SidebarItem[] = [
     icon: <Images />,
     key: "media",
     path: "/admin/media",
+  },
+  {
+    label: "Promo Strip",
+    icon: <Megaphone />,
+    key: "promo-items",
+    path: "/admin/promo-items",
   },
   {
     label: "Settings",

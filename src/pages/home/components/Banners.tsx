@@ -5,39 +5,38 @@ import newArrivalsImg from "@/assets/new-arrivals.png";
 import KurtiImg from "@/assets/kurti.png";
 import shortKurtiImg from "@/assets/short-kurti.png";
 import cordSets from "@/assets/cord-set.jpeg";
+import { usePromoItems } from "@/hooks/usePromoItems";
 
 /* ─────────────────────────────────────────────
    PromoStrip — thin scrolling announcement bar
    ───────────────────────────────────────────── */
-const PROMO_ITEMS = [
-  "🚚 Free Shipping on Orders Above ₹999",
-  "✨ New Festive Collection Now Live",
-  "🔄 Easy 3-5-Day Exchange",
-  "💎 Buy Now to get good deals",
-  // "🎁 Gift Wrapping Available on All Orders",
-];
+export const PromoStrip = () => {
+  const { items } = usePromoItems();
 
-export const PromoStrip = () => (
-  <div className="bg-[#1a1a1a] text-white py-2.5 overflow-x-scroll">
-    <div className="flex items-center justify-around gap-10 whitespace-nowrap animate-[marquee_30s_linear_infinite] px-4">
-      {[...PROMO_ITEMS].map((item, i) => (
-        // {[...PROMO_ITEMS, ...PROMO_ITEMS].map((item, i) => (
-        <span
-          key={i}
-          className="text-[11px] tracking-[0.18em] text-[#C6A46C] shrink-0"
-        >
-          {item}
-        </span>
-      ))}
+  if (items.length === 0) return null;
+
+  return (
+    <div className="bg-[#1a1a1a] text-white py-2.5 overflow-x-scroll">
+      <div className="flex items-center justify-around gap-10 whitespace-nowrap animate-[marquee_30s_linear_infinite] px-4">
+        {/* {[...items, ...items].map((item, i) => ( */}
+        {[...items].map((item, i) => (
+          <span
+            key={i}
+            className="text-[11px] tracking-[0.18em] text-[#C6A46C] shrink-0"
+          >
+            {item.text}
+          </span>
+        ))}
+      </div>
+      {/* <style>{`
+        @keyframes marquee {
+          from { transform: translateX(0); }
+          to   { transform: translateX(-50%); }
+        }
+      `}</style> */}
     </div>
-    {/* <style>{`
-      @keyframes marquee {
-        from { transform: translateX(0); }
-        to   { transform: translateX(-50%); }
-      }
-    `}</style> */}
-  </div>
-);
+  );
+};
 
 /* ─────────────────────────────────────────────
    TrustBar — 4-column trust badges
