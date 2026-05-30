@@ -199,11 +199,19 @@ const VariantsModal = ({ open, onClose, product }: Props) => {
 
   const handleAddVariant = () => {
     if (!newColor.trim()) return toast.error("Color name is required");
+    if (!newColorCode.trim()) return toast.error("Color code is required");
+    const hexExists = product?.variants.some(
+      (v) => v.colorCode?.toLowerCase() === newColorCode.trim().toLowerCase(),
+    );
+    if (hexExists) return toast.error(`Color code ${newColorCode.trim()} is already used by another variant`);
     const validSizes = newSizes.filter((s) => s.size.trim());
     if (!validSizes.length) return toast.error("At least one size is required");
+    const sizeLabels = validSizes.map((s) => s.size.trim().toLowerCase());
+    if (sizeLabels.some((s, i) => sizeLabels.indexOf(s) !== i))
+      return toast.error("Duplicate sizes are not allowed");
     addVariantMut.mutate({
       color: newColor.trim(),
-      colorCode: newColorCode.trim() || undefined,
+      colorCode: newColorCode.trim(),
       sizes: validSizes.map((s) => ({
         size: s.size.trim(),
         stock: Math.max(0, Number(s.stock) || 0),
@@ -213,6 +221,12 @@ const VariantsModal = ({ open, onClose, product }: Props) => {
 
   const handleAddSize = (variantId: string) => {
     if (!sizeLabel.trim()) return toast.error("Size label is required");
+    const variant = product?.variants.find((v) => v.id === variantId);
+    const isDuplicate = variant?.sizes.some(
+      (s) => s.size.toLowerCase() === sizeLabel.trim().toLowerCase(),
+    );
+    if (isDuplicate)
+      return toast.error(`Size "${sizeLabel.trim()}" already exists for this variant`);
     addSizeMut.mutate({
       variantId,
       dto: { size: sizeLabel.trim(), stock: Math.max(0, Number(sizeStock) || 0) },
@@ -443,7 +457,7 @@ const VariantsModal = ({ open, onClose, product }: Props) => {
                       restrictSpecialChars={false}
                     />
                   </LabelField>
-                  <LabelField label="Color Code">
+                  <LabelField label="Color Code *">
                     <Input
                       value={newColorCode}
                       onChange={(e) => setNewColorCode(e.target.value)}
