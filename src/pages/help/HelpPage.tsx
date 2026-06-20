@@ -61,7 +61,7 @@ const SECTIONS = [
     icon: MapPin,
     title: "Track My Order",
     points: [
-      "Use the tracking link sent via SMS/email after dispatch.",
+      // "Use the tracking link sent via SMS/email after dispatch.",
       "Enter your order ID to check the current status.",
       "For delays beyond the expected window, contact our support team.",
     ],
@@ -197,7 +197,9 @@ export default function HelpPage() {
     staleTime: 5 * 60 * 1000,
   });
   const shippingFlat = parseFloat(appConfig?.SHIPPING_FLAT ?? "70");
-  const shippingFreeThreshold = parseFloat(appConfig?.SHIPPING_FREE_THRESHOLD ?? "500");
+  const shippingFreeThreshold = parseFloat(
+    appConfig?.SHIPPING_FREE_THRESHOLD ?? "500",
+  );
 
   const sections = SECTIONS.map((s) =>
     s.id === "shipping"
