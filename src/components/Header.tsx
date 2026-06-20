@@ -14,7 +14,7 @@ const Header: React.FC = () => {
       <header className="hidden md:flex w-full items-center justify-between border-b border-gray-200 bg-white px-4 py-3 select-none fixed top-0 shadow-sm z-50">
         <div className="flex gap-8">
           <Link to="/">
-            <img src={logo} alt="bpXchange" className=" h-12" />
+            <img src={logo} alt="logo" className=" h-12" />
           </Link>
           <div className="flex flex-col">
             <span className="text-sm text-primary">Welcome Back!</span>

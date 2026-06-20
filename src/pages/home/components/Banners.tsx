@@ -17,9 +17,8 @@ export const PromoStrip = () => {
 
   return (
     <div className="bg-[#1a1a1a] text-white py-2.5 overflow-x-scroll">
-      <div className="flex items-center justify-around gap-10 whitespace-nowrap animate-[marquee_30s_linear_infinite] px-4">
-        {/* {[...items, ...items].map((item, i) => ( */}
-        {[...items].map((item, i) => (
+      <div className="flex items-center gap-10 whitespace-nowrap animate-[marquee_30s_linear_infinite] px-4">
+        {[...items, ...items, ...items].map((item, i) => (
           <span
             key={i}
             className="text-[11px] tracking-[0.18em] text-[#C6A46C] shrink-0"
@@ -28,12 +27,12 @@ export const PromoStrip = () => {
           </span>
         ))}
       </div>
-      {/* <style>{`
+      <style>{`
         @keyframes marquee {
           from { transform: translateX(0); }
           to   { transform: translateX(-50%); }
         }
-      `}</style> */}
+      `}</style>
     </div>
   );
 };
@@ -264,8 +263,8 @@ interface CategoryCard {
 const CATEGORY_CARDS: CategoryCard[] = [
   { label: "Kurtis", href: "/shop?category=kurtis", image: KurtiImg },
   {
-    label: "Co-ord Sets",
-    href: "/shop?category=co-ord-sets",
+    label: "Ethnic Sets",
+    href: "/shop?category=ethnic-sets",
     image: cordSets,
   },
   {

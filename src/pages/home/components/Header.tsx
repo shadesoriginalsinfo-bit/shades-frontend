@@ -7,7 +7,7 @@ import {
   ChevronDown,
   LogOut,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import logo from "@/assets/logo2.png";
 import { useAuthUser } from "@/hooks/useAuth";
@@ -98,6 +98,17 @@ const Header = () => {
   const [mobileShopOpen, setMobileShopOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const profileRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (profileRef.current && !profileRef.current.contains(e.target as Node)) {
+        setProfileOpen(false);
+      }
+    };
+    if (profileOpen) document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [profileOpen]);
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -200,12 +211,11 @@ const Header = () => {
               )}
 
               {!isLoading && user ? (
-                <div
-                  className="relative"
-                  onMouseEnter={() => setProfileOpen(true)}
-                  onMouseLeave={() => setProfileOpen(false)}
-                >
-                  <button className="flex items-center border-2 border-[#9A7A46] w-8 h-8 rounded-full overflow-hidden">
+                <div ref={profileRef} className="relative">
+                  <button
+                    onClick={() => setProfileOpen((prev) => !prev)}
+                    className="flex items-center border-2 border-[#9A7A46] w-8 h-8 rounded-full overflow-hidden"
+                  >
                     <img
                       src={avatar}
                       alt={user.name}

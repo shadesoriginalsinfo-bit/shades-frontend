@@ -153,6 +153,7 @@ const ShopPage = () => {
               isError={isError}
               view={view}
               limit={PAGE_LIMIT}
+              onReset={handleReset}
             />
 
             {/* Pagination */}

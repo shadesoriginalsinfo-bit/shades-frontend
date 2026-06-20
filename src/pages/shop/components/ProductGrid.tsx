@@ -1,5 +1,4 @@
 import { PackageSearch } from "lucide-react";
-import { Link } from "react-router-dom";
 import { type IProduct } from "@/types/product";
 import { type ViewMode } from "./ShopToolbar";
 import ProductCard from "@/pages/home/components/ProductCard";
@@ -13,6 +12,7 @@ interface ProductGridProps {
   isError: boolean;
   view: ViewMode;
   limit: number;
+  onReset?: () => void;
 }
 
 const ProductGrid = ({
@@ -21,6 +21,7 @@ const ProductGrid = ({
   isError,
   view,
   limit,
+  onReset,
 }: ProductGridProps) => {
   /* ── Error state ── */
   if (isError) {
@@ -46,18 +47,20 @@ const ProductGrid = ({
         <div className="w-14 h-14 rounded-full bg-[#F5EFE7] border border-[#E8DDD0] flex items-center justify-center mb-5">
           <PackageSearch size={22} className="text-[#9A7A46]" />
         </div>
-        <p className="text-base font-serif font-medium text-gray-700 tracking-wide mb-1">
-          No products found
+        <p className="text-xl font-serif font-semibold text-gray-700 tracking-wide mb-1">
+          Coming Soon ✨
         </p>
         <p className="text-xs text-gray-400 tracking-wide mb-6">
-          Try adjusting your filters or search query.
+          New products are on their way. Check back soon.
         </p>
-        <Link
-          to="/shop"
-          className="px-7 py-2.5 border border-[#9A7A46] text-[#9A7A46] text-xs tracking-[0.2em] uppercase font-medium hover:bg-[#9A7A46] hover:text-white transition-all rounded-sm"
-        >
-          Clear All Filters
-        </Link>
+        {onReset && (
+          <button
+            onClick={onReset}
+            className="px-7 py-2.5 border border-[#9A7A46] text-[#9A7A46] text-xs tracking-[0.2em] uppercase font-medium hover:bg-[#9A7A46] hover:text-white transition-all rounded-sm"
+          >
+            Clear All Filters
+          </button>
+        )}
       </div>
     );
   }
