@@ -17,12 +17,15 @@ import flipkartIcon from "@/assets/flipkart.png";
 import amazonIcon from "@/assets/amazon.png";
 
 const MeeshoLogo = () => (
-  <svg width="18" height="18" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect width="32" height="32" rx="5" fill="#F43397"/>
-    <path
-      d="M6 24V9l10 9 10-9v15h-3.5V15l-6.5 6-6.5-6v9H6z"
-      fill="white"
-    />
+  <svg
+    width="18"
+    height="18"
+    viewBox="0 0 32 32"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <rect width="32" height="32" rx="5" fill="#F43397" />
+    <path d="M6 24V9l10 9 10-9v15h-3.5V15l-6.5 6-6.5-6v9H6z" fill="white" />
   </svg>
 );
 import { type IProduct } from "@/types/product";
@@ -80,7 +83,11 @@ const Accordion = ({
 };
 
 /* ── Main component ─────────────────────────────────────────────────── */
-const ProductInfo = ({ product, selectedVariantIdx, onVariantChange }: ProductInfoProps) => {
+const ProductInfo = ({
+  product,
+  selectedVariantIdx,
+  onVariantChange,
+}: ProductInfoProps) => {
   const [qty, setQty] = useState(1);
   const [selectedSizeId, setSelectedSizeId] = useState<string | null>(null);
   const [addedToCart, setAddedToCart] = useState(false);
@@ -92,7 +99,9 @@ const ProductInfo = ({ product, selectedVariantIdx, onVariantChange }: ProductIn
     staleTime: 5 * 60 * 1000,
   });
   const shippingFlat = parseFloat(appConfig?.SHIPPING_FLAT ?? "70");
-  const shippingFreeThreshold = parseFloat(appConfig?.SHIPPING_FREE_THRESHOLD ?? "500");
+  const shippingFreeThreshold = parseFloat(
+    appConfig?.SHIPPING_FREE_THRESHOLD ?? "500",
+  );
 
   const selectedVariant = product.variants[selectedVariantIdx];
 
@@ -109,11 +118,14 @@ const ProductInfo = ({ product, selectedVariantIdx, onVariantChange }: ProductIn
     setAddedToCart(false);
   };
 
-  const selectedSize = selectedVariant?.sizes.find((s) => s.id === selectedSizeId) ?? null;
-  const variantStock = selectedVariant?.sizes.reduce((s, sz) => s + sz.stock, 0) ?? 0;
+  const selectedSize =
+    selectedVariant?.sizes.find((s) => s.id === selectedSizeId) ?? null;
+  const variantStock =
+    selectedVariant?.sizes.reduce((s, sz) => s + sz.stock, 0) ?? 0;
   const maxQty = selectedSize ? selectedSize.stock : variantStock;
 
-  const sortedImages = selectedVariant?.images.sort((a, b) => a.position - b.position) ?? [];
+  const sortedImages =
+    selectedVariant?.images.sort((a, b) => a.position - b.position) ?? [];
 
   const buildCartItem = () => ({
     variantSizeId: selectedSizeId!,
@@ -148,7 +160,9 @@ const ProductInfo = ({ product, selectedVariantIdx, onVariantChange }: ProductIn
   const gstRate = (product.gstPercent ?? 0) / 100;
   const finalPrice = product.discountPrice ?? product.marketPrice;
   const finalPriceWithGst = parseFloat((finalPrice * (1 + gstRate)).toFixed(2));
-  const marketPriceWithGst = parseFloat((product.marketPrice * (1 + gstRate)).toFixed(2));
+  const marketPriceWithGst = parseFloat(
+    (product.marketPrice * (1 + gstRate)).toFixed(2),
+  );
   const discount =
     product.discountPrice && product.marketPrice > product.discountPrice
       ? Math.round(
@@ -273,7 +287,9 @@ const ProductInfo = ({ product, selectedVariantIdx, onVariantChange }: ProductIn
         <p className="text-xs text-emerald-600 font-medium -mt-1 tracking-wide">
           You save{" "}
           <span className="font-bold">
-            {formatINR(parseFloat((marketPriceWithGst - finalPriceWithGst).toFixed(2)))}
+            {formatINR(
+              parseFloat((marketPriceWithGst - finalPriceWithGst).toFixed(2)),
+            )}
           </span>{" "}
           on this order
         </p>
@@ -365,7 +381,9 @@ const ProductInfo = ({ product, selectedVariantIdx, onVariantChange }: ProductIn
                   Only {selectedSize.stock} left in this size
                 </span>
               ) : (
-                <span className="text-gray-400">{selectedSize.stock} available in this size</span>
+                <span className="text-gray-400">
+                  {selectedSize.stock} available in this size
+                </span>
               )}
             </p>
           )}
@@ -416,9 +434,14 @@ const ProductInfo = ({ product, selectedVariantIdx, onVariantChange }: ProductIn
             }`}
           >
             {addedToCart ? (
-              <><Check size={14} /> Added to Cart</>
+              <>
+                <Check size={14} /> Added to Cart
+              </>
             ) : (
-              <><ShoppingBag size={14} />{sizeRequired ? "Select a size to add" : "Add to Cart"}</>
+              <>
+                <ShoppingBag size={14} />
+                {sizeRequired ? "Select a size to add" : "Add to Cart"}
+              </>
             )}
           </button>
 
@@ -447,7 +470,11 @@ const ProductInfo = ({ product, selectedVariantIdx, onVariantChange }: ProductIn
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 pl-2 pr-4 py-2 border border-[#2874F0] text-[#2874F0] text-xs font-medium tracking-wide rounded-md hover:bg-[#2874F0] hover:text-white transition-all duration-200 group"
               >
-                <img src={flipkartIcon} alt="Flipkart" className="w-5 h-5 object-contain" />
+                <img
+                  src={flipkartIcon}
+                  alt="Flipkart"
+                  className="w-5 h-5 object-contain"
+                />
                 <span className="group-hover:text-white">Shop on Flipkart</span>
               </a>
             )}
@@ -469,7 +496,11 @@ const ProductInfo = ({ product, selectedVariantIdx, onVariantChange }: ProductIn
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 pl-2 pr-4 py-2 border border-[#FF9900] text-[#232F3E] text-xs font-medium tracking-wide rounded-md hover:bg-[#FF9900] transition-all duration-200"
               >
-                <img src={amazonIcon} alt="Amazon" className="w-5 h-5 object-contain" />
+                <img
+                  src={amazonIcon}
+                  alt="Amazon"
+                  className="w-5 h-5 object-contain"
+                />
                 Shop on Amazon
               </a>
             )}
@@ -517,7 +548,7 @@ const ProductInfo = ({ product, selectedVariantIdx, onVariantChange }: ProductIn
         <div className="flex gap-3">
           <span className="text-gray-400 w-20 shrink-0">Product ID</span>
           <span className="text-gray-500 font-mono text-[11px]">
-            {product.id.slice(0, 8).toUpperCase()}
+            {product.id}
           </span>
         </div>
         <div className="flex gap-3">
