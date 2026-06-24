@@ -11,7 +11,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import LabelField from "@/components/LabelField";
-import type { IProduct } from "@/types/product";
+import type { IProduct, IProductVariantSize } from "@/types/product";
 import { PRODUCTS_QUERY_KEY } from "@/hooks/useProducts";
 import { handleApiError } from "@/utils/handleApiError";
 import {
@@ -75,13 +75,13 @@ const VariantsModal = ({ open, onClose, product }: Props) => {
     });
   }, [product]);
 
-  const getSortedSizes = (variantId: string, sizes: typeof product.variants[0]["sizes"]) => {
+  const getSortedSizes = (variantId: string, sizes: IProductVariantSize[]) => {
     const order = sizeOrders[variantId];
     if (!order) return [...sizes].sort((a, b) => a.position - b.position);
-    return order.map((id) => sizes.find((s) => s.id === id)).filter(Boolean) as typeof sizes;
+    return order.map((id) => sizes.find((s) => s.id === id)).filter(Boolean) as IProductVariantSize[];
   };
 
-  const hasPendingReorder = (variantId: string, sizes: typeof product.variants[0]["sizes"]) => {
+  const hasPendingReorder = (variantId: string, sizes: IProductVariantSize[]) => {
     const order = sizeOrders[variantId];
     if (!order) return false;
     const serverOrder = [...sizes].sort((a, b) => a.position - b.position).map((s) => s.id);
@@ -397,7 +397,7 @@ const VariantsModal = ({ open, onClose, product }: Props) => {
                         <div className="flex items-center gap-1">
                           <Input
                             type="number"
-                            value={editingStock.value}
+                            value={editingStock?.value ?? ""}
                             onChange={(e) =>
                               setEditingStock((prev) =>
                                 prev ? { ...prev, value: e.target.value } : null,
