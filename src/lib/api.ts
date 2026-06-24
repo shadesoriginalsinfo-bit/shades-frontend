@@ -266,6 +266,18 @@ export async function removeVariantSize(
   return data;
 }
 
+export async function reorderVariantSizes(
+  productId: string,
+  variantId: string,
+  sizes: { id: string; position: number }[],
+): Promise<IProductVariantSize[]> {
+  const { data } = await axios.patch(
+    `/products/${productId}/variants/${variantId}/sizes/reorder`,
+    { sizes },
+  );
+  return data.data;
+}
+
 // ── Addresses ─────────────────────────────────────────────────────────────────
 
 export async function getAddresses(): Promise<IAddress[]> {

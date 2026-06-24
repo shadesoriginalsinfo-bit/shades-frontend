@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Check, ImagePlus, Layers, Pencil, Plus, Trash2, X } from "lucide-react";
+import { Check, GripVertical, ImagePlus, Layers, Pencil, Plus, Trash2, X } from "lucide-react";
 import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -20,6 +20,7 @@ import {
   addVariantSize,
   updateVariantSizeStock,
   removeVariantSize,
+  reorderVariantSizes,
   addVariantImages,
   removeVariantImage,
   reorderVariantImages,
@@ -55,6 +56,54 @@ const VariantsModal = ({ open, onClose, product }: Props) => {
     sizeId: string;
     value: string;
   } | null>(null);
+
+  // ── Size reorder ──────────────────────────────────────────────────────────
+  const [sizeOrders, setSizeOrders] = useState<Record<string, string[]>>({});
+  const dragSizeIdx = useRef(-1);
+  const dragVariantId = useRef("");
+
+  useEffect(() => {
+    if (!product) return;
+    setSizeOrders((prev) => {
+      const next: Record<string, string[]> = {};
+      for (const v of product.variants) {
+        next[v.id] = [...v.sizes]
+          .sort((a, b) => a.position - b.position)
+          .map((s) => s.id);
+      }
+      return JSON.stringify(next) === JSON.stringify(prev) ? prev : next;
+    });
+  }, [product]);
+
+  const getSortedSizes = (variantId: string, sizes: typeof product.variants[0]["sizes"]) => {
+    const order = sizeOrders[variantId];
+    if (!order) return [...sizes].sort((a, b) => a.position - b.position);
+    return order.map((id) => sizes.find((s) => s.id === id)).filter(Boolean) as typeof sizes;
+  };
+
+  const hasPendingReorder = (variantId: string, sizes: typeof product.variants[0]["sizes"]) => {
+    const order = sizeOrders[variantId];
+    if (!order) return false;
+    const serverOrder = [...sizes].sort((a, b) => a.position - b.position).map((s) => s.id);
+    return order.join(",") !== serverOrder.join(",");
+  };
+
+  const handleSizeDragStart = (variantId: string, idx: number) => {
+    dragVariantId.current = variantId;
+    dragSizeIdx.current = idx;
+  };
+
+  const handleSizeDragOver = (e: React.DragEvent, variantId: string, overIdx: number) => {
+    e.preventDefault();
+    if (dragVariantId.current !== variantId || dragSizeIdx.current === overIdx) return;
+    setSizeOrders((prev) => {
+      const arr = [...(prev[variantId] ?? [])];
+      const [item] = arr.splice(dragSizeIdx.current, 1);
+      arr.splice(overIdx, 0, item);
+      dragSizeIdx.current = overIdx;
+      return { ...prev, [variantId]: arr };
+    });
+  };
 
   // ── Images sub-modal ──────────────────────────────────────────────────────
   const [imagesVariantId, setImagesVariantId] = useState<string | null>(null);
@@ -137,6 +186,21 @@ const VariantsModal = ({ open, onClose, product }: Props) => {
     }) => removeVariantSize(product!.id, variantId, sizeId),
     onSuccess: () => {
       toast.success("Size removed");
+      invalidate();
+    },
+    onError: handleApiError,
+  });
+
+  const reorderSizesMut = useMutation({
+    mutationFn: ({
+      variantId,
+      sizes,
+    }: {
+      variantId: string;
+      sizes: { id: string; position: number }[];
+    }) => reorderVariantSizes(product!.id, variantId, sizes),
+    onSuccess: () => {
+      toast.success("Size order saved");
       invalidate();
     },
     onError: handleApiError,
@@ -316,8 +380,15 @@ const VariantsModal = ({ open, onClose, product }: Props) => {
                   {variant.sizes.length === 0 && (
                     <p className="text-xs text-gray-400">No sizes added</p>
                   )}
-                  {variant.sizes.map((size) => (
-                    <div key={size.id} className="flex items-center gap-2 text-xs">
+                  {getSortedSizes(variant.id, variant.sizes).map((size, idx) => (
+                    <div
+                      key={size.id}
+                      draggable
+                      onDragStart={() => handleSizeDragStart(variant.id, idx)}
+                      onDragOver={(e) => handleSizeDragOver(e, variant.id, idx)}
+                      className="flex items-center gap-2 text-xs cursor-default"
+                    >
+                      <GripVertical className="size-3 text-gray-300 cursor-grab shrink-0" />
                       <span className="w-14 font-medium text-gray-700 shrink-0">
                         {size.size}
                       </span>
@@ -387,6 +458,23 @@ const VariantsModal = ({ open, onClose, product }: Props) => {
                     </div>
                   ))}
                 </div>
+
+                {/* Save order button */}
+                {hasPendingReorder(variant.id, variant.sizes) && (
+                  <button
+                    onClick={() =>
+                      reorderSizesMut.mutate({
+                        variantId: variant.id,
+                        sizes: (sizeOrders[variant.id] ?? []).map((id, i) => ({ id, position: i })),
+                      })
+                    }
+                    disabled={reorderSizesMut.isPending}
+                    className="flex items-center gap-1 text-xs text-[#9A7A46] hover:text-[#B8936A] transition-colors mb-2 disabled:opacity-50"
+                  >
+                    {reorderSizesMut.isPending ? <Spinner /> : <Check className="size-3" />}
+                    Save order
+                  </button>
+                )}
 
                 {/* Add size inline form */}
                 {addSizeFor === variant.id ? (

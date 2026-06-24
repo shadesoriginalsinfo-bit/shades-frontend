@@ -10,6 +10,7 @@ export interface IProductVariantSize {
   id: string;
   size: string;
   stock: number;
+  position: number;
   createdAt: string;
   updatedAt: string;
 }
