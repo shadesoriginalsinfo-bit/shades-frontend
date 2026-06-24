@@ -1,4 +1,5 @@
 import { useState, useCallback, useRef, useEffect } from "react";
+import { createPortal } from "react-dom";
 import {
   ChevronLeft,
   ChevronRight,
@@ -190,9 +191,9 @@ const ProductImageGallery = ({ images, title }: ProductImageGalleryProps) => {
       </div>
 
       {/* ── Lightbox modal ── */}
-      {modalOpen && (
+      {modalOpen && createPortal(
         <div
-          className="fixed inset-0 z-999 bg-black/92 flex items-center justify-center"
+          className="fixed inset-0 z-9999 bg-black/92 flex items-center justify-center"
           onClick={() => {
             if (!didSwipe.current) setModalOpen(false);
             didSwipe.current = false;
@@ -267,7 +268,8 @@ const ProductImageGallery = ({ images, title }: ProductImageGalleryProps) => {
               ))}
             </div>
           )}
-        </div>
+        </div>,
+        document.body
       )}
     </>
   );
