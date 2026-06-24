@@ -1,5 +1,11 @@
-import { useState, useCallback } from "react";
-import { ChevronLeft, ChevronRight, ZoomIn, ShoppingBag } from "lucide-react";
+import { useState, useCallback, useRef, useEffect } from "react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  ZoomIn,
+  ShoppingBag,
+  X,
+} from "lucide-react";
 import { type IProductImage } from "@/types/product";
 
 interface ProductImageGalleryProps {
@@ -30,6 +36,9 @@ const ProductImageGallery = ({ images, title }: ProductImageGalleryProps) => {
   const [activeIdx, setActiveIdx] = useState(0);
   const [zoomed, setZoomed] = useState(false);
   const [zoomPos, setZoomPos] = useState({ x: 50, y: 50 });
+  const [modalOpen, setModalOpen] = useState(false);
+  const touchStartX = useRef(0);
+  const didSwipe = useRef(false);
 
   const prev = useCallback(
     () => setActiveIdx((i) => (i - 1 + sorted.length) % sorted.length),
@@ -39,6 +48,31 @@ const ProductImageGallery = ({ images, title }: ProductImageGalleryProps) => {
     () => setActiveIdx((i) => (i + 1) % sorted.length),
     [sorted.length],
   );
+
+  useEffect(() => {
+    if (!modalOpen) return;
+    const onKey = (e: KeyboardEvent) =>
+      e.key === "Escape" && setModalOpen(false);
+    document.addEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+    };
+  }, [modalOpen]);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+    didSwipe.current = false;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    const diff = touchStartX.current - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) {
+      didSwipe.current = true;
+      diff > 0 ? next() : prev();
+    }
+  };
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -58,92 +92,184 @@ const ProductImageGallery = ({ images, title }: ProductImageGalleryProps) => {
   }
 
   return (
-    <div className="flex flex-col-reverse sm:flex-row gap-3 md:gap-4">
-      {/* ── Thumbnail strip ── */}
-      <div className="flex sm:flex-col gap-2 overflow-x-auto sm:overflow-visible sm:w-[72px] shrink-0 pb-1 sm:pb-0">
-        {sorted.map((img, i) => (
-          <button
-            key={img.id}
-            onClick={() => setActiveIdx(i)}
-            aria-label={`View image ${i + 1}`}
-            className={`relative shrink-0 w-14 h-14 sm:w-[72px] sm:h-[72px] rounded-sm overflow-hidden border-2 transition-all duration-200 ${
-              i === activeIdx
-                ? "border-[#9A7A46] shadow-[0_0_0_2px_rgba(198,164,108,0.25)]"
-                : "border-[#E8DDD0] hover:border-[#9A7A46]/60"
-            }`}
+    <>
+      <div className="flex flex-col-reverse sm:flex-row gap-3 md:gap-4">
+        {/* ── Thumbnail strip ── */}
+        <div className="flex sm:flex-col gap-2 overflow-x-auto sm:overflow-visible sm:w-[72px] shrink-0 pb-1 sm:pb-0">
+          {sorted.map((img, i) => (
+            <button
+              key={img.id}
+              onClick={() => setActiveIdx(i)}
+              aria-label={`View image ${i + 1}`}
+              className={`relative shrink-0 w-14 h-14 sm:w-[72px] sm:h-[72px] rounded-sm overflow-hidden border-2 transition-all duration-200 ${
+                i === activeIdx
+                  ? "border-[#9A7A46] shadow-[0_0_0_2px_rgba(198,164,108,0.25)]"
+                  : "border-[#E8DDD0] hover:border-[#9A7A46]/60"
+              }`}
+            >
+              <img
+                src={img?.url}
+                alt={img?.altText ?? `${title} image ${i + 1}`}
+                className="w-full h-full object-cover"
+              />
+              {i === activeIdx && (
+                <div className="absolute inset-0 bg-[#9A7A46]/08 pointer-events-none" />
+              )}
+            </button>
+          ))}
+        </div>
+
+        {/* ── Main image ── */}
+        <div className="relative flex-1 group">
+          {/* Zoom container */}
+          <div
+            className="relative overflow-hidden rounded-sm aspect-4/5 bg-[#F5EFE7] border border-[#E8DDD0] cursor-crosshair select-none"
+            onMouseEnter={() => setZoomed(true)}
+            onMouseLeave={() => setZoomed(false)}
+            onMouseMove={handleMouseMove}
+            onClick={() => setModalOpen(true)}
           >
+            {/* Blurred background fill */}
             <img
-              src={img?.url}
-              alt={img?.altText ?? `${title} image ${i + 1}`}
-              className="w-full h-full object-cover"
+              src={active?.url}
+              alt=""
+              aria-hidden
+              className="absolute inset-0 w-full h-full object-cover scale-110 blur-xl opacity-40 pointer-events-none"
+              draggable={false}
             />
-            {i === activeIdx && (
-              <div className="absolute inset-0 bg-[#9A7A46]/08 pointer-events-none" />
+            <img
+              src={active?.url}
+              alt={active?.altText ?? title}
+              className={`relative w-full h-full object-cover transition-transform duration-100 ${
+                zoomed ? "scale-[1.85]" : "scale-100"
+              }`}
+              style={
+                zoomed
+                  ? { transformOrigin: `${zoomPos.x}% ${zoomPos.y}%` }
+                  : undefined
+              }
+              draggable={false}
+            />
+
+            {/* Zoom hint */}
+            {!zoomed && (
+              <div className="absolute bottom-3 right-3 flex items-center gap-1.5 bg-white/80 backdrop-blur-sm border border-[#E8DDD0] px-2.5 py-1.5 rounded-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
+                <ZoomIn size={12} className="text-[#9A7A46]" />
+                <span className="text-[10px] tracking-[0.15em] text-gray-500">
+                  Hover to zoom
+                </span>
+              </div>
             )}
-          </button>
-        ))}
+
+            {/* Image counter badge */}
+            <div className="absolute top-3 right-3 bg-black/40 backdrop-blur-sm text-white text-[10px] tracking-widest px-2 py-1 rounded-sm pointer-events-none">
+              {activeIdx + 1} / {sorted.length}
+            </div>
+          </div>
+
+          {/* Prev / Next arrows — only show when multiple images */}
+          {sorted.length > 1 && (
+            <>
+              <button
+                onClick={prev}
+                aria-label="Previous image"
+                className="absolute left-2 top-1/2 -translate-y-1/2 w-9 h-9 flex items-center justify-center bg-white/90 hover:bg-[#9A7A46] hover:text-white text-[#9A7A46] border border-[#E8DDD0] hover:border-[#9A7A46] rounded-full shadow-md transition-all duration-200 backdrop-blur-sm z-10"
+              >
+                <ChevronLeft size={16} />
+              </button>
+              <button
+                onClick={next}
+                aria-label="Next image"
+                className="absolute right-2 top-1/2 -translate-y-1/2 w-9 h-9 flex items-center justify-center bg-white/90 hover:bg-[#9A7A46] hover:text-white text-[#9A7A46] border border-[#E8DDD0] hover:border-[#9A7A46] rounded-full shadow-md transition-all duration-200 backdrop-blur-sm z-10"
+              >
+                <ChevronRight size={16} />
+              </button>
+            </>
+          )}
+        </div>
       </div>
 
-      {/* ── Main image ── */}
-      <div className="relative flex-1 group">
-        {/* Zoom container */}
+      {/* ── Lightbox modal ── */}
+      {modalOpen && (
         <div
-          className={`relative overflow-hidden rounded-sm aspect-[4/5] bg-[#F5EFE7] border border-[#E8DDD0] cursor-crosshair select-none`}
-          onMouseEnter={() => setZoomed(true)}
-          onMouseLeave={() => setZoomed(false)}
-          onMouseMove={handleMouseMove}
+          className="fixed inset-0 z-999 bg-black/92 flex items-center justify-center"
+          onClick={() => {
+            if (!didSwipe.current) setModalOpen(false);
+            didSwipe.current = false;
+          }}
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
         >
+          {/* Close */}
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              setModalOpen(false);
+            }}
+            className="absolute top-4 right-4 z-10 w-9 h-9 flex items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors"
+            aria-label="Close"
+          >
+            <X size={18} />
+          </button>
+
+          {/* Counter */}
+          <div className="absolute top-4 left-1/2 -translate-x-1/2 text-white/60 text-xs tracking-widest pointer-events-none">
+            {activeIdx + 1} / {sorted.length}
+          </div>
+
+          {/* Image */}
           <img
             src={active?.url}
             alt={active?.altText ?? title}
-            className={`w-full h-full object-cover transition-transform duration-100 ${
-              zoomed ? "scale-[1.85]" : "scale-100"
-            }`}
-            style={
-              zoomed
-                ? { transformOrigin: `${zoomPos.x}% ${zoomPos.y}%` }
-                : undefined
-            }
+            className="max-w-full max-h-full object-contain px-4"
+            onClick={(e) => e.stopPropagation()}
             draggable={false}
           />
 
-          {/* Zoom hint */}
-          {!zoomed && (
-            <div className="absolute bottom-3 right-3 flex items-center gap-1.5 bg-white/80 backdrop-blur-sm border border-[#E8DDD0] px-2.5 py-1.5 rounded-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
-              <ZoomIn size={12} className="text-[#9A7A46]" />
-              <span className="text-[10px] tracking-[0.15em] text-gray-500">
-                Hover to zoom
-              </span>
-            </div>
+          {/* Prev / Next */}
+          {sorted.length > 1 && (
+            <>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  prev();
+                }}
+                aria-label="Previous image"
+                className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 flex items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors"
+              >
+                <ChevronLeft size={20} />
+              </button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  next();
+                }}
+                aria-label="Next image"
+                className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 flex items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors"
+              >
+                <ChevronRight size={20} />
+              </button>
+            </>
           )}
 
-          {/* Image counter badge */}
-          <div className="absolute top-3 right-3 bg-black/40 backdrop-blur-sm text-white text-[10px] tracking-widest px-2 py-1 rounded-sm pointer-events-none">
-            {activeIdx + 1} / {sorted.length}
-          </div>
+          {/* Dot indicators */}
+          {sorted.length > 1 && (
+            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-1.5 pointer-events-none">
+              {sorted.map((_, i) => (
+                <div
+                  key={i}
+                  className={`rounded-full transition-all duration-200 ${
+                    i === activeIdx
+                      ? "w-4 h-1.5 bg-white"
+                      : "w-1.5 h-1.5 bg-white/40"
+                  }`}
+                />
+              ))}
+            </div>
+          )}
         </div>
-
-        {/* Prev / Next arrows — only show when multiple images */}
-        {sorted.length > 1 && (
-          <>
-            <button
-              onClick={prev}
-              aria-label="Previous image"
-              className="absolute left-2 top-1/2 -translate-y-1/2 w-9 h-9 flex items-center justify-center bg-white/90 hover:bg-[#9A7A46] hover:text-white text-[#9A7A46] border border-[#E8DDD0] hover:border-[#9A7A46] rounded-full shadow-md transition-all duration-200 backdrop-blur-sm z-10"
-            >
-              <ChevronLeft size={16} />
-            </button>
-            <button
-              onClick={next}
-              aria-label="Next image"
-              className="absolute right-2 top-1/2 -translate-y-1/2 w-9 h-9 flex items-center justify-center bg-white/90 hover:bg-[#9A7A46] hover:text-white text-[#9A7A46] border border-[#E8DDD0] hover:border-[#9A7A46] rounded-full shadow-md transition-all duration-200 backdrop-blur-sm z-10"
-            >
-              <ChevronRight size={16} />
-            </button>
-          </>
-        )}
-      </div>
-    </div>
+      )}
+    </>
   );
 };
 

@@ -46,7 +46,7 @@ const MediaCarousel = () => {
   const slide = slides[current];
 
   return (
-    <section className="relative w-full h-[420px] sm:h-[500px] md:h-[580px] overflow-hidden bg-[#1a1a1a]">
+    <section className="relative w-full h-[280px] sm:h-[580px] md:h-[580px] overflow-hidden bg-[#1a1a1a]">
       {/* Blurred backdrop — fills letterbox gaps with the same image */}
       <img
         src={slide.url}
@@ -60,7 +60,7 @@ const MediaCarousel = () => {
         key={animKey}
         src={slide.url}
         alt={slide.altText ?? "banner"}
-        className="absolute inset-0 w-full h-full object-cover md:object-contain object-center"
+        className="absolute inset-0 w-full h-full object-cover sm:object-contain object-center"
         style={{ animation: "carouselFade 0.6s ease both" }}
       />
 
