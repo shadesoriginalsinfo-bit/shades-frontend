@@ -170,7 +170,7 @@ const CheckoutPage = () => {
     if (validatingCode) return;
     setValidatingCode(code);
     try {
-      const result = await validateCoupon(code, subtotal + taxAmount);
+      const result = await validateCoupon(code, parseFloat((subtotal + taxAmount).toFixed(2)));
       setAppliedCoupon(result);
       toast.success(`Coupon applied — ${formatINR(result.discountAmount)} off`);
     } catch (err) {
