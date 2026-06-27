@@ -268,8 +268,8 @@ const CATEGORY_CARDS: CategoryCard[] = [
     image: cordSets,
   },
   {
-    label: "New Arrivals",
-    href: "/shop?category=new-arrival",
+    label: "Most Loved",
+    href: "/shop?category=most-loved",
     image: newArrivalsImg,
   },
   {
