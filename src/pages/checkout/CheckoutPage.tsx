@@ -21,6 +21,7 @@ import {
   verifyPayment,
   getAppConfig,
   validateCoupon,
+  getActiveCoupons,
 } from "@/lib/api";
 import type { IAppliedCoupon } from "@/types/coupon";
 import { handleApiError } from "@/utils/handleApiError";
@@ -63,9 +64,10 @@ const CheckoutPage = () => {
   const [addressForm, setAddressForm] =
     useState<ICreateAddress>(emptyAddressForm);
   const [paymentMethod] = useState<"ONLINE">("ONLINE");
-  const [couponInput, setCouponInput] = useState("");
-  const [appliedCoupon, setAppliedCoupon] = useState<IAppliedCoupon | null>(null);
-  const [isValidating, setIsValidating] = useState(false);
+  const [appliedCoupon, setAppliedCoupon] = useState<IAppliedCoupon | null>(
+    null,
+  );
+  const [validatingCode, setValidatingCode] = useState<string | null>(null);
 
   if (!state?.items?.length) {
     return (
@@ -110,11 +112,19 @@ const CheckoutPage = () => {
   const shipping =
     subtotal > 1 && subtotal < SHIPPING_FREE_THRESHOLD ? SHIPPING_FLAT : 0;
   const discount = appliedCoupon?.discountAmount ?? 0;
-  const total = parseFloat((subtotal + taxAmount + shipping - discount).toFixed(2));
+  const total = parseFloat(
+    (subtotal + taxAmount + shipping - discount).toFixed(2),
+  );
 
   const { data: addresses = [], isLoading: addressesLoading } = useQuery({
     queryKey: ["addresses"],
     queryFn: getAddresses,
+  });
+
+  const { data: availableCoupons = [], isLoading: couponsLoading } = useQuery({
+    queryKey: ["active-coupons"],
+    queryFn: getActiveCoupons,
+    staleTime: 2 * 60 * 1000,
   });
 
   const addAddressMutation = useMutation({
@@ -156,19 +166,17 @@ const CheckoutPage = () => {
     addAddressMutation.mutate(payload);
   };
 
-  const handleApplyCoupon = async () => {
-    const code = couponInput.trim().toUpperCase();
-    if (!code) return;
-    setIsValidating(true);
+  const handleSelectCoupon = async (code: string) => {
+    if (validatingCode) return;
+    setValidatingCode(code);
     try {
-      const result = await validateCoupon(code, subtotal + taxAmount + shipping);
+      const result = await validateCoupon(code, subtotal + taxAmount);
       setAppliedCoupon(result);
-      setCouponInput("");
       toast.success(`Coupon applied — ${formatINR(result.discountAmount)} off`);
     } catch (err) {
       handleApiError(err);
     } finally {
-      setIsValidating(false);
+      setValidatingCode(null);
     }
   };
 
@@ -598,14 +606,16 @@ const CheckoutPage = () => {
               )}
             </section>
 
-            {/* Promo code */}
+            {/* Coupon */}
             <section className="bg-white border border-[#E8DDD0] rounded-sm p-5">
               <h2 className="text-[11px] tracking-[0.25em] uppercase font-semibold text-gray-700 mb-4">
-                Promo Code
+                Coupon
               </h2>
-              {appliedCoupon ? (
-                <div className="flex items-center gap-3 p-3 bg-emerald-50 border border-emerald-200 rounded-sm">
-                  <Tag size={14} className="text-emerald-600 shrink-0" />
+
+              {/* Applied state */}
+              {appliedCoupon && (
+                <div className="flex items-center gap-3 p-3 bg-emerald-50 border border-emerald-200 rounded-sm mb-3">
+                  <Tag size={13} className="text-emerald-600 shrink-0" />
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-mono font-semibold text-emerald-700">
                       {appliedCoupon.code}
@@ -627,27 +637,87 @@ const CheckoutPage = () => {
                     <X size={14} />
                   </button>
                 </div>
+              )}
+
+              {/* Coupon list */}
+              {couponsLoading ? (
+                <div className="flex items-center gap-2 text-gray-400 text-xs py-1">
+                  <Loader2 size={12} className="animate-spin" /> Loading offers…
+                </div>
+              ) : availableCoupons.length === 0 ? (
+                <p className="text-xs text-gray-400">
+                  No coupons available right now.
+                </p>
               ) : (
-                <div className="flex gap-2">
-                  <input
-                    value={couponInput}
-                    onChange={(e) => setCouponInput(e.target.value.toUpperCase())}
-                    onKeyDown={(e) => e.key === "Enter" && handleApplyCoupon()}
-                    placeholder="Enter promo code"
-                    maxLength={50}
-                    className="flex-1 border border-[#E8DDD0] rounded-sm px-3 py-2 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:border-[#9A7A46] transition-colors font-mono tracking-wider uppercase"
-                  />
-                  <button
-                    onClick={handleApplyCoupon}
-                    disabled={isValidating || !couponInput.trim()}
-                    className="flex items-center gap-1.5 px-4 py-2 bg-[#2A1810] text-white text-xs tracking-[0.15em] uppercase font-medium hover:bg-[#9A7A46] transition-all rounded-sm disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {isValidating ? (
-                      <Loader2 size={12} className="animate-spin" />
-                    ) : (
-                      "Apply"
-                    )}
-                  </button>
+                <div className="space-y-2 max-h-56 overflow-y-auto pr-0.5">
+                  {availableCoupons.map((coupon) => {
+                    const eligible = subtotal >= coupon.thresholdAmount;
+                    const isApplied = appliedCoupon?.code === coupon.code;
+                    const isLoading = validatingCode === coupon.code;
+                    return (
+                      <button
+                        key={coupon.code}
+                        type="button"
+                        disabled={!eligible || !!validatingCode || isApplied}
+                        onClick={() =>
+                          !isApplied && handleSelectCoupon(coupon.code)
+                        }
+                        className={`w-full text-left flex items-center gap-3 p-3 border rounded-sm transition-all ${
+                          isApplied
+                            ? "border-emerald-300 bg-emerald-50 cursor-default"
+                            : eligible
+                              ? "border-[#E8DDD0] hover:border-[#9A7A46] hover:bg-[#FDFAF6] cursor-pointer"
+                              : "border-[#E8DDD0] opacity-50 cursor-not-allowed"
+                        }`}
+                      >
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <span className="font-mono font-semibold text-[#2A1810] text-sm tracking-wider">
+                              {coupon.code}
+                            </span>
+                            <span className="text-[10px] tracking-wider px-1.5 py-0.5 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-sm">
+                              -{formatINR(coupon.discountAmount)} off
+                            </span>
+                          </div>
+                          {coupon.description && (
+                            <p className="text-xs text-gray-500 truncate mt-0.5">
+                              {coupon.description}
+                            </p>
+                          )}
+                          <p className="text-[10px] mt-0.5">
+                            {eligible ? (
+                              <span className="text-gray-400">
+                                Min order {formatINR(coupon.thresholdAmount)}
+                              </span>
+                            ) : (
+                              <span className="text-amber-600">
+                                Add{" "}
+                                {formatINR(coupon.thresholdAmount - subtotal)}{" "}
+                                more to unlock
+                              </span>
+                            )}
+                          </p>
+                        </div>
+                        <div className="shrink-0">
+                          {isLoading ? (
+                            <Loader2
+                              size={14}
+                              className="animate-spin text-[#9A7A46]"
+                            />
+                          ) : isApplied ? (
+                            <CheckCircle2
+                              size={14}
+                              className="text-emerald-500"
+                            />
+                          ) : (
+                            <span className="text-[10px] tracking-[0.15em] uppercase text-[#9A7A46] font-medium">
+                              Apply
+                            </span>
+                          )}
+                        </div>
+                      </button>
+                    );
+                  })}
                 </div>
               )}
             </section>

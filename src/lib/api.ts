@@ -31,7 +31,7 @@ import type {
   IUserOrdersResponse,
 } from "@/types/order";
 import type { IDashboardData } from "@/types/dashboard";
-import type { IAdminCoupon, IAppliedCoupon, ICreateCoupon, IUpdateCoupon } from "@/types/coupon";
+import type { IAdminCoupon, IAppliedCoupon, ICoupon, ICreateCoupon, IUpdateCoupon } from "@/types/coupon";
 import type { Role } from "@/types/enum";
 import type {
   IReview,
@@ -355,6 +355,11 @@ export async function adminUpdateOrderStatus(
 }
 
 // ── Coupons ───────────────────────────────────────────────────────────────────
+
+export async function getActiveCoupons(): Promise<ICoupon[]> {
+  const { data } = await axios.get("/coupons");
+  return data.data;
+}
 
 export async function adminGetCoupons(): Promise<IAdminCoupon[]> {
   const { data } = await axios.get("/coupons/admin/all");
