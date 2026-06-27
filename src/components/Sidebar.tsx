@@ -11,6 +11,7 @@ import {
   Settings2,
   Images,
   Megaphone,
+  Tag,
 } from "lucide-react";
 import { useLogout } from "@/hooks/useLogout";
 import LoadingModal from "@/pages/LoadingPage";
@@ -57,6 +58,12 @@ export const navLinks: SidebarItem[] = [
     icon: <Megaphone />,
     key: "promo-items",
     path: "/admin/promo-items",
+  },
+  {
+    label: "Coupons",
+    icon: <Tag />,
+    key: "coupons",
+    path: "/admin/coupons",
   },
   {
     label: "Settings",

@@ -10,7 +10,8 @@ import {
   Loader2,
   CreditCard,
   ShoppingBag,
-  // Truck,
+  Tag,
+  X,
 } from "lucide-react";
 import {
   getAddresses,
@@ -19,7 +20,9 @@ import {
   initiatePayment,
   verifyPayment,
   getAppConfig,
+  validateCoupon,
 } from "@/lib/api";
+import type { IAppliedCoupon } from "@/types/coupon";
 import { handleApiError } from "@/utils/handleApiError";
 import { useRazorpay } from "@/hooks/useRazorpay";
 import toast from "react-hot-toast";
@@ -60,6 +63,9 @@ const CheckoutPage = () => {
   const [addressForm, setAddressForm] =
     useState<ICreateAddress>(emptyAddressForm);
   const [paymentMethod] = useState<"ONLINE">("ONLINE");
+  const [couponInput, setCouponInput] = useState("");
+  const [appliedCoupon, setAppliedCoupon] = useState<IAppliedCoupon | null>(null);
+  const [isValidating, setIsValidating] = useState(false);
 
   if (!state?.items?.length) {
     return (
@@ -103,7 +109,8 @@ const CheckoutPage = () => {
   const totalQty = items.reduce((s, i) => s + i.quantity, 0);
   const shipping =
     subtotal > 1 && subtotal < SHIPPING_FREE_THRESHOLD ? SHIPPING_FLAT : 0;
-  const total = parseFloat((subtotal + taxAmount + shipping).toFixed(2));
+  const discount = appliedCoupon?.discountAmount ?? 0;
+  const total = parseFloat((subtotal + taxAmount + shipping - discount).toFixed(2));
 
   const { data: addresses = [], isLoading: addressesLoading } = useQuery({
     queryKey: ["addresses"],
@@ -149,6 +156,22 @@ const CheckoutPage = () => {
     addAddressMutation.mutate(payload);
   };
 
+  const handleApplyCoupon = async () => {
+    const code = couponInput.trim().toUpperCase();
+    if (!code) return;
+    setIsValidating(true);
+    try {
+      const result = await validateCoupon(code, subtotal + taxAmount + shipping);
+      setAppliedCoupon(result);
+      setCouponInput("");
+      toast.success(`Coupon applied — ${formatINR(result.discountAmount)} off`);
+    } catch (err) {
+      handleApiError(err);
+    } finally {
+      setIsValidating(false);
+    }
+  };
+
   const handlePlaceOrder = async () => {
     if (!selectedAddressId) {
       toast.error("Please select a delivery address");
@@ -164,6 +187,7 @@ const CheckoutPage = () => {
           variantSizeId: i.variantSizeId,
           quantity: i.quantity,
         })),
+        ...(appliedCoupon && { couponCode: appliedCoupon.code }),
       });
     } catch {
       return;
@@ -574,6 +598,60 @@ const CheckoutPage = () => {
               )}
             </section>
 
+            {/* Promo code */}
+            <section className="bg-white border border-[#E8DDD0] rounded-sm p-5">
+              <h2 className="text-[11px] tracking-[0.25em] uppercase font-semibold text-gray-700 mb-4">
+                Promo Code
+              </h2>
+              {appliedCoupon ? (
+                <div className="flex items-center gap-3 p-3 bg-emerald-50 border border-emerald-200 rounded-sm">
+                  <Tag size={14} className="text-emerald-600 shrink-0" />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-mono font-semibold text-emerald-700">
+                      {appliedCoupon.code}
+                    </p>
+                    {appliedCoupon.description && (
+                      <p className="text-xs text-emerald-600 truncate">
+                        {appliedCoupon.description}
+                      </p>
+                    )}
+                  </div>
+                  <span className="text-sm font-semibold text-emerald-700 shrink-0">
+                    -{formatINR(appliedCoupon.discountAmount)}
+                  </span>
+                  <button
+                    onClick={() => setAppliedCoupon(null)}
+                    className="text-emerald-400 hover:text-emerald-700 transition-colors shrink-0"
+                    title="Remove coupon"
+                  >
+                    <X size={14} />
+                  </button>
+                </div>
+              ) : (
+                <div className="flex gap-2">
+                  <input
+                    value={couponInput}
+                    onChange={(e) => setCouponInput(e.target.value.toUpperCase())}
+                    onKeyDown={(e) => e.key === "Enter" && handleApplyCoupon()}
+                    placeholder="Enter promo code"
+                    maxLength={50}
+                    className="flex-1 border border-[#E8DDD0] rounded-sm px-3 py-2 text-sm text-gray-800 placeholder-gray-300 focus:outline-none focus:border-[#9A7A46] transition-colors font-mono tracking-wider uppercase"
+                  />
+                  <button
+                    onClick={handleApplyCoupon}
+                    disabled={isValidating || !couponInput.trim()}
+                    className="flex items-center gap-1.5 px-4 py-2 bg-[#2A1810] text-white text-xs tracking-[0.15em] uppercase font-medium hover:bg-[#9A7A46] transition-all rounded-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {isValidating ? (
+                      <Loader2 size={12} className="animate-spin" />
+                    ) : (
+                      "Apply"
+                    )}
+                  </button>
+                </div>
+              )}
+            </section>
+
             {/* Payment method */}
             <section className="bg-white border border-[#E8DDD0] rounded-sm p-5">
               <h2 className="text-[11px] tracking-[0.25em] uppercase font-semibold text-gray-700 mb-4">
@@ -632,6 +710,17 @@ const CheckoutPage = () => {
                     Add {formatINR(SHIPPING_FREE_THRESHOLD - subtotal)} more for
                     free shipping
                   </p>
+                )}
+                {appliedCoupon && (
+                  <div className="flex justify-between text-emerald-600">
+                    <span className="flex items-center gap-1.5">
+                      <Tag size={11} />
+                      {appliedCoupon.code}
+                    </span>
+                    <span className="font-medium">
+                      -{formatINR(appliedCoupon.discountAmount)}
+                    </span>
+                  </div>
                 )}
                 <div className="border-t border-[#E8DDD0] pt-2.5 flex justify-between">
                   <span className="font-semibold text-[#2A1810]">Total</span>

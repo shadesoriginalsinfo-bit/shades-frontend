@@ -53,7 +53,10 @@ function ItemModal({ item, onClose, onSave, isPending }: ItemModalProps) {
           <h2 className="text-sm tracking-[0.15em] uppercase font-medium text-gray-700">
             {item ? "Edit Promo Item" : "New Promo Item"}
           </h2>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600 cursor-pointer">
+          <button
+            onClick={onClose}
+            className="text-gray-400 hover:text-gray-600 cursor-pointer"
+          >
             <X className="size-4" />
           </button>
         </div>
@@ -71,13 +74,19 @@ function ItemModal({ item, onClose, onSave, isPending }: ItemModalProps) {
             />
           </div>
           <div className="flex items-center justify-between">
-            <span className="text-xs tracking-[0.12em] uppercase text-gray-500">Active</span>
+            <span className="text-xs tracking-[0.12em] uppercase text-gray-500">
+              Active
+            </span>
             <button
               type="button"
               onClick={() => setIsActive((v) => !v)}
               className="text-[#9A7A46] cursor-pointer"
             >
-              {isActive ? <ToggleRight className="size-6" /> : <ToggleLeft className="size-6 text-gray-400" />}
+              {isActive ? (
+                <ToggleRight className="size-6" />
+              ) : (
+                <ToggleLeft className="size-6 text-gray-400" />
+              )}
             </button>
           </div>
           <div className="flex justify-end gap-3 pt-2">
@@ -131,8 +140,13 @@ export default function PromoItemsPage() {
   });
 
   const updateMutation = useMutation({
-    mutationFn: ({ id, dto }: { id: string; dto: { text?: string; isActive?: boolean } }) =>
-      adminUpdatePromoItem(id, dto),
+    mutationFn: ({
+      id,
+      dto,
+    }: {
+      id: string;
+      dto: { text?: string; isActive?: boolean };
+    }) => adminUpdatePromoItem(id, dto),
     onSuccess: () => {
       toast.success("Promo item updated");
       setModalItem(null);
@@ -153,7 +167,9 @@ export default function PromoItemsPage() {
 
   const reorderMutation = useMutation({
     mutationFn: (ordered: IPromoItem[]) =>
-      adminReorderPromoItems(ordered.map((it, idx) => ({ id: it.id, sortOrder: idx }))),
+      adminReorderPromoItems(
+        ordered.map((it, idx) => ({ id: it.id, sortOrder: idx })),
+      ),
     onSuccess: () => {
       toast.success("Order saved");
       setIsDirty(false);
@@ -202,11 +218,10 @@ export default function PromoItemsPage() {
     }
   };
 
-  const isPendingModal =
-    createMutation.isPending || updateMutation.isPending;
+  const isPendingModal = createMutation.isPending || updateMutation.isPending;
 
   return (
-    <div className="max-w-2xl">
+    <div className="space-y-6 p-1 md:p-4 max-w-2xl">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
@@ -228,7 +243,9 @@ export default function PromoItemsPage() {
       {/* Reorder save bar */}
       {isDirty && (
         <div className="flex items-center justify-between bg-[#F8F4EE] border border-[#E8DDD0] px-4 py-2.5 mb-4 text-sm">
-          <span className="text-[#9A7A46] text-xs tracking-wide">Unsaved order changes</span>
+          <span className="text-[#9A7A46] text-xs tracking-wide">
+            Unsaved order changes
+          </span>
           <div className="flex gap-2">
             <Button variant="outline" size="sm" onClick={handleDiscardOrder}>
               Discard
@@ -267,7 +284,9 @@ export default function PromoItemsPage() {
             >
               <GripVertical className="size-4 text-gray-300 shrink-0 cursor-grab active:cursor-grabbing" />
 
-              <span className="flex-1 text-sm text-gray-700 truncate">{item.text}</span>
+              <span className="flex-1 text-sm text-gray-700 truncate">
+                {item.text}
+              </span>
 
               <span
                 className={`text-[10px] tracking-widest uppercase px-2 py-0.5 border ${
@@ -317,7 +336,11 @@ export default function PromoItemsPage() {
         open={!!deleteTarget}
         onClose={() => setDeleteTarget(null)}
         title="Delete Promo Item"
-        description={deleteTarget ? `"${deleteTarget.text}" will be permanently removed.` : undefined}
+        description={
+          deleteTarget
+            ? `"${deleteTarget.text}" will be permanently removed.`
+            : undefined
+        }
         onConfirm={() => deleteTarget && deleteMutation.mutate(deleteTarget.id)}
         loading={deleteMutation.isPending}
       />

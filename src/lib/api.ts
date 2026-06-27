@@ -31,6 +31,7 @@ import type {
   IUserOrdersResponse,
 } from "@/types/order";
 import type { IDashboardData } from "@/types/dashboard";
+import type { IAdminCoupon, IAppliedCoupon, ICreateCoupon, IUpdateCoupon } from "@/types/coupon";
 import type { Role } from "@/types/enum";
 import type {
   IReview,
@@ -311,6 +312,7 @@ export async function createOrder(payload: {
   shippingAddressId: string;
   paymentMethod: "ONLINE" | "COD";
   items: { variantSizeId: string; quantity: number }[];
+  couponCode?: string;
 }): Promise<IOrder> {
   const { data } = await axios.post("/orders", payload);
   return data.data;
@@ -349,6 +351,33 @@ export async function adminUpdateOrderStatus(
     status,
     ...(trackingNumber !== undefined && { trackingNumber }),
   });
+  return data.data;
+}
+
+// ── Coupons ───────────────────────────────────────────────────────────────────
+
+export async function adminGetCoupons(): Promise<IAdminCoupon[]> {
+  const { data } = await axios.get("/coupons/admin/all");
+  return data.data;
+}
+
+export async function adminCreateCoupon(dto: ICreateCoupon): Promise<IAdminCoupon> {
+  const { data } = await axios.post("/coupons", dto);
+  return data.data;
+}
+
+export async function adminUpdateCoupon(code: string, dto: IUpdateCoupon): Promise<IAdminCoupon> {
+  const { data } = await axios.patch(`/coupons/${code}`, dto);
+  return data.data;
+}
+
+export async function adminDeleteCoupon(code: string): Promise<{ message: string }> {
+  const { data } = await axios.delete(`/coupons/${code}`);
+  return data;
+}
+
+export async function validateCoupon(code: string, orderAmount: number): Promise<IAppliedCoupon> {
+  const { data } = await axios.post("/coupons/validate", { code, orderAmount });
   return data.data;
 }
 
